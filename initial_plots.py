@@ -1,5 +1,6 @@
-from yt.mods import *
-import numpy as np
+from lauren import *
+#from yt.mods import *
+#import numpy as np
 
 #fn="/Users/laurennc/data/RyanSims/r0058_l10/redshift0058"
 fn="/hpc/astrostats/astro/users/lnc2115/Ryan/r0058_l10/redshift0058"
@@ -18,6 +19,22 @@ rad = 108.0/pf['kpc']
 data = pf.h.sphere(pos,rad)
 
 fields = ["Density","Temperature","Electron_Density","HAlphaEmissionArc"]
+
+proj = pf.h.proj(0,fields)
+width = 108./pf['kpc']
+res = [1000,1000]
+frb = proj.to_frb(width,res,center=pos)
+
+#max in the fbr:
+i,j = np.unravel_index(frb['Density'].argmax(),frb['Density'].shape)
+frbcenter = [i,j]
+
+x1 = (np.arange(500)+1)*0.108
+x2 = -1*x1
+x2 = x2[::-1]
+x2 = x2[1:]
+x = np.concatenate((x2,[0]))
+x = np.concatenate((x,x1))
 
 for dim in "xyz":
 	pp = ProjectionPlot(pf,dim,fields,center=pos,width=(108.,'kpc'),axes_unit=['kpc','kpc'])
