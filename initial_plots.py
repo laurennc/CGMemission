@@ -1,13 +1,13 @@
 from lauren import *
 #from yt.mods import *
 #import numpy as np
+import matplotlib.pyplot as plt
+import triangle as triangle
 
 #fn="/Users/laurennc/data/RyanSims/r0058_l10/redshift0058"
 fn="/hpc/astrostats/astro/users/lnc2115/Ryan/r0058_l10/redshift0058"
 
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
-
-#what types of plots do I want to make?  Density projections, and HI projections that are all the same size, color maps, and limits as Ximena's data!
 
 #Need to find the position of the maximum density!
 #val, pos = pf.h.find_max('Density')
@@ -18,12 +18,38 @@ pos = [0.40328598,0.47176743,0.46131516]
 rad = 108.0/pf['kpc']
 data = pf.h.sphere(pos,rad)
 
-fields = ["Density","Temperature","Electron_Density","HAlphaEmissionArc"]
+#First let's look at HAlpha vs HI Col Dens on a cell by cell basis
+halphaArc = np.log10(data['HAlphaEmissionArc'])
+em = np.log10(data['EmissionMeasurePC'])
+hIcoldens = np.log10(data['HI_Number_Density']*data['dx'])
+datain = np.zeros((len(hIcoldens),2))
+datain[:,1] = em
+datain[:,0] = hIcoldens
+#datain[:,1] = halphaArc
+#fileout = 'hIcoldens_vs_halphaArc.png'
+#triangle.corner(datain,labels=['log(HI Column Density)','log(H Alpha Arc)']).savefig(fileout)
+fileout = 'hIcoldens_vs_emPC.png'
+triangle.corner(datain,labels=['log(HI Column Density) (cm^-2)','log(Emission Measure) (cm^-6 pc)']).savefig(fileout)
 
+
+fields = ["Density","EmissionMeasure","Electron_Density_Squared","HAlphaEmissionSr","Temperature","Electron_Density","HAlphaEmissionArc","HI_Number_Density"]
+fields = ["EmissionMeasureCM","EmissionMeasurePC","HI_Number_Density"]
+fields = ['HAlphaEmissionRal','HAlphaEmissionSr','HAlphaEmissionArc']
+fields = ['EmissionMeasurePC','EmissionMeasureCold','HAlphaEmissionSr','HAlphaEmissionRal','HI_Number_Density','Temperature']
 proj = pf.h.proj(0,fields)
 width = 108./pf['kpc']
 res = [1000,1000]
 frb = proj.to_frb(width,res,center=pos)
+
+
+datain = np.zeros((len(frb['HI_Number_Density'].flatten()),2))
+datain[:,0] = np.log10(frb['HI_Number_Density'].flatten())
+#datain[:,1] = np.log10(frb['HAlphaEmissionArc'].flatten()*2.3582*10**-11.)
+datain[:,1] = np.log10(frb['EmissionMeasurePC'].flatten())
+fileout = 'hIcoldens_vs_em_PROJ.png'
+triangle.corner(datain,labels=['log(HI Column Density)','log(Emission Measure) (cm^-5 pc)']).savefig(fileout)
+
+
 
 #max in the fbr:
 i,j = np.unravel_index(frb['Density'].argmax(),frb['Density'].shape)
