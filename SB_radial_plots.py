@@ -20,11 +20,12 @@ res = [1000,1000]
 frb = proj.to_frb(width,res,center=pos)
 
 xL = np.arange(-500,500)*0.2
-x2 = x2[:len(x2)-1]
 xL, yL = np.meshgrid(xL,xL)
 
-rp_Arc = radial_data(frb['HAlphaEmissionArc']*(2.3529*10**(-11.)),x=xL,y=yL)
-rp_Ral = radial_data(ergs_sr_TO_raleighs(frb['HAlphaEmissionSr']),x=xL,y=yL)
+#rp_Arc = radial_data(frb['HAlphaEmissionArc']*(2.3529*10**(-11.)),x=xL,y=yL)
+rp_Arc = radial_data(frb['HAlphaEmissionArc'],x=xL,y=yL)
+#rp_Ral = radial_data(ergs_sr_TO_raleighs(frb['HAlphaEmissionSr']),x=xL,y=yL)
+rp_Ral = radial_data(frb['HAlphaEmissionRal'],x=xL,y=yL)
 rp_Vor = radial_data(frb['voortHalpha'],x=xL,y=yL)
 
 #rp_HInd = radial_data(frb['HI_Number_Density'],x=xL,y=yL)
@@ -43,15 +44,14 @@ axes[1].plot((rp_Ral.r/250.)[thisindex],rp_Ral.mean[thisindex])
 axes[1].set_yscale('log')
 axes[1].set_xscale('log')
 axes[1].set_xlabel('Radius / Rvir')
-axes[1].set_ylabel('Surface Brightness (photon s^-1 cm^-2 sr^-1)')
+axes[1].set_ylabel('Surface Brightness (R)')
 
 thisindex = (rp_Vor.r/250. >0.01)
 axes[2].plot((rp_Vor.r/250.)[thisindex],rp_Vor.mean[thisindex])
 axes[2].set_yscale('log')
 axes[2].set_xscale('log')
 axes[2].set_xlabel('Radius / Rvir')
-axes[2].set_ylabel('Dense Only Surface Brightness (ergs s^-1 cm^-2 sr^-1)')
-
+axes[2].set_ylabel('Non Dense (ergs s^-1 cm^-2 arcsec^-1)')
 
 plt.savefig('radial_profile_y.png')
 
