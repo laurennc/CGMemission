@@ -36,18 +36,54 @@ fields = ["Density","EmissionMeasure","Electron_Density_Squared","HAlphaEmission
 fields = ["EmissionMeasureCM","EmissionMeasurePC","HI_Number_Density"]
 fields = ['HAlphaEmissionRal','HAlphaEmissionSr','HAlphaEmissionArc']
 fields = ['EmissionMeasurePC','EmissionMeasureCold','HAlphaEmissionSr','HAlphaEmissionRal','HI_Number_Density','Temperature']
+
+fields = ['HI_Number_Density','HI_Number_Density_DX','EmissionMeasurePC','EmissionMeasureCold','EmissionMeasurePCDX','HAlphaEmissionArc','HAlphaEmissionRal']
 proj = pf.h.proj(0,fields)
 width = 108./pf['kpc']
 res = [1000,1000]
 frb = proj.to_frb(width,res,center=pos)
 
 
-datain = np.zeros((len(frb['HI_Number_Density'].flatten()),2))
+datain = np.zeros((len(frb['HI_Number_Density'].flatten()),4))
 datain[:,0] = np.log10(frb['HI_Number_Density'].flatten())
 #datain[:,1] = np.log10(frb['HAlphaEmissionArc'].flatten()*2.3582*10**-11.)
 datain[:,1] = np.log10(frb['EmissionMeasurePC'].flatten())
-fileout = 'hIcoldens_vs_em_PROJ.png'
-triangle.corner(datain,labels=['log(HI Column Density)','log(Emission Measure) (cm^-5 pc)']).savefig(fileout)
+datain[:,2] = np.log10(frb['HAlphaEmissionArc'].flatten())
+datain[:,3] = np.log10(frb['Temperature'].flatten())
+fileout = 'hIcoldens_em_halphaArc_temp_PROJ.png'
+triangle.corner(datain,labels=['log(HI Column Density)','log(EM) (cm^-6 pc)','HAlpha Arc','log(Temperature)']).savefig(fileout)
+
+datain = np.zeros((len(frb['Temperature'].flatten()),4))
+datain[:,0] = np.log10(frb['Temperature'].flatten())
+datain[:,1] = np.log10(frb['EmissionMeasureCold'].flatten())
+fileout = 'temp_emcold_PROJ.png'
+triangle.corner(datain,labels=['log(Temperature)','log(EM) (cm^-6 pc)']).savefig(fileout)
+
+datain = np.zeros((len(idC),4))
+datain[:,0] = np.log10(data['Temperature'][idC])
+datain[:,1] = np.log10(data['EmissionMeasureCold'][idC])
+dafgadf
+fileout = 'hIcoldens_temp_emcold_CELL.png'
+triangle.corner(datain,labels=['log(HI Column Density)','log(Temperature)','log(EM) (cm^-6 pc)']).savefig(fileout)
+
+
+#can really only do it on a cell-by-cell basis since the projection seems so weird for the cold data
+datain = np.zeros((len(idC),4))
+datain[:,0] = np.log10(data['HI_Number_Density'][idC]*data['dx'][idC]*pf['cm'])
+datain[:,1] = np.log10(data['EmissionMeasureCold'][idC])
+datain[:,2] = np.log10(data['HAlphaEmissionArc'][idC])
+datain[:,3] = np.log10(data['Temperature'][idC])
+fileout = 'hIcoldens_emcold_halphaArc_temp_CELL.png'
+triangle.corner(datain,labels=['HI Col Dens','EM Cold','HAlpha Arc','Temp']).savefig(fileout)
+
+datain = np.zeros((len(data['Temperature']),4))
+datain[:,0] = np.log10(data['HI_Number_Density']*data['dx']*pf['cm'])
+datain[:,1] = np.log10(data['EmissionMeasurePC']*data['dx']*pf['pc'])
+datain[:,2] = np.log10(data['HAlphaEmissionArc'])
+datain[:,3] = np.log10(data['Temperature'])
+fileout = 'hIcoldens_em_halphaArc_temp_CELL.png'
+triangle.corner(datain,labels=['HI Col Dens','EM (cm^-6 pc)','HAlpha Arc','Temp']).savefig(fileout)
+
 
 
 
