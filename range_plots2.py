@@ -15,9 +15,11 @@ pos = [0.40328598,0.47176743,0.46131516]
 #cell be cell is much much easier than projections...
 
 radii = [20.,50.,80.,100.]
-temps = [4.5,5.0,5.5,6.0]
+#temps = [4.5,5.0,5.5,6.0]
+temps = [0]
 fields = ['Temp','HI Col Dens','EM', 'Ha Arc']
-fieldlims = [(4,8),(8,18),(-24,-14),(-46,-36)]
+#fieldlims = [(4,8),(8,18),(-24,-14),(-46,-36)]
+fieldlims = [(4,8),(8,22),(-6,6),(-26,-12)]
 for temp in temps:
 	#data = pf.h.sphere(pos,rad/pf['kpc'])	
 	count = 0
@@ -25,13 +27,16 @@ for temp in temps:
 	fig.set_size_inches(10,10)
 	radcount = 0
 	for rad in radii:
+		print 'rad is ', rad
 		data = pf.h.sphere(pos,rad/pf['kpc'])
-		idx = np.where(np.log10(data['Temperature'] > temp)[0]
+		idx = np.where(np.log10(data['Temperature']) >= temp)[0]
 		
-		for rad > radii[0]:
+		if radcount > 0:
+			print 'inside idD loop'
 			dists = distance_from_center(data['x'],data['y'],data['z'],pos)
 			idD = np.where((dists > radii[radcount-1]/pf['kpc']) & (dists <= radii[radcount]/pf['kpc'] ))[0]
 			idx = np.intersect1d(idD,idx)
+			#print len(idx),idx[0:5]
 
 		#idx = np.where(np.log10(data['Temperature']) > temp)[0]
 		datain = np.zeros((len(idx),4))
@@ -39,6 +44,11 @@ for temp in temps:
 		datain[:,2] = np.log10(data['EmissionMeasureCM'][idx]*data['dx'][idx]*pf['pc'])
 		datain[:,3] = np.log10(data['HAlphaEmissionArc'][idx]*data['dx'][idx]*pf['cm'])
 		datain[:,0] = np.log10(data['Temperature'][idx])
+		#print 'HI Col Dens', datain[0:5,1]
+		#print 'EM', datain[0:5,2]
+		#print 'Ha', datain[0:5,3]
+		#print 'Temp', datain[0:5,0]
+
 
 		#ok so this is fine but how do I make the numbers fit correctly?
 		otro = 0
@@ -68,7 +78,8 @@ for temp in temps:
 
 	#plt.suptitle('Data Sphere with Radius of '+str(rad)+' kpc')
 	plt.tight_layout(w_pad=1.2,h_pad=1.2)
-	fileout = ('varyRad_Temp='+str(temp)+'.png')
+	#fileout = ('varyRad_Temp='+str(temp)+'_annuli.png')
+	fileout = ('varyRad_Temp=all_annuli.png')
 	plt.savefig(fileout)
 	plt.close()
 

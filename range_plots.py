@@ -17,8 +17,8 @@ pos = [0.40328598,0.47176743,0.46131516]
 radii = [20.,50.,80.,100.]
 temps = [4.5,5.0,5.5,6.0]
 fields = ['Temp','HI Col Dens','EM', 'Ha Arc']
-fieldlims = [(4,8),(8,18),(-24,-14),(-46,-36)]
-
+#fieldlims = [(4,8),(8,18),(-24,-14),(-46,-36)]
+fieldlims = [(4,8),(8,22),(-6,6),(-26,-12)]
 radcount = 0
 
 for rad in radii:
@@ -33,7 +33,7 @@ for rad in radii:
 		idD = np.where((dists > radii[radcount-1]/pf['kpc']) & (dists <= radii[radcount]/pf['kpc'] ))[0]
 
 	for temp in temps:
-		idx = np.where(np.log10(data['Temperature'][idD]) > temp)[0]
+		idx = np.where(np.log10(data['Temperature']) <= temp)[0]
 		if rad > radii[0]:
 			idx = np.intersect1d(idD,idx)
 		datain = np.zeros((len(idx),4))
@@ -70,7 +70,7 @@ for rad in radii:
 	#plt.suptitle('Data Sphere with Radius of '+str(rad)+' kpc')
 	radcount = radcount + 1
 	plt.tight_layout(w_pad=1.2,h_pad=1.2)
-	fileout = ('varyTemp_rad='+str(rad)+'kpc.png')
+	fileout = ('varyTemp_rad='+str(rad)+'kpc_annuli.png')
 	plt.savefig(fileout)
 	plt.close()
 
