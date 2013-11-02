@@ -9,12 +9,14 @@ pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 val = 2.37163264206e-23
 pos = [0.40328598,0.47176743,0.46131516]
 
-rad = 108.0/pf['kpc']
-data = pf.h.sphere(pos,rad)
+#rad = 108.0/pf['kpc']
+#data = pf.h.sphere(pos,rad)
 
-fields = ["Density","HAlphaEmissionSr","HAlphaEmissionArc","voortHalpha","HI_Number_Density"]
+#fields = ["Density","HAlphaEmissionSr","HAlphaEmissionArc","voortHalpha","HI_Number_Density"]
 
-proj = pf.h.proj(1,fields)
+fields = ["HI_Number_Density","HAlpha_Emissivity","HAlpha_Emissivity_R","HAlpha_Voort_R"]
+
+proj = pf.h.proj(0,fields)
 width = 200./pf['kpc']
 res = [1000,1000]
 frb = proj.to_frb(width,res,center=pos)
@@ -23,10 +25,10 @@ xL = np.arange(-500,500)*0.2
 xL, yL = np.meshgrid(xL,xL)
 
 #rp_Arc = radial_data(frb['HAlphaEmissionArc']*(2.3529*10**(-11.)),x=xL,y=yL)
-rp_Arc = radial_data(frb['HAlphaEmissionArc'],x=xL,y=yL)
+#rp_Arc = radial_data(frb['HAlphaEmissionArc'],x=xL,y=yL)
 #rp_Ral = radial_data(ergs_sr_TO_raleighs(frb['HAlphaEmissionSr']),x=xL,y=yL)
-rp_Ral = radial_data(frb['HAlphaEmissionRal'],x=xL,y=yL)
-rp_Vor = radial_data(frb['voortHalpha'],x=xL,y=yL)
+#rp_Ral = radial_data(frb['HAlphaEmissionRal'],x=xL,y=yL)
+#rp_Vor = radial_data(frb['voortHalpha'],x=xL,y=yL)
 
 #rp_HInd = radial_data(frb['HI_Number_Density'],x=xL,y=yL)
 
