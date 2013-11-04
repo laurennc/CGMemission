@@ -24,17 +24,17 @@ xL, yL = np.meshgrid(xL,xL)
 r = abs(xL+1j*yL)
 
 projx = pf.h.proj(0,fields)
-frbx = proj.to_frb(width,res,center=pos)
+frbx = projx.to_frb(width,res,center=pos)
 rp_Ralx = radial_data(frbx['HAlpha_Emissivity_R'],x=xL,y=yL)
 rp_Vorx = radial_data(frbx['HAlpha_Voort_R'],x=xL,y=yL)
 
 projy = pf.h.proj(1,fields)
-frby = proj.to_frb(width,res,center=pos)
+frby = projy.to_frb(width,res,center=pos)
 rp_Raly = radial_data(frby['HAlpha_Emissivity_R'],x=xL,y=yL)
 rp_Vory = radial_data(frby['HAlpha_Voort_R'],x=xL,y=yL)
 
 projz = pf.h.proj(2,fields)
-frbz = proj.to_frb(width,res,center=pos)
+frbz = projz.to_frb(width,res,center=pos)
 rp_Ralz = radial_data(frbz['HAlpha_Emissivity_R'],x=xL,y=yL)
 rp_Vorz = radial_data(frbz['HAlpha_Voort_R'],x=xL,y=yL)
 
