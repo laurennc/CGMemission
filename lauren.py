@@ -32,13 +32,12 @@ def plot_scatter_percentile(data,x,y,percentile):
 		rhere = r[thisindex].flatten()
 		datahere = data[thisindex].flatten()
 		meanhere = data[thisindex].mean()
-		idx = np.where(datahere > meanhere)[0]
-		lenperc = int(len(idx)*percentile)
+		lenperc = int(len(datahere)*percentile)
 		idSort = np.argsort(datahere)[::-1]
 		wanted = idSort[0:lenperc]
 		if len(wanted) == 0:
 			wanted = np.where(datahere == datahere.max())
 #		print wanted
-		plt.plot(rhere[wanted],datahere[wanted],'go')#,markersize=0.75)				
+		plt.plot(rhere[wanted],datahere[wanted],'go',markersize=0.80)#,markersize=0.75)				
 
 
