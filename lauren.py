@@ -38,6 +38,6 @@ def plot_scatter_percentile(data,x,y,percentile):
 		if len(wanted) == 0:
 			wanted = np.where(datahere == datahere.max())
 #		print wanted
-		plt.plot(rhere[wanted],datahere[wanted],'go',markersize=0.80)#,markersize=0.75)				
+		plt.plot(rhere[wanted],np.log10(datahere[wanted]),'go',markersize=3.5)#,markersize=0.75)				
 
 
