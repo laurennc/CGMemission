@@ -16,12 +16,10 @@ def load_Ryan_data():
 	data = pf.h.sphere(pos,rad)
 	return pf, data
 
+def scale_by_metallicity(values,assumed_Z,wanted_Z):
+	wanted_ratio = (10.**(wanted_Z))/(10.**(assumed_Z))
+	return values*wanted_ratio
 
-def HAlpha_Emission_Arc(t,hden):
-	#assuming that n_e/n_H = 1.15 and n_HII/n_H = 0.9936
-	Tfour = (10**t)/1.0e4
-	exponent = -0.942-0.031*np.log(Tfour)
-	return (2.82e-26)*(1.15*0.9936)*(2.3528e-11)*((10**hden)**2.0)*Tfour**(exponent)
 
 def plot_scatter_percentile(data,x,y,percentile):
 	x,y = np.meshgrid(x,y)
