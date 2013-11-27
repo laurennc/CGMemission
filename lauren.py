@@ -1,6 +1,7 @@
 from yt.mods import *
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import interpolate
 
 def ergs_sr_TO_raleighs(data_arr):
 	return data_arr*3.304e11/79577.4715459
@@ -43,5 +44,18 @@ def plot_scatter_percentile(data,x,y,percentile):
 		if len(wanted) == 0:
 			wanted = np.where(datahere == datahere.max())
 		plt.plot(rhere[wanted],np.log10(datahere[wanted]),'go',markersize=3.5)#,markersize=0.75)				
+
+def make_Cloudy_table(table_index):
+	hden_n_bins, hden_min, hden_max = 15, -6, 1
+	T_n_bins, T_min, T_max = 51, 3, 8
+	patt = "/hpc/astrostats/astro/users/lnc2115/codes/cloudy_yt/all_lines/all_emissivity_run%i.dat"
+	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
+	T=numpy.linspace(T_min,T_max, T_n_bins)
+	table = np.zeros((hden_n_bins,T_n_bins))
+	for i in range(hden_n_bins):
+		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
+	return hden,T,table
+
+	
 
 
