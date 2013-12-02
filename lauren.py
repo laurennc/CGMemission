@@ -56,6 +56,7 @@ def make_Cloudy_table(table_index):
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
 
-	
+def dummy():
+	return	
 
 
