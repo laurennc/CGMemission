@@ -16,58 +16,52 @@ dims = "xyz"
 projx = pf.h.proj(0,fields)
 frbx = projx.to_frb(width,res,center=pos)
 
+fileout = 'frbx_5kpc_CIV.cpkl'
+cPickle.dump(frbx['Emission_CIV'],open(fileout,'wb'),protocol=-1)
+fileout = 'frbx_5kpc_CIV_Scaled.cpkl'
+cPickle.dump(frbx['Emission_CIV_Scaled'],open(fileout,'wb'),protocol=-1)
+fileout = 'frbx_5kpc_CIV_Scaled_ncut.cpkl'
+cPickle.dump(frbx['Emission_CIV_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
+fileout = 'frbx_5kpc_OVI.cpkl'
+cPickle.dump(frbx['Emission_OVI'],open(fileout,'wb'),protocol=-1)
+fileout = 'frbx_5kpc_OVI_Scaled.cpkl'
+cPickle.dump(frbx['Emission_OVI_Scaled'],open(fileout,'wb'),protocol=-1)
+fileout = 'frbx_5kpc_OVI_Scaled_ncut.cpkl'
+cPickle.dump(frbx['Emission_OVI_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
+
+
 projy = pf.h.proj(1,fields)
 frby = projy.to_frb(width,res,center=pos)
+
+fileout = 'frby_5kpc_CIV.cpkl'
+cPickle.dump(frby['Emission_CIV'],open(fileout,'wb'),protocol=-1)
+fileout = 'frby_5kpc_CIV_Scaled.cpkl'
+cPickle.dump(frby['Emission_CIV_Scaled'],open(fileout,'wb'),protocol=-1)
+fileout = 'frby_5kpc_CIV_Scaled_ncut.cpkl'
+cPickle.dump(frby['Emission_CIV_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
+fileout = 'frby_5kpc_OVI.cpkl'
+cPickle.dump(frby['Emission_OVI'],open(fileout,'wb'),protocol=-1)
+fileout = 'frby_5kpc_OVI_Scaled.cpkl'
+cPickle.dump(frby['Emission_OVI_Scaled'],open(fileout,'wb'),protocol=-1)
+fileout = 'frby_5kpc_OVI_Scaled_ncut.cpkl'
+cPickle.dump(frby['Emission_OVI_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
+
 
 projz = pf.h.proj(2,fields)
 frbz = projz.to_frb(width,res,center=pos)
 
-fileout = 'frbx_5kpc_OVI.cpkl'
-cPickle.dump(frbx['Emission_CIV'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_Ha.cpkl'
-cPickle.dump(frby['Emission_CIV'],open(fileout,'wb'),protocol=-1)
-fileout = 'frbz_5kpc_Ha.cpkl'
+fileout = 'frbz_5kpc_CIV.cpkl'
 cPickle.dump(frbz['Emission_CIV'],open(fileout,'wb'),protocol=-1)
-
-fileout = 'frbx_5kpc_CIV_Scaled.cpkl'
-cPickle.dump(frbx['Emission_CIV_Scaled'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_CIV_Scaled.cpkl'
-cPickle.dump(frby['Emission_CIV_Scaled'],open(fileout,'wb'),protocol=-1)
 fileout = 'frbz_5kpc_CIV_Scaled.cpkl'
 cPickle.dump(frbz['Emission_CIV_Scaled'],open(fileout,'wb'),protocol=-1)
-
-fileout = 'frbx_5kpc_CIV_Scaled_ncut.cpkl'
-cPickle.dump(frbx['Emission_CIV_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_CIV_Scaled_ncut.cpkl'
-cPickle.dump(frby['Emission_CIV_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
 fileout = 'frbz_5kpc_CIV_Scaled_ncut.cpkl'
 cPickle.dump(frbz['Emission_CIV_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
-
-
-fileout = 'frbx_5kpc_OVI.cpkl'
-cPickle.dump(frbx['Emission_OVI'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_OVI.cpkl'
-cPickle.dump(frby['Emission_OVI'],open(fileout,'wb'),protocol=-1)
 fileout = 'frbz_5kpc_OVI.cpkl'
 cPickle.dump(frbz['Emission_OVI'],open(fileout,'wb'),protocol=-1)
-
-fileout = 'frbx_5kpc_OVI_Scaled.cpkl'
-cPickle.dump(frbx['Emission_OVI_Scaled'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_OVI_Scaled.cpkl'
-cPickle.dump(frby['Emission_OVI_Scaled'],open(fileout,'wb'),protocol=-1)
 fileout = 'frbz_5kpc_OVI_Scaled.cpkl'
 cPickle.dump(frbz['Emission_OVI_Scaled'],open(fileout,'wb'),protocol=-1)
-
-fileout = 'frbx_5kpc_OVI_Scaled_ncut.cpkl'
-cPickle.dump(frbx['Emission_OVI_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
-fileout = 'frby_5kpc_OVI_Scaled_ncut.cpkl'
-cPickle.dump(frby['Emission_OVI_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
 fileout = 'frbz_5kpc_OVI_Scaled_ncut.cpkl'
 cPickle.dump(frbz['Emission_OVI_Scaled_ncut'],open(fileout,'wb'),protocol=-1)
-
-
-
-
 
 
 
