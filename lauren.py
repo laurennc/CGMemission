@@ -48,7 +48,8 @@ def plot_scatter_percentile(data,x,y,percentile):
 def make_Cloudy_table(table_index):
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/hpc/astrostats/astro/users/lnc2115/codes/cloudy_yt/all_lines/all_emissivity_run%i.dat"
+#	patt = "/hpc/astrostats/astro/users/lnc2115/codes/cloudy_yt/all_lines/all_emissivity_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/all_lines/all_emissivity_run%i.dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
 	table = np.zeros((hden_n_bins,T_n_bins))
@@ -56,7 +57,21 @@ def make_Cloudy_table(table_index):
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
 
-def dummy():
-	return	
+def make_SB_profile(filex,filey,filez):
+	xL = np.arange(-20,20)*10.0
+	xL, yL = np.meshgrid(xL,xL)
+	r = abs(xL+1j*yL)
 
+	frbx = cPickle.load(open(filex,'rb'))
+	frby = cPickle.load(open(filey,'rb'))
+	frbz = cPickle.load(open(filez,'rb'))
+	
+	rp_Ralx = radial_data(frbx,x=xL,y=yL)
+	rp_Raly = radial_data(frby,x=xL,y=yL)
+	rp_Ralz = radial_data(frbz,x=xL,y=yL)
+	
+	rp_mean = (rp_Ralx.mean + rp_Raly.mean + rp_Ralz.mean)/3.0
+	rp_median  = (rp_Ralx.median + rp_Raly.median + rp_Ralz.median)/3.0
+
+	return rp_Ralx.r, rp_mean, rp_median
 
