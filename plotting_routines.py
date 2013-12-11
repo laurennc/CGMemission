@@ -5,7 +5,7 @@ from lauren import *
 #recreate Bertone 2010 Figure 1 where I'm plotting cloudy results for different densities
 
 def readin_Cloudy_data(inputfile):
-	cldata = np.genfromtxt(inputfile,skip_header=13,dtype=[('Temperature',float),('Lya',float),('Ha',float),('C4a',float),('C4b',float),('O6a',float),('O6b',float)])
+	cldata = np.genfromtxt(inputfile,skip_header=13,dtype=[('Temperature',float),('Lya',float),('Ha',float),('C4a',float),('C4b',float),('O6a',float),('O6b',float),('C3a',float),('C3b',float),('C3c',float)])
         cldata = cldata.view(np.recarray)
 
         data = np.zeros((len(cldata['Temperature']),5))
@@ -14,12 +14,14 @@ def readin_Cloudy_data(inputfile):
         data[:,2] = cldata['Ha']
         data[:,3] = np.log10(10.**(cldata['C4a'])+10.**(cldata['C4b']))
         data[:,4] = np.log10(10.**(cldata['O6a'])+10.**(cldata['O6b']))
+	data[:,5] = cldata['C3a']
+	data[:,6] = np.log10(10.**(cldata['C3b'])+10.**(data['C3c']))
 	return data
 
 def plot_Cloudy_output(inputfile,axes,scale=False,scale_value=-0.3):#outputfile):
 	data = readin_Cloudy_data(inputfile)
 
-	labels = ['Temperature','Lya','Ha','CIV','OVI']
+	labels = ['Temperature','Lya','Ha','CIV','OVI','CIII 977','CIII']
 	i = 1
 	while (i < 5):
 		if scale==True:
