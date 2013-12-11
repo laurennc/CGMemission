@@ -2,6 +2,7 @@ from yt.mods import *
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
+from radial_data_lauren import *
 
 def ergs_sr_TO_raleighs(data_arr):
 	return data_arr*3.304e11/79577.4715459
@@ -57,7 +58,7 @@ def make_Cloudy_table(table_index):
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
 
-def make_SB_profile(filex,filey,filez):
+
 	xL = np.arange(-20,20)*10.0
 	xL, yL = np.meshgrid(xL,xL)
 	r = abs(xL+1j*yL)
@@ -66,6 +67,10 @@ def make_SB_profile(filex,filey,filez):
 	frby = cPickle.load(open(filey,'rb'))
 	frbz = cPickle.load(open(filez,'rb'))
 	
+	frbx = frbx*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
+	frby = frby*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
+	frbz = frbz*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
+
 	rp_Ralx = radial_data(frbx,x=xL,y=yL)
 	rp_Raly = radial_data(frby,x=xL,y=yL)
 	rp_Ralz = radial_data(frbz,x=xL,y=yL)
