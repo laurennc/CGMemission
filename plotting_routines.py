@@ -4,31 +4,92 @@ from lauren import *
 
 #recreate Bertone 2010 Figure 1 where I'm plotting cloudy results for different densities
 
-def plot_Cloudy_output(inputfile,outputfile):
-	cldata = np.genfromtxt(inputfile,skip_header=??,dtype=[('Temperature',float),('Lya',float),('Ha',float),('C4a',float),('C4b',float),('O6a',float),('O6b',float)])
-	cldata = cldata.view(np.recarray)
-	
-	data = np.zeros((len(cldata['Temperature']),5))
-	data[:,0] = cldata['Temperature']
-	data[:,1] = cldata['Lya']
-	data[:,2] = cldata['Ha']
-	data[:,3] = np.log10(10.**(cldata['C4a'])+10.**(data['C4b']))
-	data[:,4] = np.log10(10.**(cldata['O6a'])+10.**(data['06b']))
+def readin_Cloudy_data(inputfile):
+	cldata = np.genfromtxt(inputfile,skip_header=13,dtype=[('Temperature',float),('Lya',float),('Ha',float),('C4a',float),('C4b',float),('O6a',float),('O6b',float)])
+        cldata = cldata.view(np.recarray)
+
+        data = np.zeros((len(cldata['Temperature']),5))
+        data[:,0] = cldata['Temperature']
+        data[:,1] = cldata['Lya']
+        data[:,2] = cldata['Ha']
+        data[:,3] = np.log10(10.**(cldata['C4a'])+10.**(cldata['C4b']))
+        data[:,4] = np.log10(10.**(cldata['O6a'])+10.**(cldata['O6b']))
+	return data
+
+def plot_Cloudy_output(inputfile,axes,scale=False,scale_value=-0.3):#outputfile):
+	data = readin_Cloudy_data(inputfile)
 
 	labels = ['Temperature','Lya','Ha','CIV','OVI']
 	i = 1
 	while (i < 5):
-		plt.plot(data[:,0],data[:,i],label=labels[i],linewidth=3)
+		if scale==True:
+			#print 'in scale loop'
+			#print scale_value
+			data[:,i] = np.log10(scale_by_metallicity(10.**(data[:,i]),-0.3,scale_value))
+		axes.plot(data[:,0],data[:,i],label=labels[i],linewidth=3)
 		i = i + 1
-	plt.xlim()
-	plt.ylim()
-	plt.legend()
-	plt.xlabel(r"")
-	plt.ylabel(r"")
+	axes.set_autoscale_on(False)
+	axes.set_aspect('equal')
+	axes.set_xlim(3,8)
+	axes.set_ylim(-28,-20)#-22)
+	#axes.legend(loc="lower right")
+	axes.set_xlabel(r"log(Temperature)")
+	axes.set_ylabel("\epsilon / n_{H}^2")
+	#plt.savefig(outputfile)
+	return
+
+def plot_Cloudy_loop(inputfileS,outputfile,xlen,ylen):
+	fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
+	fig.set_size_inches(11,4.5)
+	fig.subplots_adjust(hspace=0.1,wspace=0.1)
+	i = 0
+	count = 0
+	while i < xlen:
+		#j = 0
+		#while j < ylen:
+			#plot_Cloudy_output(inputfileS[count],ax[i,j])
+			#j = j + 1
+			#count = count + 1
+		plot_Cloudy_output(inputfileS[i],ax[i])
+		i = i + 1
+	ax[0].text(7,-22.5,'n = 1')
+	ax[1].text(7,-22.5,'n = -3')
+	ax[2].text(7,-22.5,'n = -6')
+	ax[xlen-1].legend(loc="lower right")
 	plt.savefig(outputfile)
+	return 
 
 #make comparison for the cloudy runs I DO have of the scaled values and the actual Cloudy values to see how they compare
 #NOTE: I'm scaling simply by the metallicity and not by a assumed abundance based off of that metallicity
+def plot_Cloudy_scaling_compare(originalfile1,newmetalfile2,scaleTo,outputfile):
+	fig,ax = plt.subplots(1,3)
+	fig.set_size_inches(10,5)
+	fig.subplots_adjust(wspace=0.3)
+	plot_Cloudy_output(newmetalfile2,ax[0])
+	plot_Cloudy_output(originalfile1,ax[1],scale=True,scale_value=0)
+	
+	data1 = readin_Cloudy_data(originalfile1)
+	data2 = readin_Cloudy_data(newmetalfile2)
+	
+	labels = ['Temperature','Lya','Ha','CIV','OVI']
+        i = 1
+        while (i < 5):
+		data1[:,i] = np.log10(scale_by_metallicity(10.**data1[:,i],-0.3,0))
+                ax[2].plot(data1[:,0],10.**(data1[:,i]-data2[:,i]),label=labels[i],linewidth=3)
+                i = i + 1
+        ax[0].legend(loc="upper right")
+        ax[2].set_xlabel(r"log(Temperature)")
+        ax[2].set_ylabel("Scaled / Cloudy")
+	ax[0].set_title("Z = -0.3")
+	ax[1].set_title("Z = 0")
+	#ax[2].set_autoscale_on(False)
+        #ax[2].set_aspect('equal')
+
+
+	plt.savefig(outputfile)
+	return data1, data2
+
+
 
 
 
