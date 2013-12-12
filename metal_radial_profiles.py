@@ -8,7 +8,7 @@ import matplotlib
 import pylab
 
 #patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frb"
-patt = "/u/10/l/lnc2115/vega/repos/CGMemission/frb"
+patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frb"
 pattend = "_5kpc_CIV_Scaled_ncut.cpkl"
 
 rpCIVr,rpCIVmean,rpCIVmedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.28e-11)
@@ -23,8 +23,13 @@ rpOVIr,rpOVImean,rpOVImedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend
 plt.plot(rpOVIr,np.log10(rpOVImean),'b-',linewidth=1.2,label='OVI Mean')
 plt.plot(rpOVIr,np.log10(rpOVImedian),'b--',linewidth=1.2,label='OVI Median')
 
+pattend = "_5kpc_CIII_977_Scaled_ncut.cpkl"
 
-patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frb"
+rpCIVr,rpCIVmean,rpCIVmedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.28e-11)
+
+plt.plot(rpCIVr,np.log10(rpCIVmean),'g-',linewidth=1.2,label='CIII 977 Mean')
+plt.plot(rpCIVr,np.log10(rpCIVmedian),'g--',linewidth=1.2,label='CIII 977 Median')
+
 pattend = "_5kpc_HaR.cpkl"
 
 rpHar,rpHamean,rpHamedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,3.028e-12)
