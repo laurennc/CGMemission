@@ -23,7 +23,8 @@ def scale_by_metallicity(values,assumed_Z,wanted_Z):
 	return values*wanted_ratio
 
 
-def plot_scatter_percentile(data,x,y,percentile):
+def plot_scatter_percentile(data,x,y,percentile,symbol,change_units=False,energy=1.):
+	#data is the frb array data
 	x,y = np.meshgrid(x,y)
 	working_mask = np.ones(data.shape,bool)
 	r = abs(x+1j*y)
@@ -31,6 +32,9 @@ def plot_scatter_percentile(data,x,y,percentile):
         dr = np.abs([x[0,0] - x[0,1]]) #* annulus_width
         radial = np.arange(rmax/dr)*dr + dr/2.
         nrad = len(radial)	
+
+	if (change_units):
+		data = data*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
 
 	for irad in range(nrad):
 		minrad = irad*dr
@@ -44,7 +48,7 @@ def plot_scatter_percentile(data,x,y,percentile):
 		wanted = idSort[0:lenperc]
 		if len(wanted) == 0:
 			wanted = np.where(datahere == datahere.max())
-		plt.plot(rhere[wanted],np.log10(datahere[wanted]),'go',markersize=3.5)#,markersize=0.75)				
+		plt.plot(rhere[wanted],np.log10(datahere[wanted]),symbol,markersize=3.5)#,markersize=0.75)				
 
 def make_Cloudy_table(table_index):
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
@@ -59,7 +63,7 @@ def make_Cloudy_table(table_index):
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
 
-def radial_algo():
+def make_SB_profile(filex,filey,filez,energy):
 	xL = np.arange(-20,20)*10.0
 	xL, yL = np.meshgrid(xL,xL)
 	r = abs(xL+1j*yL)
