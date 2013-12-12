@@ -55,10 +55,11 @@ def make_Cloudy_table(table_index):
 	T=numpy.linspace(T_min,T_max, T_n_bins)
 	table = np.zeros((hden_n_bins,T_n_bins))
 	for i in range(hden_n_bins):
+		print i
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
 
-
+def radial_algo():
 	xL = np.arange(-20,20)*10.0
 	xL, yL = np.meshgrid(xL,xL)
 	r = abs(xL+1j*yL)
