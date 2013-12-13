@@ -95,7 +95,10 @@ def triangle_from_frb(files,energies,labels,outputfile):
 	datain[:,0] = np.log10(frb.flatten())
 	i = 1
 	while i < len(files):
-		frb = scale_by_energy(files[i],energies[i])
+		#Right now, I made CIII projections properly so they don't need to be scaled....
+		if i < 3:
+			frb = scale_by_energy(files[i],energies[i])
+		frb = cPickle.load(open(files[i],'rb'))
 		datain[:,i] = frb.flatten()
 		idx = np.where(frb.flatten() == 0.0)
 		if len(idx[0]) > 0:

@@ -8,14 +8,14 @@ def readin_Cloudy_data(inputfile):
 	cldata = np.genfromtxt(inputfile,skip_header=13,dtype=[('Temperature',float),('Lya',float),('Ha',float),('C4a',float),('C4b',float),('O6a',float),('O6b',float),('C3a',float),('C3b',float),('C3c',float)])
         cldata = cldata.view(np.recarray)
 
-        data = np.zeros((len(cldata['Temperature']),5))
+        data = np.zeros((len(cldata['Temperature']),7))
         data[:,0] = cldata['Temperature']
         data[:,1] = cldata['Lya']
         data[:,2] = cldata['Ha']
         data[:,3] = np.log10(10.**(cldata['C4a'])+10.**(cldata['C4b']))
         data[:,4] = np.log10(10.**(cldata['O6a'])+10.**(cldata['O6b']))
 	data[:,5] = cldata['C3a']
-	data[:,6] = np.log10(10.**(cldata['C3b'])+10.**(data['C3c']))
+	data[:,6] = np.log10(10.**(cldata['C3b'])+10.**(cldata['C3c']))
 	return data
 
 def plot_Cloudy_output(inputfile,axes,scale=False,scale_value=-0.3):#outputfile):
@@ -23,7 +23,7 @@ def plot_Cloudy_output(inputfile,axes,scale=False,scale_value=-0.3):#outputfile)
 
 	labels = ['Temperature','Lya','Ha','CIV','OVI','CIII 977','CIII']
 	i = 1
-	while (i < 5):
+	while (i < 7):
 		if scale==True:
 			#print 'in scale loop'
 			#print scale_value
@@ -52,7 +52,7 @@ def plot_Cloudy_loop(inputfileS,outputfile,xlen,ylen):
 			#plot_Cloudy_output(inputfileS[count],ax[i,j])
 			#j = j + 1
 			#count = count + 1
-		plot_Cloudy_output(inputfileS[i],ax[i])
+		plot_Cloudy_output(inputfileS[i],ax[i],scale_value=0.0)
 		i = i + 1
 	ax[0].text(7,-22.5,'n = 1')
 	ax[1].text(7,-22.5,'n = -3')
@@ -94,9 +94,9 @@ def plot_Cloudy_scaling_compare(originalfile1,newmetalfile2,scaleTo,outputfile):
 
 def compare_projected_cell_emission(outputfile):
 	patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frbx"
-	files = [patt+"_5kpc_HaR.cpkl",patt+"_5kpc_CIV_Scaled_ncut.cpkl",patt+"_5kpc_OVI_Scaled_ncut.cpkl"]
+	files = [patt+"_5kpc_HaR.cpkl",patt+"_5kpc_CIV_Scaled_ncut.cpkl",patt+"_5kpc_OVI_Scaled_ncut.cpkl",patt+"_5kpc_CIII_977_Scaled_ncut.cpkl"]
 	energies = [3.028e-12,1.28e-11,1.92e-11]
-	labels = ["Ha","CIV","OVI"]
+	labels = ["Ha","CIV","OVI","CIII 977"]
 
 	triangle_from_frb(files,energies,labels,outputfile)
 	return

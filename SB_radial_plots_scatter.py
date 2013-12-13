@@ -52,6 +52,16 @@ plt.plot(rpOVIr,np.log10(rpOVImean),'r-',linewidth=1.2,label='OVI')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'ro',change_units=True,energy=1.92e-11)
 
 
+
+pattend = "_5kpc_CIII_977_Scaled_ncut.cpkl"
+#don't want to scale because already correct. So!
+energy_noscale = ( 5.7e-18)/(4.*np.pi*1.87e-12)
+rpCIII977r,rpCIII977mean,rpCIII977median = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,energy_noscale)
+
+plt.plot(rpCIII977r,np.log10(rpCIII977mean),'g-',linewidth=1.2,label='CIII 977')
+plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'go',change_units=False)
+
+
 #THIS was when I was plottini all the points and comparing top ten percent
 #rflat = r.flatten()
 #rHalpha = frbx.flatten()
