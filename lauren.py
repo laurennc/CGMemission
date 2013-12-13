@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from radial_data_lauren import *
+import triangle
 
 def ergs_sr_TO_raleighs(data_arr):
 	return data_arr*3.304e11/79577.4715459
@@ -22,6 +23,9 @@ def scale_by_metallicity(values,assumed_Z,wanted_Z):
 	wanted_ratio = (10.**(wanted_Z))/(10.**(assumed_Z))
 	return values*wanted_ratio
 
+def scale_by_energy(frbfile,energy):
+	data = cPickle.load(open(frbfile,'rb'))
+        return data*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
 
 def plot_scatter_percentile(data,x,y,percentile,symbol,change_units=False,energy=1.):
 	#data is the frb array data
@@ -84,4 +88,22 @@ def make_SB_profile(filex,filey,filez,energy):
 	rp_median  = (rp_Ralx.median + rp_Raly.median + rp_Ralz.median)/3.0
 
 	return rp_Ralx.r, rp_mean, rp_median
+
+def triangle_from_frb(files,energies,labels,outputfile):
+	frb = scale_by_energy(files[0],energies[0])
+	datain = np.zeros((len(frb.flatten()),len(files)))
+	datain[:,0] = np.log10(frb.flatten())
+	i = 1
+	while i < len(files):
+		frb = scale_by_energy(files[i],energies[i])
+		datain[:,i] = frb.flatten()
+		idx = np.where(frb.flatten() == 0.0)
+		if len(idx[0]) > 0:
+			datain[idx,i] = 999999999999
+		datain[:,i] = np.log10(datain[:,i])
+		i = i + 1
+	triangle.corner(datain,labels=labels,range=(-1,6)).savefig(outputfile)
+	return 
+
+
 
