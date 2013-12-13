@@ -92,6 +92,13 @@ def plot_Cloudy_scaling_compare(originalfile1,newmetalfile2,scaleTo,outputfile):
 	return data1, data2
 
 
+def compare_projected_cell_emission(outputfile):
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frbx"
+	files = [patt+"_5kpc_HaR.cpkl",patt+"_5kpc_CIV_Scaled_ncut.cpkl",patt+"_5kpc_OVI_Scaled_ncut.cpkl"]
+	energies = [3.028e-12,1.28e-11,1.92e-11]
+	labels = ["Ha","CIV","OVI"]
 
+	triangle_from_frb(files,energies,labels,outputfile)
+	return
 
 
