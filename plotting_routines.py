@@ -98,7 +98,22 @@ def compare_projected_cell_emission(outputfile):
 	energies = [3.028e-12,1.28e-11,1.92e-11]
 	labels = ["Ha","CIV","OVI","CIII 977"]
 
-	triangle_from_frb(files,energies,labels,outputfile)
-	return
+	datain=triangle_from_frb(files,energies,labels,outputfile)
+	return datain
+
+def visualize_frb(inputfile,title,outputfile,energy=1.0,scale=False):
+	if scale==True:
+		frb = scale_by_energy(inputfile,energy)
+	else:
+		frb = cPickle.load(open(inputfile,'rb'))
+
+	plt.imshow(np.log10(frb))
+	plt.title(title)
+	plt.colorbar()
+	plt.savefig(outputfile)
+	plt.close()
+	#return
+
+	return frb
 
 
