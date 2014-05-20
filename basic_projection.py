@@ -15,17 +15,24 @@ data_source = pf.h.sphere(pos,rad)
 #field = ['Emission_CIV','Emission_OVI']#,'HAlpha_Emissivity_R']
 #field = ['Emission_CIV','Emission_CIV_Scaled','Emission_CIV_Scaled_ncut']
 #field = ['Emission_OVI','Emission_OVI_Scaled','Emission_OVI_Scaled_ncut']
-field = ['Temperature','Metallicity','SolarMetals']
+#field = ['Emission_CIII','Emission_CIII_Scaled','Emission_CIII_Scaled_ncut']
+#field = ['Emission_CIII_977','Emission_CIII_977_Scaled','Emission_CIII_977_Scaled_ncut']
+#field = ['Temperature','Metallicity','SolarMetals']
+#field = ['HAlpha_Emissivity_Lauren','Emission_CIII_977_Scaled','Emission_CIV_Scaled','Emission_OVI_Scaled']
+field = ['CIII_Density','CIV_Density','OVI_Density','MgII_Density','SiII_Density','SiIII_Density','SiIV_Density']
 
 font = {'weight':'bold','size':22,'family':'sans-serif'}
 matplotlib.rc('font',**font)
 
 #pp = ProjectionPlot(pf,'y',field,center=pos,width=(108.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)
-pp = ProjectionPlot(pf,'x',field,center=pos,width=(108.,'kpc'),weight_field="H_NumberDensity",axes_unit=['kpc','kpc'],fontsize=22.)#,fontweight='bold')
+pp = ProjectionPlot(pf,'x',field,center=pos,width=(108.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)#,fontweight='bold')
+#pp = ProjectionPlot(pf,'x',field,center=pos,width=(108.,'kpc'),weight_field="H_NumberDensity",axes_unit=['kpc','kpc'],fontsize=22.)#,fontweight='bold')
 pp.set_font(font)
 pp.set_cmap('all','spectral')
 #pp.set_zlim('all',10**-5.0,10**2.0)
 #pp.set_zlim('all',10**14.0,10**23.5)
+pp.set_zlim('all',10**12.0,10**20.0)
+#pp.set_zlim('all',1.,10**7)
 #pp.plots['SolarMetals'].cb.set_ticks([0.1,0.3,0.5,0.7,1.0])
 #pp.plots['SolarMetals'].cb.set_ticklabels([0.1,0.3,0.5,0.7,1.0])
 pp.save()
