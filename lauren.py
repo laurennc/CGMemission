@@ -12,7 +12,8 @@ def distance_from_center(x,y,z,center):
         return ((x-center[0])**2.0+(y-center[1])**2.0+(z-center[2])**2.0)**0.5
 
 def load_Ryan_data():
-	fn="/hpc/astrostats/astro/users/lnc2115/Ryan/r0058_l10/redshift0058"
+	#fn="/hpc/astrostats/astro/users/lnc2115/Ryan/r0058_l10/redshift0058"
+	fn = "/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
 	pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 	pos = [0.40328598,0.47176743,0.46131516]
 	rad = 108.0/pf['kpc']
@@ -63,9 +64,21 @@ def make_Cloudy_table(table_index):
 	T=numpy.linspace(T_min,T_max, T_n_bins)
 	table = np.zeros((hden_n_bins,T_n_bins))
 	for i in range(hden_n_bins):
-		print i
+		#print i
 		table[i,:]=[float(l.split()[table_index]) for l in open(patt%(i+1)) if l[0] != "#"]
 	return hden,T,table
+
+def make_ion_table(ion,number):
+	hden_n_bins,hden_min,hden_max = 15, -6, 1
+	T_n_bins, T_min, T_max = 51, 3, 8
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb_ion/euvb_ion_run%i_"+ion+".dat"
+	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
+        T=numpy.linspace(T_min,T_max, T_n_bins)
+        table = np.zeros((hden_n_bins,T_n_bins))
+        for i in range(hden_n_bins):
+                table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
+        return hden,T,table
+ 
 
 def make_SB_profile(filex,filey,filez,energy):
 	xL = np.arange(-20,20)*10.0
@@ -98,15 +111,16 @@ def triangle_from_frb(files,energies,labels,outputfile):
 		#Right now, I made CIII projections properly so they don't need to be scaled....
 		if i < 3:
 			frb = scale_by_energy(files[i],energies[i])
-		frb = cPickle.load(open(files[i],'rb'))
-		datain[:,i] = frb.flatten()
+		else:
+			frb = cPickle.load(open(files[i],'rb'))
 		idx = np.where(frb.flatten() == 0.0)
+		datain[:,i] = np.log10(frb.flatten())
 		if len(idx[0]) > 0:
-			datain[idx,i] = 999999999999
-		datain[:,i] = np.log10(datain[:,i])
+			datain[idx,i] = 12.0
 		i = i + 1
-	triangle.corner(datain,labels=labels,range=(-1,6)).savefig(outputfile)
-	return 
+	#print datain
 
-
+	#triangle.corner(datain,labels=labels,range=(-1,6)).savefig(outputfile)
+	triangle.corner(datain,labels=labels).savefig(outputfile)
+	return datain
 
