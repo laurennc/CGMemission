@@ -80,7 +80,7 @@ def make_ion_table(ion,number):
         return hden,T,table
  
 
-def make_SB_profile(filex,filey,filez,energy):
+def make_SB_profile_OLD(filex,filey,filez,energy):
 	xL = np.arange(-20,20)*10.0
 	xL, yL = np.meshgrid(xL,xL)
 	r = abs(xL+1j*yL)

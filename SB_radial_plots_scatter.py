@@ -32,21 +32,21 @@ xL2 = np.arange(-20,20)*10.0
 patt = "/u/10/l/lnc2115/vega/data/Ryan/frbs/frb"
 
 pattend = "_5kpc_HaR.cpkl"
-rpHar,rpHamean,rpHamedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,3.028e-12)
+rpHar,rpHamean,rpHamedian = make_SB_profile_OLD(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,3.028e-12)
 
 plt.plot(rpHar,np.log10(rpHamean),'k-',linewidth=1.2,label='Ha')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'ko',change_units=True,energy=3.028e-12)
 
 
 pattend = "_5kpc_CIV_Scaled_ncut.cpkl"
-rpCIVr,rpCIVmean,rpCIVmedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.28e-11)
+rpCIVr,rpCIVmean,rpCIVmedian = make_SB_profile_OLD(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.28e-11)
 
 plt.plot(rpCIVr,np.log10(rpCIVmean),'b-',linewidth=1.2,label='CIV')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'bo',change_units=True,energy=1.28e-11)
 
 
 pattend = "_5kpc_OVI_Scaled_ncut.cpkl"
-rpOVIr,rpOVImean,rpOVImedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.92e-11)
+rpOVIr,rpOVImean,rpOVImedian = make_SB_profile_OLD(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,1.92e-11)
 
 plt.plot(rpOVIr,np.log10(rpOVImean),'r-',linewidth=1.2,label='OVI')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'ro',change_units=True,energy=1.92e-11)
@@ -56,7 +56,7 @@ plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'r
 pattend = "_5kpc_CIII_977_Scaled_ncut.cpkl"
 #don't want to scale because already correct. So!
 energy_noscale = ( 5.7e-18)/(4.*np.pi*1.87e-12)
-rpCIII977r,rpCIII977mean,rpCIII977median = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,energy_noscale)
+rpCIII977r,rpCIII977mean,rpCIII977median = make_SB_profile_OLD(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,energy_noscale)
 
 plt.plot(rpCIII977r,np.log10(rpCIII977mean),'g-',linewidth=1.2,label='CIII 977')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'go',change_units=False)
@@ -65,7 +65,7 @@ plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'g
 pattend = "_5kpc_CIII_Scaled_ncut.cpkl"
 #don't want to scale because already correct. So!
 energy_noscale = ( 5.7e-18)/(4.*np.pi*1.87e-12)
-rpCIIIr,rpCIIImean,rpCIIImedian = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,energy_noscale)
+rpCIIIr,rpCIIImean,rpCIIImedian = make_SB_profile_OLD(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend,energy_noscale)
 
 plt.plot(rpCIIIr,np.log10(rpCIIImean),'m-',linewidth=1.2,label='CIII')
 plot_scatter_percentile(cPickle.load(open(patt+"x"+pattend,'rb')),xL2,xL2,0.1,'mo',change_units=False)
