@@ -59,7 +59,9 @@ def make_Cloudy_table(table_index):
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
 	T_n_bins, T_min, T_max = 51, 3, 8
 #	patt = "/hpc/astrostats/astro/users/lnc2115/codes/cloudy_yt/all_lines/all_emissivity_run%i.dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/all_lines/all_emissivity_run%i.dat"
+	#att = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/all_lines/all_emissivity_run%i.dat"
+#	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
 	table = np.zeros((hden_n_bins,T_n_bins))
@@ -79,6 +81,29 @@ def make_ion_table(ion,number):
                 table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
         return hden,T,table
  
+def make_SB_profile(filex,filey,filez):
+        #xL = np.arange(-20,20)*10.0
+        #xL = np.arange(-200,200,0.5)
+	xL = np.arange(-100,100,0.25)
+	xL, yL = np.meshgrid(xL,xL)
+        r = abs(xL+1j*yL)
+
+        frbx = cPickle.load(open(filex,'rb'))
+        frby = cPickle.load(open(filey,'rb'))
+        frbz = cPickle.load(open(filez,'rb'))
+
+        rp_x = radial_data(frbx,x=xL,y=yL)
+        rp_y = radial_data(frby,x=xL,y=yL)
+        rp_z = radial_data(frbz,x=xL,y=yL)
+
+        rp_mean = (rp_x.mean + rp_y.mean + rp_z.mean)/3.0
+        rp_median  = (rp_x.median + rp_y.median + rp_z.median)/3.0
+	rp_max = map(max,rp_x.max,rp_y.max,rp_z.max)
+	rp_min = map(min,rp_x.min,rp_y.min,rp_z.min)
+
+        return rp_x.r, rp_mean, rp_median, rp_max, rp_min
+
+
 
 def make_SB_profile_OLD(filex,filey,filez,energy):
 	xL = np.arange(-20,20)*10.0
