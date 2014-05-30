@@ -57,7 +57,8 @@ def plot_Cloudy_loop(inputfileS,outputfile,xlen,ylen):
 	ax[0].text(7,-22.5,'n = 1')
 	ax[1].text(7,-22.5,'n = -3')
 	ax[2].text(7,-22.5,'n = -6')
-	ax[xlen-1].legend(loc="lower right")
+	#ax[xlen-1].legend(loc="lower right")
+	ax[0].legend(loc="lower right")
 	plt.savefig(outputfile)
 	return 
 
@@ -116,4 +117,20 @@ def visualize_frb(inputfile,title,outputfile,energy=1.0,scale=False):
 
 	return frb
 
+def plot_Werk_ColDens(ax,data,ion,xkey):
+	#for a given ion, plot the column density as a function of xkey
+	idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1))[0]
+	logNA = data['logNA'][idx]
+	x = data[xkey][idx]
+	l_logNA = data['l_logNA'][idx]
+	e_logNA = data['e_logNA'][idx]	
 
+	upper = np.where(l_logNA == 'u')[0]
+	lower = np.where(l_logNA == 'l')[0]
+	norm  = np.where(l_logNA == 'n')[0]
+
+	ax.errorbar(x[upper],logNA[upper],yerr=0.05,uplims=True,fmt='.',color='m')
+	ax.errorbar(x[lower],logNA[lower],yerr=0.05,lolims=True,fmt='.',color='m')
+	ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='.',color='m')
+	
+	return
