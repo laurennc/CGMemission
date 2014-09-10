@@ -19,8 +19,8 @@ def make_plots():
 	font = {'weight' : 'bold','size' : 18}
 	matplotlib.rc('font',**font)
 
-#	patt = "/u/10/l/lnc2115/vega/repos/CGMemission/euvb_frbs/coldens/frb"
-	patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/factor10/frb"
+	#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/euvb_frbs/coldens/control/frb"
+	patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g10q1/frb"
 	pattends = ["_1kpc_z02_CIIIdens.cpkl","_1kpc_z02_CIVdens.cpkl","_1kpc_z02_OVIdens.cpkl","_1kpc_z02_MgIIdens.cpkl","_1kpc_z02_SiIIdens.cpkl","_1kpc_z02_SiIIIdens.cpkl","_1kpc_z02_SiIVdens.cpkl","_1kpc_z02_HIdens.cpkl"]	
 
 	iax = 331
@@ -66,9 +66,9 @@ def make_plots():
 		#ax1.set_xlim(0,160)
 		#ax1.set_xscale('log')
 		iax = iax + 1
-		
+	print key		
 	plt.gcf().subplots_adjust(bottom=0.15)
-	plt.savefig('bertColDens_factor10_limits.png')
+	plt.savefig('g10q1_limits.png')
 	plt.close()
 
 
