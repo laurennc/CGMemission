@@ -1,6 +1,7 @@
-from lauren import *
+#from lauren import *
+import matplotlib.pyplot as plt
+import numpy as np
 
-#what types of plots do I want to make.....
 
 #recreate Bertone 2010 Figure 1 where I'm plotting cloudy results for different densities
 
@@ -117,9 +118,9 @@ def visualize_frb(inputfile,title,outputfile,energy=1.0,scale=False):
 
 	return frb
 
-def plot_Werk_ColDens(ax,data,ion,xkey):
+def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	#for a given ion, plot the column density as a function of xkey
-	idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1))[0]
+	idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1) & (data[xkey] <= xmax))[0]
 	logNA = data['logNA'][idx]
 	x = data[xkey][idx]
 	l_logNA = data['l_logNA'][idx]
@@ -129,8 +130,95 @@ def plot_Werk_ColDens(ax,data,ion,xkey):
 	lower = np.where(l_logNA == 'l')[0]
 	norm  = np.where(l_logNA == 'n')[0]
 
-	ax.errorbar(x[upper],logNA[upper],yerr=0.05,uplims=True,fmt='.',color='m')
-	ax.errorbar(x[lower],logNA[lower],yerr=0.05,lolims=True,fmt='.',color='m')
-	ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='.',color='m')
-	
+	ax.errorbar(x[upper],logNA[upper],yerr=0.5,uplims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
+	ax.errorbar(x[lower],logNA[lower],yerr=0.5,lolims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
+	ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='o',color='DarkOrange',ecolor='m')
 	return
+
+def plot_ion_fractions(inputfile,ax,txtDens):
+	#inputfile = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/control/bertone/euvb_ion_run10_O.dat"
+	#print inputfile
+	data = np.genfromtxt(inputfile,skip_header=12)	
+	x = data[:,0]
+	i = 1
+	while (i < len(data[0,:])):
+		ax.plot(x,data[:,i],linewidth=1.5,label=str(i))
+		i = i + 1
+	ax.set_ylim(-10,1)
+	#ax.text(7,-2,txtDens)
+	return
+
+
+def plot_ion_loop(inputPatts,outputfile,ion,xlen,ylen,special=False):
+        fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
+        if ylen > 1:
+		fig.set_size_inches(13.5,16)
+	else:
+		fig.set_size_inches(12,4)
+        fig.subplots_adjust(hspace=0.1,wspace=0.1)
+	labels = ['Factor=0.001','Factor=0.1','Factor=1','Factor=10','Factor=1000']
+	j = 0
+	while j < ylen:
+		pattnow = inputPatts[j]
+		inputfiles = [pattnow+'15_'+ion+'.dat',pattnow+'7_'+ion+'.dat',pattnow+'1_'+ion+'.dat']	
+		if special == True:
+			if j > 0:
+				inputfiles = [pattnow+'3_'+ion+'.dat',pattnow+'2_'+ion+'.dat',pattnow+'1_'+ion+'.dat']
+			#labels=["HM05","HM96","CoronalWith"]
+			labels = ["All","Gals","Quasar"]
+			ax[0].set_ylabel(labels[0])
+			ax[1].set_ylabel(labels[1])
+			ax[2].set_ylabel(labels[2])
+
+		densLabels=['n=1','n=-3','n=-6']
+		i = 0
+		while i < xlen:
+			if ylen > 1:
+                		plot_ion_fractions(inputfiles[i],ax[j,i],densLabels[i])
+                		if xlen == 0:
+					ax[j,i].set_ylabel(labels[j])
+			else:
+				plot_ion_fractions(inputfiles[i],ax[i],densLabels[i])          
+				if xlen == 0:
+					ax[i].set_ylabel(labels[j])
+			i = i + 1
+		j = j + 1
+        if ylen > 1:
+		ax[0,0].set_title(densLabels[0],fontsize=18)
+		ax[0,1].set_title(densLabels[1],fontsize=18)
+		ax[0,2].set_title(densLabels[2],fontsize=18)
+		plt.suptitle('Ion Fractions of '+ion,fontsize=22.)
+		ax[0,2].legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+	else:
+		plt.suptitle('Ion Fractions of '+ion,fontsize=22.)
+		ax[2].legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+	plt.savefig(outputfile)
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
