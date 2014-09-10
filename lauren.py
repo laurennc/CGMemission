@@ -1,5 +1,7 @@
-from yt.mods import *
+#from yt.mods import *
 import numpy as np
+import numpy
+import cPickle
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from radial_data_lauren import *
@@ -28,24 +30,25 @@ def scale_by_energy(frbfile,energy):
 	data = cPickle.load(open(frbfile,'rb'))
         return data*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
 
-def plot_scatter_percentile(data,x,y,percentile,symbol,change_units=False,energy=1.):
+def plot_scatter_percentile(ax1,data,x,y,percentile,symbol,maxr=500.):
 	#data is the frb array data
 	x,y = np.meshgrid(x,y)
 	working_mask = np.ones(data.shape,bool)
 	r = abs(x+1j*y)
 	rmax = r[working_mask].max()
         dr = np.abs([x[0,0] - x[0,1]]) #* annulus_width
-        radial = np.arange(rmax/dr)*dr + dr/2.
+        radial = np.arange(maxr/dr)*dr + dr/2.
         nrad = len(radial)	
-
-	if (change_units):
-		data = data*(5.7e-18)*(1./1.87e-12)/(4.*np.pi*energy)
+	#mslope = (0.001-0.007)/nrad
+	mslope = (0.0075-0.07)/nrad
 
 	for irad in range(nrad):
 		minrad = irad*dr
 		maxrad = minrad + dr
 		thisindex = (r>=minrad) * (r<maxrad) * working_mask
-		rhere = r[thisindex].flatten()
+		alphahere = mslope*irad + 0.07
+		ax1.plot(r[thisindex],np.log10(data[thisindex]),symbol,alpha=alphahere)
+ 		rhere = r[thisindex].flatten()
 		datahere = data[thisindex].flatten()
 		meanhere = data[thisindex].mean()
 		lenperc = int(len(datahere)*percentile)
@@ -53,12 +56,20 @@ def plot_scatter_percentile(data,x,y,percentile,symbol,change_units=False,energy
 		wanted = idSort[0:lenperc]
 		if len(wanted) == 0:
 			wanted = np.where(datahere == datahere.max())
-		plt.plot(rhere[wanted],np.log10(datahere[wanted]),symbol,markersize=3.5)#,markersize=0.75)				
+		ax1. plot(rhere[wanted],np.log10(datahere[wanted]),'g.',alpha=0.2)
+		#ax1.plot(rhere[wanted],np.log10(datahere[wanted]),symbol,markersize=3.5)#,markersize=0.75)				
 
 def make_Cloudy_table(table_index):
+	#hden_n_bins, hden_min, hden_max = 35, -6, 1
+	#T_n_bins, T_min, T_max = 151, 3, 8
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
+	#hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone_factor1/bertone1_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/g01q01/g01q01_run%i.dat"
+
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
 	table = np.zeros((hden_n_bins,T_n_bins))
@@ -68,9 +79,12 @@ def make_Cloudy_table(table_index):
 	return hden,T,table
 
 def make_ion_table(ion,number):
-	hden_n_bins,hden_min,hden_max = 15, -6, 1
+	#hden_n_bins,hden_min,hden_max = 15, -6, 1
+	hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb_ion/bertone/euvb_ion_run%i_"+ion+".dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/control/euvb/euvb_ion_run%i_"+ion+".dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/euvbIon_factor1000/euvb_ion_run%i_"+ion+".dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q1/bert_ion_run%i_"+ion+".dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
         T=numpy.linspace(T_min,T_max, T_n_bins)
         table = np.zeros((hden_n_bins,T_n_bins))
@@ -81,13 +95,17 @@ def make_ion_table(ion,number):
 def make_SB_profile(filex,filey,filez):
         #xL = np.arange(-20,20)*10.0
         #xL = np.arange(-200,200,0.5)
-	xL = np.arange(-100,100,0.25)
+	#xL = np.arange(-100,100,0.25)
+	xL = np.linspace(-160,160,320)#[0:320]
 	xL, yL = np.meshgrid(xL,xL)
         r = abs(xL+1j*yL)
 
+#	print filex
         frbx = cPickle.load(open(filex,'rb'))
-        frby = cPickle.load(open(filey,'rb'))
-        frbz = cPickle.load(open(filez,'rb'))
+ #       print filey
+	frby = cPickle.load(open(filey,'rb'))
+  #      print filez
+	frbz = cPickle.load(open(filez,'rb'))
 
         rp_x = radial_data(frbx,x=xL,y=yL)
         rp_y = radial_data(frby,x=xL,y=yL)
@@ -145,4 +163,16 @@ def triangle_from_frb(files,energies,labels,outputfile):
 	#triangle.corner(datain,labels=labels,range=(-1,6)).savefig(outputfile)
 	triangle.corner(datain,labels=labels).savefig(outputfile)
 	return datain
+
+def emission_interpolation(field_idx,H_N,Temperature):
+	from scipy import interpolate
+	hden,temp,table = make_Cloudy_table(field_idx)
+	hden,temp = np.meshgrid(hden,temp)
+	pts = np.array((hden.ravel(),temp.ravel())).T
+	sr = table.T.ravel()
+	bl = interpolate.LinearNDInterpolator(pts,sr)
+	dia = bl(H_N,Temperature)
+	idx = np.isnan(dia)
+	dia[idx] = -200.0
+	return dia
 
