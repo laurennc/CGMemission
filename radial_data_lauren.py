@@ -29,6 +29,8 @@ def radial_data(data,annulus_width=1,working_mask=None,x=None,y=None,rmax=None):
           .max    - maximum value in the annulus
           .min    - minimum value in the annulus
           .numel  - number of elements in the annulus
+	  .q25    - 25th quartile for the annulus
+	  .q75    - 75th quartile for the annulus
     """
     
 # 2010-03-10 19:22 IJC: Ported to python from Matlab
@@ -43,6 +45,8 @@ def radial_data(data,annulus_width=1,working_mask=None,x=None,y=None,rmax=None):
         """Empty object container.
         """
         def __init__(self): 
+	    self.q75 = None
+	    self.q25 = None
             self.mean = None
             self.std = None
             self.median = None
@@ -78,6 +82,8 @@ def radial_data(data,annulus_width=1,working_mask=None,x=None,y=None,rmax=None):
     radial = ny.arange(rmax/dr)*dr + dr/2.
     nrad = len(radial)
     radialdata = radialDat()
+    radialdata.q25 = ny.zeros(nrad)
+    radialdata.q75 = ny.zeros(nrad)
     radialdata.mean = ny.zeros(nrad)
     radialdata.std = ny.zeros(nrad)
     radialdata.median = ny.zeros(nrad)
@@ -96,6 +102,8 @@ def radial_data(data,annulus_width=1,working_mask=None,x=None,y=None,rmax=None):
       maxrad = minrad + dr
       thisindex = (r>=minrad) * (r<maxrad) * working_mask
       if not thisindex.ravel().any():
+	radialdata.q25[irad] = ny.nan
+	radialdata.q75[irad] = ny.nan
         radialdata.mean[irad] = ny.nan
         radialdata.std[irad]  = ny.nan
         radialdata.median[irad] = ny.nan
@@ -104,6 +112,8 @@ def radial_data(data,annulus_width=1,working_mask=None,x=None,y=None,rmax=None):
         radialdata.min[irad] = ny.nan
 	radialdata.fractionAbove[irad] = ny.nan
       else:
+	radialdata.q25[irad] = ny.percentile(data[thisindex],25)
+	radialdata.q75[irad] = ny.percentile(data[thisindex],75)
         radialdata.mean[irad] = data[thisindex].mean()
         radialdata.std[irad]  = data[thisindex].std()
         radialdata.median[irad] = ny.median(data[thisindex])
