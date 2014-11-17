@@ -21,7 +21,7 @@ class Line:
 		data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
 		#Choosing the data that I want for this ion, within the radius range David and I decided upon
 		#logNA > 0.1 ---- double check what this is ---- right now copying from other code
-		idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0]
+		idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30) & (data['l_logNA']=='n'))[0]
 		
 		#Keep the data that I want for this line
 		self.coldens = data['logNA'][idx]

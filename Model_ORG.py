@@ -21,7 +21,7 @@ class Model:
 		self.model_width = model_width
 		self.ions = ions
 		for ion in ions:
-			model_name = model_beg+'y'+model_mid+ion+'dens.cpkl'
+			model_name = model_beg+'z'+model_mid+ion+'dens.cpkl'
 			#print ion,model_name
 			line = Line(ion,model_name,l,u,model_width)#,k)
 			line.total_probability()

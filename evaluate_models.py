@@ -17,7 +17,7 @@ from Model_ORG import *
 qs = [0.01,1,10.]
 gs = [0.01,1,10.]
 l,u,k = 0.,20.,8.
-model_width = 0.5
+model_width = 0.0#0.5
 models = []
 
 model_mid = '_1kpc_z02_'
@@ -31,12 +31,26 @@ patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas
 models = np.append(models,Model(ions,patt,model_mid,0.01,1.,l,u,model_width))#k))
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g01q10/frb"
 models = np.append(models,Model(ions,patt,model_mid,0.01,10.,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g01q0.05/frb"
+#models = np.append(models,Model(ions,patt,model_mid,0.01,0.05,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g01q0.5/frb"
+#models = np.append(models,Model(ions,patt,model_mid,0.01,0.5,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g01q2/frb"
+#models = np.append(models,Model(ions,patt,model_mid,0.01,2.0,l,u,model_width))#k))
+
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q01/frb"
 models = np.append(models,Model(ions,patt,model_mid,1.,0.01,l,u,model_width))#k))
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q1/frb"
 models = np.append(models,Model(ions,patt,model_mid,1.,1.,l,u,model_width))#k))
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q10/frb"
-models = np.append(models,Model(ions,patt,model_mid,1.,10.,l,u,model_width))#k))
+#models = np.append(models,Model(ions,patt,model_mid,1.,10.,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q0.05/frb"
+#models = np.append(models,Model(ions,patt,model_mid,1.,0.05,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q0.5/frb"
+#models = np.append(models,Model(ions,patt,model_mid,1.,0.5,l,u,model_width))#k))
+#patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g1q2/frb"
+#models = np.append(models,Model(ions,patt,model_mid,1.,2.,l,u,model_width))#k))
+
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g10q01/frb"
 models = np.append(models,Model(ions,patt,model_mid,10.,0.1,l,u,model_width))#k))
 patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/g10q1/frb"
@@ -48,10 +62,11 @@ models = np.append(models,Model(ions,patt,model_mid,10.,10.,l,u,k))
 count = 0
 iax = 130
 fig = plt.figure(figsize = (12,4))
-markers = itertools.cycle(['^','o','s'])
-colors = itertools.cycle(['b','g','r'])
+markers = itertools.cycle(['^','o','s'])#,'v','p','D'])
+colors = itertools.cycle(['b','g','r'])#,'c','m','k'])
 for count in range(len(models)):
-        if count %3 == 0.0:
+        print count
+	if count %3 == 0.0:
                 iax = iax+1
                 ax1 = fig.add_subplot(iax)
                 ax1.set_title('g='+str(models[count].g))
@@ -63,7 +78,7 @@ for count in range(len(models)):
                 ax1.plot(idl,models[count].lines[idl].likelihood,color=colornow,marker=markernow,label='q='+str(models[count].q),alpha=0.6)
 
         ax1.set_xlim(-0.2,len(ions)+0.02)
-plt.savefig('TESTmodel_likelihoods_gaussStep_0.3+0.5.png')
+plt.savefig('model_likelihoods_gaussStep_detectonly.png')
 plt.close()
 
 
