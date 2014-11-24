@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 import scipy.special
+import matplotlib.patches
 
 class Line:
 	def __init__(self,ion,idx,model_name,galaxy,radii):
@@ -20,6 +21,7 @@ class Line:
 		self.model = np.log10(cPickle.load(open(self.model_name,'rb')))
 		self.galaxy = galaxy
 		self.radii = radii
+		self.nbins = galaxy.nbins
 	
 		#So the functions run without having to edit them
 		self.l,self.u,self.model_width = galaxy.l,galaxy.u,galaxy.model_width
@@ -32,72 +34,66 @@ class Line:
 	
 
 	#l and u are the upper and lower limits of the model range that we are currently considering
-	def normalize_upper_limit(self,data_pt,sigma):
-		a = (self.u-data_pt)/2.
-		b = (self.l-data_pt)/2.
-		c = ((self.u-data_pt)/(np.sqrt(2.)*sigma))*scipy.special.erf((self.u-data_pt)/(np.sqrt(2)*sigma)) + np.exp(-((self.u-data_pt)/(np.sqrt(2.)*sigma))**2.0)/np.sqrt(np.pi)
-		d = ((self.l-data_pt)/(np.sqrt(2.)*sigma))*scipy.special.erf((self.l-data_pt)/(np.sqrt(2)*sigma)) + np.exp(-((self.l-data_pt)/(np.sqrt(2.)*sigma))**2.0)/np.sqrt(np.pi)
-		c = c*np.sqrt(2.)*sigma/2.
-		d = d*np.sqrt(2.)*sigma/2.
-		return (1.-(1e-18*(self.u-self.l)))/(a-b+d-c)
+	def upper_limit(self,bin_idx,hist,del_x):
+		return sum(hist[:bin_idx+1]*del_x)
 
-	def upper_limit(self,model_x,data_pt,sigma):
-		K = self.normalize_upper_limit(data_pt,sigma)
-		return (K/2.0)*(1.-scipy.special.erf((model_x-data_pt)/(np.sqrt(2)*sigma)))
+	def lower_limit(self,bin_idx,hist,del_x):
+		return sum(hist[bin_idx:]*del_x)
 
-	def normalize_lower_limit(self,data_pt,sigma):
-		a = -(data_pt-self.u)/2.
-		b = -(data_pt-self.l)/2.
-		c = ((data_pt-self.u)/(np.sqrt(2.)*sigma))*scipy.special.erf((data_pt-self.u)/(np.sqrt(2)*sigma)) + np.exp(-((data_pt-self.u)/(np.sqrt(2.)*sigma))**2.0)/np.sqrt(np.pi)
-		d = ((data_pt-self.l)/(np.sqrt(2.)*sigma))*scipy.special.erf((data_pt-self.l)/(np.sqrt(2)*sigma)) + np.exp(-((data_pt-self.l)/(np.sqrt(2.)*sigma))**2.0)/np.sqrt(np.pi)
-		c = -1.*c*np.sqrt(2.)*sigma/2.
-		d = -1.*d*np.sqrt(2.)*sigma/2.
-		return (1.-(1e-18*(self.u-self.l)))/(a-b+d-c)
-
-	def lower_limit(self,model_x,data_pt,sigma):
-		K = self.normalize_lower_limit(data_pt,sigma)
-		return (K/2.0)*(1.-scipy.special.erf((-model_x+data_pt)/(np.sqrt(2)*sigma)))
-
-	def detection(self,model_x,data_pt,data_err):
-		return np.exp(-np.power(model_x-data_pt,2.)/(2.*np.power(data_err,2.)))
-
-#
 	def model_probability(self,data_idx):
-		#print self.rperp[data_idx]
-		idr = np.where((self.radii >= self.rperp[data_idx]-0.05) & (self.radii <= self.rperp[data_idx]+0.05))
-		#idr = np.where((self.radii >= self.rperp[data_idx]-0.5) & (self.radii <= self.rperp[data_idx]+0.5))
+		idr = np.where((self.radii >= self.rperp[data_idx]-2.5) & (self.radii <= self.rperp[data_idx]+2.5))
 		model_pts = self.model[idr]
-		#print len(model_pts)
-		if self.label[data_idx] == 'u':
-			#print 'in upper'
-			sigma = np.sqrt((0.3**2.0)+(self.model_width)**2.0)
-               		probs = self.upper_limit(model_pts,self.coldens[data_idx],sigma)
-			id0 = np.where(probs ==0.0)
-			probs[id0] = 1e-18
-			#print probs
+		#Here I'm just binning the data and not adding in any measurement error or smoothing error
+		#perhaps one way to not add gaussian is to add +x for real bin and +y for a given smoothing to whatever number of bins we want
+		hist,edges = np.histogram(model_pts,bins=self.nbins,range=(self.l,self.u),density=True)
+		
+		#del_x = (self.u-self.l)/self.nbins
+		del_x = edges[1]-edges[0]
+		bin_want = int((self.coldens[data_idx]-self.l)/del_x)
+
+		if self.label[data_idx] == 'n':
+			prob = hist[bin_want]
 		elif self.label[data_idx] == 'l':
-			#print 'in lower'
-			sigma = np.sqrt((0.3**2.0)+(self.model_width)**2.0)
-			probs = self.lower_limit(model_pts,self.coldens[data_idx],sigma)
-                        id0 = np.where(probs ==0.0)
-			probs[id0] = 1e-18
-			#print probs
-		elif self.label[data_idx] == 'n':
-			#print 'in normal'
-			sigma = np.sqrt((self.err[data_idx])**2.0+(self.model_width)**2.0)
-			probs = self.detection(model_pts,self.coldens[data_idx],sigma)
-                        id0 = np.where(probs ==0.0)
-			probs[id0] = 1e-18
-			#print probs
+			prob = self.lower_limit(bin_want,hist,del_x)
+		elif self.label[data_idx] == 'u':
+			prob = self.upper_limit(bin_want,hist,del_x)
 		else:
-                       print 'SOMETHING IS GOING WRONG....'
-		return np.sum(np.log(probs))/len(probs)
+			print 'WARNING: SOMETHING IS WRONG WITH THE DATA'
+		if prob == 0.0:
+			prob = 1e-45
+
+		#print self.ion,prob
+		return np.log(prob)
 
 	def total_probability(self):
 		for data_idx in range(len(self.idx)):
 			self.likelihood = self.likelihood + self.model_probability(data_idx)
+		self.likelihood = self.likelihood - np.log(len(self.idx))
 		return
 		
 	
 	
+	def plot_pdf(self,data_idx,ax):
+		data_idx = 0
+		idr = np.where((self.radii >= self.rperp[data_idx]-2.5) & (self.radii <= self.rperp[data_idx]+2.5))
+                model_pts = self.model[idr]
+                hist,edges = np.histogram(model_pts,bins=self.nbins,range=(self.l,self.u),density=True)
 
+		if self.label[data_idx] == 'u':
+			rect1 = matplotlib.patches.Rectangle((edges[0],0), self.coldens[data_idx]-edges[0], np.max(hist), color='DeepPink',alpha=0.15)
+			ax.add_patch(rect1)
+		if self.label[data_idx] == 'l':
+			rect1 = matplotlib.patches.Rectangle((self.coldens[data_idx],0), edges[-1]-self.coldens[data_idx], np.max(hist), color='DeepPink',alpha=0.15)
+			ax.add_patch(rect1)
+
+		ax.plot(edges[1:],hist,color='Gray')
+                ax.axvline(x=self.coldens[data_idx],color='DeepPink',linewidth=2.2,linestyle='-.')
+
+		prob = self.model_probability(data_idx)	
+		prob = np.exp(prob)
+
+		ax.set_xlabel('Values')
+		ax.set_ylabel('Density')
+		ax.set_title('p='+str(prob))
+		
+		return

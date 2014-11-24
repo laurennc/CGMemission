@@ -5,14 +5,18 @@ import scipy.integrate as integrate
 from Line import *
 
 class Galaxy(object):
-	def __init__(self,ID,l,u,model_width):
-		self.ID,self.u,self.l,self.model_width = ID, u, l, model_width
+	def __init__(self,ID,l,u,model_width,nbins):
+		self.ID,self.u,self.l,self.model_width,self.nbins = ID, u, l, model_width, nbins
 	
 		data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
 #Choosing the data that I want for this ion, within the radius range David and I decided upon
                 #logNA > 0.1 ---- double check what this is ---- right now copying from other code
-                idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0]
-		
+        
+		####DETECTIONS ONLY####
+	        #idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30) & (data['l_logNA']=='n'))[0]
+		idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0]
+	
+
 		self.ions = data['ion'][idx]
 		self.coldens = data['logNA'][idx]
 		self.rperp = data['Rperp'][idx]
@@ -21,6 +25,7 @@ class Galaxy(object):
 		
 		self.models = []
 		self.best_model = -1
+		self.best_q,self.best_g = -1, -1
 
 	def add_model(self,g,q,model_name,galaxy):
 		mnow = Model(g,q,model_name,galaxy)
@@ -34,8 +39,29 @@ class Galaxy(object):
 			if self.models[i].total_likelihood > likehold:
 				likehold = self.models[i].total_likelihood
 				likeidx = i
+				self.best_q = self.models[i].q
+				self.best_g = self.models[i].g
 		self.best_model = likeidx
 		return
+
+	def plot_pdfs_oneline_allmodels(self,ion,fileout):
+		data_idx = np.where(self.ions ==ion)[0][0]
+		fig,axs = plt.subplots(4,4)
+		fig.set_size_inches(13.5,13.5)
+		ax2 = axs.flat
+		i = 0
+		for model in self.models:
+			for line in model.lines:
+				if line.ion == ion:
+					line.plot_pdf(data_idx,ax2[i])
+
+			i = i + 1
+
+		plt.tight_layout()
+		plt.savefig(fileout)
+		plt.close()
+		return
+	
 
 class Model():
         def __init__(self,g,q,model_name,galaxy): #,k) for tanh
@@ -44,7 +70,8 @@ class Model():
 		self.galaxy = galaxy
 		self.nlines = 0	
 		self.model_name = model_name
-		
+		self.g, self.q = g, q		
+
 		xL = np.linspace(-160,160,320)
                 xL,yL = np.meshgrid(xL,xL)
                 self.radii = abs(xL+1j*yL)
