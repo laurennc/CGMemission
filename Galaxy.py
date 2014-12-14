@@ -5,16 +5,16 @@ import scipy.integrate as integrate
 from Line import *
 
 class Galaxy(object):
-	def __init__(self,ID,l,u,model_width,nbins):
-		self.ID,self.u,self.l,self.model_width,self.nbins = ID, u, l, model_width, nbins
+	def __init__(self,ID,l,u,model_width,nbins,ndraws):
+		self.ID,self.u,self.l,self.model_width,self.nbins,self.ndraws = ID, u, l, model_width, nbins, ndraws
 	
 		data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
 #Choosing the data that I want for this ion, within the radius range David and I decided upon
                 #logNA > 0.1 ---- double check what this is ---- right now copying from other code
         
 		####DETECTIONS ONLY####
-	        #idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30) & (data['l_logNA']=='n'))[0]
-		idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0]
+	        idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30) & (data['l_logNA']=='n'))[0]
+		#idx = np.where((data['ID'] == ID) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0]
 	
 
 		self.ions = data['ion'][idx]
@@ -54,7 +54,7 @@ class Galaxy(object):
 			for line in model.lines:
 				if line.ion == ion:
 					line.plot_pdf(data_idx,ax2[i])
-
+					ax2[i].set_ylabel('g:'+str(model.g)+' q:'+str(model.q))
 			i = i + 1
 
 		plt.tight_layout()
@@ -92,7 +92,7 @@ class Model():
 		for line in self.lines:
 			self.nlines = self.nlines + 1
 			self.total_likelihood = self.total_likelihood + line.likelihood
-		self.total_likelihood/float(self.nlines)
+		self.total_likelihood - np.log10(float(self.nlines))
 		return
 
 
