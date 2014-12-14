@@ -22,7 +22,7 @@ matplotlib.rc('font',**font)
 xL2 = np.linspace(-160,160,320)
 
 
-patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/g1q01/frb"
+patt = "/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/control/frb"#grid_galquas/g1q01/frb"
 #patt =  "/u/10/l/lnc2115/vega/repos/CGMemission/euvb_frbs/emis/frb"
 pattends = ["_1kpc_z02_CIII.cpkl","_1kpc_z02_CIII_977.cpkl","_1kpc_z02_CIV.cpkl","_1kpc_z02_OVI.cpkl","_1kpc_z02_MgII.cpkl","_1kpc_z02_SiII.cpkl","_1kpc_z02_SiIII_1207.cpkl","_1kpc_z02_SiIV.cpkl","_1kpc_z02_HAlpha.cpkl"]#,"_1kpc_z02_SiIII_1883.cpkl","_1kpc_z02_SiIV.cpkl","_1kpc_z02_HAlpha.cpkl"]
 
@@ -68,7 +68,7 @@ for i in range(len(pattends)):
 plt.gcf().subplots_adjust(bottom=0.15)
 #plt.savefig('euvb_frbs/euvb_scatter_profile.png')
 #plt.savefig('euvb_frbs/euvb_scatter_profile2.png')
-plt.savefig('bertone_frbs/g1q01_scatter_limits.png')
+plt.savefig('bertone_frbs/bertone_control_scatter_1kpcz02_limit.png')
 plt.close()
 
 

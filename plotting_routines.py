@@ -131,7 +131,7 @@ def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	norm  = np.where(l_logNA == 'n')[0]
 
 	ax.errorbar(x[upper],logNA[upper],yerr=0.5,uplims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
-	ax.errorbar(x[lower],logNA[lower],yerr=0.5,lolims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
+	ax.errorbar(x[lower],logNA[lower],yerr=0.5,lolims=True,fmt=None,ecolor='Crimson',capsize=5,elinewidth=2,mew=0)
 	ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='o',color='DarkOrange',ecolor='m')
 	return
 
