@@ -1,4 +1,4 @@
-#from yt.mods import *
+from yt.mods import *
 import numpy as np
 import numpy
 import cPickle
@@ -58,6 +58,7 @@ def plot_scatter_percentile(ax1,data,x,y,percentile,symbol,maxr=500.):
 			wanted = np.where(datahere == datahere.max())
 		ax1. plot(rhere[wanted],np.log10(datahere[wanted]),'g.',alpha=0.2)
 		#ax1.plot(rhere[wanted],np.log10(datahere[wanted]),symbol,markersize=3.5)#,markersize=0.75)				
+	return
 
 def make_Cloudy_table(table_index):
 	#hden_n_bins, hden_min, hden_max = 35, -6, 1
@@ -66,9 +67,9 @@ def make_Cloudy_table(table_index):
 	#hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone_factor1/bertone1_run%i.dat"
-	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/g01q01/g01q01_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/g1q10/g1q10_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -84,7 +85,7 @@ def make_ion_table(ion,number):
 	T_n_bins, T_min, T_max = 51, 3, 8
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/control/euvb/euvb_ion_run%i_"+ion+".dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/euvbIon_factor1000/euvb_ion_run%i_"+ion+".dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q1/bert_ion_run%i_"+ion+".dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q0.05/bert_ion_run%i_"+ion+".dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
         T=numpy.linspace(T_min,T_max, T_n_bins)
         table = np.zeros((hden_n_bins,T_n_bins))
@@ -92,13 +93,13 @@ def make_ion_table(ion,number):
                 table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
         return hden,T,table
  
-def make_SB_profile(filex,filey,filez):
+def make_SB_profile(filex,filey,filez,xL):
         #xL = np.arange(-20,20)*10.0
         #xL = np.arange(-200,200,0.5)
 	#xL = np.arange(-100,100,0.25)
-	xL = np.linspace(-160,160,320)#[0:320]
+	#xL = np.linspace(-160,160,320)#[0:320]
 	xL, yL = np.meshgrid(xL,xL)
-        r = abs(xL+1j*yL)
+        #r = abs(xL+1j*yL)
 
 #	print filex
         frbx = cPickle.load(open(filex,'rb'))
