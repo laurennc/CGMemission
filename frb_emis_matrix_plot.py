@@ -17,7 +17,7 @@ import re
 from lauren import make_SB_profile
 from radial_data_lauren import *
 from plotting_routines import *
-
+from matplotlib import colors
 
 ############FUNCTIONS FOR THE PLOTTING####################################
 
@@ -49,19 +49,28 @@ def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key):
         	maxrad = minrad + dr
         	thisindex = (r>=minrad) * (r<maxrad)
         	alphahere = mslope*irad + 0.07
-		if key=='1kpc':
-        		ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'k.',alpha=alphahere)
-		else:
-			ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'k.',alpha=0.37)
-		rhere = r[thisindex].flatten()
-                datahere = frbarr[thisindex].flatten()
-                meanhere = frbarr[thisindex].mean()
-                lenperc = int(len(datahere)*percentile)
-                idSort = np.argsort(datahere)[::-1]
-                wanted = idSort[0:lenperc]
-                if len(wanted) == 0:
-                        wanted = np.where(datahere == datahere.max())
-                ax.plot(rhere[wanted],np.log10(datahere[wanted]),'g.',alpha=0.5)
+		rnow,frbnow = r[thisindex],np.log10(frbarr[thisindex])	
+	
+		lims = [10,3,2,1,-10]
+                colors = ['Chartreuse','DarkTurquoise','HotPink','Gray']
+                i = 0
+		while i < len(lims)-1:
+			wanted = np.where((frbnow < lims[i]) & (frbnow >= lims[i+1]))[0]
+			if key=='1kpc':
+				ax.plot(rnow[wanted],frbnow[wanted],'.',color=colors[i],alpha=alphahere)
+			else:
+				ax.plot(rnow[wanted],frbnow[wanted],'.',color=colors[i],alpha=0.37)
+			i = i + 1
+
+		#rhere = r[thisindex].flatten()
+                #datahere = frbarr[thisindex].flatten()
+                #meanhere = frbarr[thisindex].mean()
+                #lenperc = int(len(datahere)*percentile)
+                #idSort = np.argsort(datahere)[::-1]
+                #wanted = idSort[0:lenperc]
+                #if len(wanted) == 0:
+                #        wanted = np.where(datahere == datahere.max())
+                #ax.plot(rhere[wanted],np.log10(datahere[wanted]),'g.',alpha=0.5)
         return
 
 def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile):
@@ -71,16 +80,19 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile):
 	rpr,rpmean,rpmedian,rpmax,rpmin = basic_profile_vals(modelnames,xL)
 	
 	idr = np.where(rpr <= 160.0)
-	ax.plot(rpr[idr],np.log10(rpmedian[idr]),color='Goldenrod',linewidth=2.2)	
+	ax.plot(rpr[idr],np.log10(rpmedian[idr]),color='k',linewidth=2.2)#previously Goldenrod	
 
 	ax.set_xticks(range(0,160,30))
-	ax.set_xlim(0,160)
-	#ax.axis([0.,160.,-2.,5.])
+	#ax.set_xlim(0,160)
+	ax.axis([0.,160.,-6.,6.5])
 	return
 
 def plot_frb(modelname,ax,include_colorbar=False):
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
-	im = ax.imshow(np.log10(frbarr),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none')
+	cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+	bounds = [-5,1,2,3,5]
+	norm = colors.BoundaryNorm(bounds,cmap.N)
+	im = ax.imshow(np.log10(frbarr),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm)
 	#if include_colorbar==True:
 	#	plt.colorbar(im)
 	return
@@ -89,7 +101,7 @@ def plot_frb(modelname,ax,include_colorbar=False):
 #ions = ['HI','MgII','SiII','SiIII']#,'SiIV','CIII','OVI']
 ions = ['SiIV','CIII','OVI']
 #ions = ['HAlpha','CIII_977','CIV','MgII','SiII','SiIII_1207','SiIII_1883']
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'
 model_gqs = ['g1q01','g1q1','g1q10','g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 model_mid = '/frbz_1kpc_z02_'
 res_keys = ['1kpc','1kpc','1kpc','5kpc','5kpc','5kpc','25kpc','25kpc','25kpc']
