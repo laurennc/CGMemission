@@ -69,7 +69,7 @@ def make_Cloudy_table(table_index):
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone_factor1/bertone1_run%i.dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/g1q10/g1q10_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z0/g1q1/g1q1_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
