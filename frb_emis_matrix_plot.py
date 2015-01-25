@@ -96,22 +96,28 @@ def plot_frb(modelname,ax,include_colorbar=False):
 	#if include_colorbar==True:
 	#	plt.colorbar(im)
 	return
+
+def add_HI_contour(ax,HIfrb,ncontours):
+	xL,r,dr,nrad = make_radius_array('1kpc')
+	X,Y = np.meshgrid(xL,xL)
+	CS = ax.contour(X,Y,HIfrb,[15,18],color='k')
+	#plt.clabel(CS, fontsize=9, inline=1)
+	return
 #########################################################################
 
 #ions = ['HI','MgII','SiII','SiIII']#,'SiIV','CIII','OVI']
-ions = ['SiIV','CIII','OVI']
-#ions = ['HAlpha','CIII_977','CIV','MgII','SiII','SiIII_1207','SiIII_1883']
+#ions = ['SiIV','CIII','OVI']
+ions = ['HAlpha','CIII_977','CIV','MgII','SiII','SiIII_1207','SiIII_1883']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'
+HI_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'
 model_gqs = ['g1q01','g1q1','g1q10','g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 model_mid = '/frbz_1kpc_z02_'
 res_keys = ['1kpc','1kpc','1kpc','5kpc','5kpc','5kpc','25kpc','25kpc','25kpc']
 
-werk_data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
-l,u = 10.,20.
-model_width = 0.0
-nbins,ndraws = 500,10
-max_r,percentile = 160.,0.01
+max_r = 160.
+percentile = 0.01
 
+ncontours = 4
 
 for ion in ions:
 	fileout = ion+'_frb_profile_matrix_nointerp.png'
@@ -129,10 +135,16 @@ for ion in ions:
 		if yes < xlen:
 			modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_z02_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frby_'+res_keys[count]+'_z02_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_z02_'+ion+'.cpkl'] 
 
+			HIfile = HI_beg+model_gqs[count]+'/frbx_1kpc_z02_HIdens.cpkl'
+			HIfrb = cPickle.load(open(HIfile,'rb'))
+			HIfrb = np.log10(HIfrb)
+
 			if i in last:
 				plot_frb(modelnames[0],ax[i],include_colorbar=True)
+				add_HI_contour(ax[i],HIfrb,ncontours)
 			else:
 				plot_frb(modelnames[0],ax[i])
+				add_HI_contour(ax[i],HIfrb,ncontours)
 
 			full_scatter_plot(modelnames,ion,ax[i+xlen],res_keys[count],max_r,percentile)
 			yes  = yes + 1
@@ -155,7 +167,7 @@ for ion in ions:
 
 	
 	plt.tight_layout()
-	plt.savefig(fileout)
+	plt.savefig(fileout, dpi=1000)
 	plt.close()
 
 
