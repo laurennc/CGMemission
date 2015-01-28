@@ -16,7 +16,11 @@ dense_cold= dense_ad.cut_region(['grid["Temperature"] < 1e4'])
 
 L = dense_cold.quantities['AngularMomentumVector']()
 
-p = OffAxisProjectionPlot(pf, L, "Density", ds.center, (100, "kpc"))
-p.save()
+proj = OffAxisProjectionPlot(pf, L, "Density", ds.center, (320, "kpc"))
+
+frb = proj["Density"].image.get_array()
+
+proj.save()
+
 
 
