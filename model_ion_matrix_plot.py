@@ -35,29 +35,38 @@ def make_radius_array():
         nrad = len(radial)
         return r, dr, nrad
 
-def plot_scatter_points(ax,frbarr,r,dr,nrad):
+def plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean):
         mslope = (0.0075-0.07)/nrad
+	total_pts, num_above = 0.,0.
         for irad in range(nrad):
 		minrad = irad*dr
         	maxrad = minrad + dr
         	thisindex = (r>=minrad) * (r<maxrad)
-        	alphahere = mslope*irad + 0.07
+        	#For the percentage calculation
+		total_pts = total_pts + len(frbarr[thisindex])
+		num_above = num_above + len(np.where(np.log10(frbarr[thisindex])>np.log10(rpmean[irad]))[0])
+		#FOr the scatter plot
+		alphahere = mslope*irad + 0.07
         	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'k.',alpha=alphahere)
-        return
+	#print float(num_above),float(total_pts)
+	percent_above = float(num_above)/float(total_pts)
+        return percent_above
 
-def full_scatter_plot(modelname,ion,ax,werk_data,max_r):
+def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 	r,dr,nrad = make_radius_array()
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
-	plot_scatter_points(ax,frbarr,r,dr,nrad)
 	###FIX THIS###
-	#rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(patt+"x"+pattend,patt+"y"+pattend,patt+"z"+pattend)
-	#idr = np.where(rpr <= max_r)[0]
-	#ax.plot(rpr[idr],np.log10(rpmedian[idr]),'c-',linewidth=2.2)
+	xL = np.linspace(-160,160,320)
+        rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
+	percent_above = plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean)
+	idr = np.where(rpr <= max_r)[0]
+	print rpr[50]
+	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'c-',linewidth=2.2)
 	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
 	ax.set_xticks(range(0,160,30))
 	ax.axis([0.,160.,8,18])
-	return
+	return percent_above
 #########################################################################
 
 #ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
@@ -83,12 +92,15 @@ plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
 ax = ax.flat
 i = 0
 
+f = open('percent_above.dat', 'w')
+
 for ion in ions:
 	count = 0
 	while count < 3:
 		print ion, count, model_gqs[count],i
 		modelname = model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl'
-		full_scatter_plot(modelname,ion,ax[i],werk_data,max_r)
+		profile_names = [model_beg+model_gqs[count]+'/frbx_1kpc_z02_'+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frby_1kpc_z02_'+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frbz_1kpc_z02_'+ion+'dens.cpkl']
+		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
 		
 		lines = Line(ion,modelname,l,u,model_width,nbins,ndraws)
 		lines.total_probability()	
@@ -106,6 +118,9 @@ for ion in ions:
 			
 		ax[i+xlen].axis([0.,160.,-12,2])
 
+		printout = modelname+'\t'+str(percent_above)+'\n'
+		f.write(printout)	
+
 		count = count + 1
 		i = i + 1	
 
@@ -121,6 +136,7 @@ for k in range(len(ions)):
 plt.tight_layout()
 plt.savefig(fileout)
 plt.close()
+f.close()
 
 
 
