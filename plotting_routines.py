@@ -1,7 +1,10 @@
 #from lauren import *
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-
+import cPickle
+import itertools
 
 #recreate Bertone 2010 Figure 1 where I'm plotting cloudy results for different densities
 
@@ -161,6 +164,7 @@ def plot_ion_loop(inputPatts,outputfile,ion,xlen,ylen,special=False):
 	while j < ylen:
 		pattnow = inputPatts[j]
 		inputfiles = [pattnow+'15_'+ion+'.dat',pattnow+'7_'+ion+'.dat',pattnow+'1_'+ion+'.dat']	
+		print inputfiles
 		if special == True:
 			if j > 0:
 				inputfiles = [pattnow+'3_'+ion+'.dat',pattnow+'2_'+ion+'.dat',pattnow+'1_'+ion+'.dat']
@@ -195,29 +199,119 @@ def plot_ion_loop(inputPatts,outputfile,ion,xlen,ylen,special=False):
 	plt.savefig(outputfile)
         return
 
+def imshow_frb(modelname,fileout):
+        frbarr = np.array(cPickle.load(open(modelname,'rb')))
+        #cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+        bounds = [-5,1,2,3,5]
+        #norm = colors.BoundaryNorm(bounds,cmap.N)
+        im = plt.imshow(np.log10(frbarr),extent=(-160,160,160,-160),interpolation='none')#,vmin=-5,vmax=5,interpolation='none')#,cmap=cmap,norm=norm)
+        plt.colorbar()
+	plt.savefig(fileout)
+	plt.close()
+	#if include_colorbar==True:
+        #       plt.colorbar(im)
+        return
 
 
+def plot_all_ions(fileout):
+	data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
+	ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
+	colors = itertools.cycle(['Indigo','b','LimeGreen','Gold','OrangeRed','MediumVioletRed','Crimson'])
+	for ion in ions:
+		idx = np.where((data['ion'] == ion) & (data['logNA'] > 0.1) & (data['Rperp'] <= 120) & (data['Rperp'] >= 30))[0] # & (data['l_logNA']=='n'))[0]
+		upper = np.where(data['l_logNA'][idx] == 'u')[0]
+		lower = np.where(data['l_logNA'][idx] == 'l')[0]
+		norm = np.where(data['l_logNA'][idx] == 'n')[0]
+
+		colornow = next(colors)
+		plt.errorbar(data['Rperp'][idx][upper],data['logNA'][idx][upper],yerr=0.3,lolims=True,fmt=None,ecolor=colornow,capsize=5,elinewidth=2,mew=0,alpha=0.75)
+		plt.errorbar(data['Rperp'][idx][lower],data['logNA'][idx][lower],yerr=0.3,uplims=True,fmt=None,ecolor=colornow,capsize=5,elinewidth=2,mew=0,alpha=0.75)
+		plt.errorbar(data['Rperp'][idx][norm],data['logNA'][idx][norm],yerr=data['e_logNA'][idx][norm],fmt='o',ecolor=colornow,label=ion,alpha=0.75)		
+
+	plt.xlabel('Radius (kpc)')
+	plt.ylabel('Column Density')
+	plt.legend(bbox_to_anchor=(1.05,1),loc=2,borderaxespad=0.,numpoints=1)
+	plt.savefig(fileout,bbox_inches='tight')
+	plt.close()
+	return
 
 
+def plot_specific_ion_fraction(inputfile,ax,ionnum,color,labelOn=False,txt='',plotDashed=False,plotDotted=False):
+	data = np.genfromtxt(inputfile,skip_header=12)
+        x = data[:,0]
+        if labelOn:
+		ax.plot(x,data[:,ionnum],linewidth=1.5,color=color,label=txt)
+	elif plotDashed:
+		ax.plot(x,data[:,ionnum],linewidth=1.5,linestyle='--',color=color)
+	elif plotDotted:
+		ax.plot(x,data[:,ionnum],linewidth=1.5,linestyle='..',color=color)
+	else:
+		ax.plot(x,data[:,ionnum],linewidth=1.5,color=color)
 
+        ax.set_ylim(-10,1)
+        #ax.set_ylim(0,1)
+	ax.set_xlim(4.5,7)
+	return
 
+def plot_specific_ion_EUVB_loop(inputPatt,outputfile,ion,ionnum):
+	fig,ax = plt.subplots(1,3,sharey=True)
+	fig.set_size_inches(12,4)
+	fig.subplots_adjust(hspace=0.1,wspace=0.1)
+	
+	euvb = ['/g1q01/bert_ion_run','/g1q1/bert_ion_run','/g1q10/bert_ion_run']
+	densPatt = ['n=1','n=-3','n=-6']
+	colors = ['MediumVioletRed','Coral','Teal']
 
+	j = 0
+	while j < len(euvb):
+		inputfiles=[inputPatt+euvb[j]+'15_'+ion+'.dat',inputPatt+euvb[j]+'7_'+ion+'.dat',inputPatt+euvb[j]+'1_'+ion+'.dat']
+		k = 0
+		while k < len(inputfiles):
+			if j == (len(euvb)-1):
+				plot_specific_ion_fraction(inputfiles[k],ax[j],ionnum,colors[k],labelOn=True,txt=densPatt[k])
+			else:
+				plot_specific_ion_fraction(inputfiles[k],ax[j],ionnum,colors[k])
+			k = k + 1
 
+		j = j + 1
 
+	plt.suptitle('Ion Fraction of '+ion+str(ionnum),fontsize=18.)
+	ax[2].legend()
+	plt.savefig(outputfile)
+	plt.close()	
+	return
 
+def plot_specific_ion_dens_loop(inputPatt,outputfile,ion,ionnum):
+        fig,ax = plt.subplots(1,4,sharey=True)
+        fig.set_size_inches(16,4)
+        fig.subplots_adjust(hspace=0.1,wspace=0.1)
 
+        euvb = ['/g1q01/bert_ion_run','/g1q1/bert_ion_run','/g1q10/bert_ion_run']
+        dens = ['15_'+ion+'.dat','7_'+ion+'.dat','5_'+ion+'.dat','1_'+ion+'.dat']
+	euvbPatt = ['g1q01','g1q1','g1q10']
+	densPatt = ['n=1','n=-3','n=-4','n=-6']
+        colors = ['MediumVioletRed','Coral','Teal']
 
+        j = 0
+        while j < len(dens):
+                inputfiles=[inputPatt+euvb[0]+dens[j],inputPatt+euvb[1]+dens[j],inputPatt+euvb[2]+dens[j]]
+                k = 0
+                while k < len(inputfiles):
+                        if j == (len(dens)-1):
+				plot_specific_ion_fraction(inputfiles[k],ax[j],ionnum,colors[k],labelOn=True,txt=euvbPatt[k])
+                        elif k == 2:
+				plot_specific_ion_fraction(inputfiles[k],ax[j],ionnum,colors[k],plotDashed=True)
+			else:
+                                plot_specific_ion_fraction(inputfiles[k],ax[j],ionnum,colors[k])
+                        k = k + 1
+		ax[j].set_title(densPatt[j])
+                j = j + 1
 
-
-
-
-
-
-
-
-
-
-
+        plt.suptitle('Ion Fraction of '+ion+str(ionnum),fontsize=18.)
+        ax[len(dens)-1].legend()
+        plt.savefig(outputfile)
+        plt.close()
+        return
 
 
 
