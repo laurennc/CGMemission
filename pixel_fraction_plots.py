@@ -102,6 +102,7 @@ def plot_fraction_vs_radius(ax,ion,frbarr,res_key,title_now):
 
 #ions = ['SiIV','CIII','OVI']
 ions = ['HAlpha','CIII_977','CIV','MgII','SiII','SiIII_1207','SiIII_1883']
+ions = ['OVI']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'
 model_gqs = ['g1q01','g1q01','g1q01','g1q1','g1q1','g1q1','g1q10','g1q10','g1q10']
 res_keys = ['1kpc','5kpc','25kpc','1kpc','5kpc','25kpc','1kpc','5kpc','25kpc']
