@@ -108,9 +108,9 @@ def add_HI_contour(ax,HIfrb,ncontours):
 #ions = ['HI','MgII','SiII','SiIII']#,'SiIV','CIII','OVI']
 #ions = ['SiIV','CIII','OVI']
 ions = ['HAlpha','CIII_977','CIV','MgII','SiII','SiIII_1207','SiIII_1883']
-redshift_key = 'z0'
+redshift_key = 'z05'
 
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'+redshift_key'/' ##CHANGED FORM Z02
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'+redshift_key+'/' ##CHANGED FORM Z02
 HI_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'
 model_gqs = ['g1q01','g1q1','g1q10','g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 #model_mid = '/frbz_1kpc_z02_'
@@ -122,7 +122,7 @@ percentile = 0.01
 ncontours = 4
 
 for ion in ions:
-	fileout = ion+'_frb_profile_matrix_nointerp.png'
+	fileout = ion+'_'+redshift_key+'_frb_profile_matrix_nointerp.png'
 	xlen,ylen = 3,6
 	first = [k*xlen for k in range(ylen)]
 	last = np.array(first)+xlen-1
@@ -137,7 +137,7 @@ for ion in ions:
 		if yes < xlen:
 			modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frby_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl'] 
 
-			HIfile = HI_beg+model_gqs[count]+'/frbx_1kpc_'+redshift_key+'_HIdens.cpkl'
+			HIfile = HI_beg+'g1q1'+'/frbx_1kpc_'+redshift_key+'_HIdens.cpkl'
 			HIfrb = cPickle.load(open(HIfile,'rb'))
 			HIfrb = np.log10(HIfrb)
 
