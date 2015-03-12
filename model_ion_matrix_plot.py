@@ -72,10 +72,8 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 #ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
 ions = ['SiIV','CIII','OVI']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'
-#removed g01q0.05 to compare and fit all on one line
-#model_gqs = ['g01q01', 'g01q0.1','g01q0.5','g01q1','g01q2','g01q10','g1q01','g1q0.1','g1q0.5','g1q1','g1q2','g1q10','g10q01','g10q1','g10q10']
 model_gqs = ['g1q01','g1q1','g1q10']#,'g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
-model_mid = '/frbz_1kpc_z02_'
+model_mid = '/frbz_1kpc_320kpc_z02_'
 #model_mid = '/frbFace_default_z02_'
 
 werk_data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
@@ -84,8 +82,7 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-#fileout = 'scatter_and_likelihood_HIGHhden.png'
-fileout = 'scatter_matrix.png'
+fileout = 'scatter_matrix_thin.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey='row')
 fig.set_size_inches(8,8)#,16)
@@ -100,7 +97,6 @@ model_gqs = ['g1q01','g1q1','g1q10']
 
 for ion in ions:
 	count = 0
-	#while count < 2:
 	while count < 3:
 		print ion, count, model_gqs[count],i
 
