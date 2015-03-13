@@ -1,4 +1,4 @@
-from yt.mods import *
+#from yt.mods import *
 import numpy as np
 import numpy
 import cPickle
@@ -69,7 +69,7 @@ def make_Cloudy_table(table_index):
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/euvb/euvb_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone/bertone_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/bertone_factor1/bertone1_run%i.dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z0/g1q1/g1q1_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z05/g1q10/g1q10_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -85,7 +85,7 @@ def make_ion_table(ion,number):
 	T_n_bins, T_min, T_max = 51, 3, 8
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/control/euvb/euvb_ion_run%i_"+ion+".dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/euvbIon_factor1000/euvb_ion_run%i_"+ion+".dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q0.05/bert_ion_run%i_"+ion+".dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q01/bert_ion_run%i_"+ion+".dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
         T=numpy.linspace(T_min,T_max, T_n_bins)
         table = np.zeros((hden_n_bins,T_n_bins))
@@ -93,7 +93,7 @@ def make_ion_table(ion,number):
                 table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
         return hden,T,table
  
-def make_SB_profile(filex,filey,filez,xL):
+def make_SB_profile(filex,filey,filez,xL,z=0.):
         #xL = np.arange(-20,20)*10.0
         #xL = np.arange(-200,200,0.5)
 	#xL = np.arange(-100,100,0.25)
@@ -108,9 +108,9 @@ def make_SB_profile(filex,filey,filez,xL):
   #      print filez
 	frbz = cPickle.load(open(filez,'rb'))
 
-        rp_x = radial_data(frbx,x=xL,y=yL)
-        rp_y = radial_data(frby,x=xL,y=yL)
-        rp_z = radial_data(frbz,x=xL,y=yL)
+        rp_x = radial_data(frbx/(1.+z)**4.0,x=xL,y=yL)
+        rp_y = radial_data(frby/(1.+z)**4.0,x=xL,y=yL)
+        rp_z = radial_data(frbz/(1.+z)**4.0,x=xL,y=yL)
 
         rp_mean = (rp_x.mean + rp_y.mean + rp_z.mean)/3.0
         rp_median  = (rp_x.median + rp_y.median + rp_z.median)/3.0
