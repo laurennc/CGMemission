@@ -313,6 +313,31 @@ def plot_specific_ion_dens_loop(inputPatt,outputfile,ion,ionnum):
         plt.close()
         return
 
+def plot_single_specific_ion(inputPatt,outputfile,ion,ionnum):
+	fig,ax = plt.subplots(1,1)
+	fig.set_size_inches(4,4)
+	fig.subplots_adjust(hspace=0.1,wspace=0.1)
+	
+	ion,ionnum = 'O',6
+	
+	inputPatt = '/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas'
+	euvb = ['/g1q1/bert_ion_run']
+	densPatt = ['n=1','n=-3','n=-6']
+	colors = ['MediumVioletRed','Coral','Teal']
+	
+	j = 0
+	        
+	inputfiles=[inputPatt+euvb[j]+'15_'+ion+'.dat',inputPatt+euvb[j]+'7_'+ion+'.dat',inputPatt+euvb[j]+'1_'+ion+'.dat']
+	k = 0
+	while k < len(inputfiles):
+	   plot_specific_ion_fraction(inputfiles[k],ax,ionnum,colors[k],labelOn=True,txt=densPatt[k])
+	                   
+	   k = k + 1
 
+	plt.suptitle('Ion Fraction of '+ion+str(ionnum),fontsize=18.)
+	ax.legend()
+	plt.savefig('ionfrac_Standard_O6.png')
+	plt.close()
+	return
 
 
