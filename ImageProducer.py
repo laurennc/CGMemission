@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import cPickle
 from astropy.convolution import convolve, convolve_fft
 from astropy.convolution import Gaussian1DKernel
+from astropy.io import fits
 
 class ImageProducer(object):
 	"""ImageProducer receives one of the frb image arrays that I've produced.
@@ -53,7 +54,8 @@ class ImageProducer(object):
 		return img
 
 	def save_as_fits(self,outputname):
-		
+		hdu = fits.PrimaryHDU(img)
+		hdu.writeto(outputname)		
 		return
 
 	
