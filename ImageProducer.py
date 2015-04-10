@@ -5,6 +5,8 @@ from astropy.convolution import convolve, convolve_fft
 from astropy.convolution import Gaussian1DKernel
 from astropy.io import fits
 import os 
+from astropy.coordinates.angles import Angle
+import math
 
 class ImageProducer(object):
 	"""ImageProducer receives one of the frb image arrays that I've produced.
@@ -28,14 +30,17 @@ class ImageProducer(object):
         #   img = array that will contain the convolved imaged. Initialized as 0  """
 
 		self.frb = frbarray
-		self.wavelengths = np.arange(lambda_center-lambda_range,lambda_center+lambda_range+lambda_res,lambda_res)[:-1]
+		#self.wavelengths = np.arange(lambda_center-lambda_range,lambda_center+lambda_range+lambda_res,lambda_res)[:-1]
 		#self.wavelengths = np.arange(0.204-0.0012,0.204+0.0012+3.4e-6,3.4e-6)
-		
+		range = math.ceil((2.*lambda_range)/lambda_res)/2.
+		self.wavelengths = np.arange(-range,range+1,1)*lambda_res+lambda_center
+
 		#build the step function that will lead to the convolver shape
 		self.step_function = np.zeros(len(self.wavelengths))
 		idx = (np.abs(self.wavelengths-lambda_line)).argmin()
 		self.step_function[idx-step_width/2.:idx+step_width/2.+1] = 1.0/(step_width*lambda_res)
-
+		##the previous step puts it in unites of photons/ micron and the next converts microns to Angstroms	
+		self.step_function = self.step_function*1.e-4
 		self.z_observed = z_observed
 
 		self.img = 0
@@ -60,9 +65,9 @@ class ImageProducer(object):
 		for i in range(len(self.frb[0,:])):
 			for j in range(len(self.frb[1,:])):
 				if scale:
-					self.img[:,i,j] = zconvolve*(self.frb[i,j]/((1.+self.z_observed)**4.0))
+					self.img[:,j,i] = zconvolve*(self.frb[i,j]/((1.+self.z_observed)**4.0))
 				else:
-					self.img[:,i,j] = zconvolve*self.frb[i,j]
+					self.img[:,j,i] = zconvolve*self.frb[i,j]
 
 		return
 
@@ -72,6 +77,30 @@ class ImageProducer(object):
 			os.remove(outputname)
 		except OSError:
 			pass
+
+	#Building header for the IMO
+		## RECUERDA: fits starts counting from 1 not zero
+
+		crpix = np.array([len(self.wavelengths)/2.+0.5,len(self.frb[1,:])/2.+0.5,len(self.frb[0,:])/2.+0.5])
+		crval = np.array([Angle('00d05m00s').degree,Angle('-00d18m00s').degree,0.2040])
+		cdelt = np.array([Angle('00d00m00.2s').degree,Angle('00d00m00.2s').degree,3.46*1e-6])
+		hdr = fits.Header()
+		hdr['NAXIS']  = self.img.ndim
+		hdr['NAXIS1'] = self.img.shape[2]
+		hdr['NAXIS2'] = self.img.shape[1]
+		hdr['NAXIS3'] = self.img.shape[0]
+		hdr['CRVAL1'] = crval[0]
+		hdr['CRVAL2'] = crval[1]
+		hdr['CRVAL3'] = crval[2]
+		hdr['CDELT1'] = cdelt[0]
+		hdr['CDELT2'] = cdelt[1]
+		hdr['CDELT3'] = cdelt[2]
+		hdr['CRPIX1'] = crpix[2]
+		hdr['CRPIX2'] = crpix[1]
+		hdr['CRPIX3'] = crpix[0]
+
+	##NOTE: Rather than having to transpose the cube, I've just built it as lambda,y,x
+
 		hdu = fits.PrimaryHDU(self.img)
 		hdu.writeto(outputname)		
 		return
