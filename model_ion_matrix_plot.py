@@ -73,7 +73,7 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 ions = ['SiIV','CIII','OVI']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'
 model_gqs = ['g1q01','g1q1','g1q10']#,'g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
-model_mid = '/frbz_1kpc_320kpc_z02_'
+model_mid = '/frbz_1kpc_500kpc_z02_'
 #model_mid = '/frbFace_default_z02_'
 
 werk_data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
@@ -82,7 +82,7 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-fileout = 'scatter_matrix_thin.png'
+fileout = 'scatter_matrix_Zfixed_500kpc.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey='row')
 fig.set_size_inches(8,8)#,16)
@@ -100,38 +100,14 @@ for ion in ions:
 	while count < 3:
 		print ion, count, model_gqs[count],i
 
-	#	if count > 0:
-	#		modelname = model_beg+model_gqs[count]+model_mid+ion+'_dens_HIGHhden.cpkl'
-	#		profile_names = [model_beg+model_gqs[count]+'/frbx_1kpc_z02_'+ion+'_dens_HIGHhden.cpkl',model_beg+model_gqs[count]+'/frby_1kpc_z02_'+ion+'_dens_HIGHhden.cpkl',model_beg+model_gqs[count]+'/frbz_1kpc_z02_'+ion+'_dens_HIGHhden.cpkl']
-	#	else:
 		modelname = model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl'
-                profile_names = [model_beg+model_gqs[count]+'/frbx_1kpc_z02_'+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frby_1kpc_z02_'+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frbz_1kpc_z02_'+ion+'dens.cpkl']
+                profile_names = [model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl']
 
 		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
 		
-	#	lines = Line(ion,modelname,l,u,model_width,nbins,ndraws)
-	#	lines.total_probability()	
-	#	idx = np.where(lines.label=='u')[0]
-	#	if len(idx) > 0:
-	#		ax[i+xlen].errorbar(lines.rperp[idx],lines.likelihoods[idx],yerr=0.4,uplims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
-
-	#	idx = np.where(lines.label=='l')[0]
-        #	if len(idx) > 0:
-        #	        ax[i+xlen].errorbar(lines.rperp[idx],lines.likelihoods[idx],yerr=0.4,lolims=True,fmt=None,ecolor='Crimson',capsize=5,elinewidth=2,mew=0)
-	
-	#	idx = np.where(lines.label=='n')[0]
-        #	if len(idx) > 0:
-        #	        ax[i+xlen].errorbar(lines.rperp[idx],lines.likelihoods[idx],yerr=0.001,fmt='o',color='DarkOrange',ecolor='m')
-			
-	#	ax[i+xlen].axis([0.,160.,-12,2])
-
-	#	printout = modelname+'\t'+str(percent_above)+'\n'
-	#	f.write(printout)	
-
 		count = count + 1
 		i = i + 1	
 
-	#i = i  + xlen
 
 for j in range(len(model_gqs)):
 	ax[j].set_title(model_gqs[j])
