@@ -8,9 +8,9 @@ import cPickle
 ##################### z = 0.2 ##########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 ####################  z = 0.5 ###########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
+#fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
 ####################  z = 1.0 ##########################
-#fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
+fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 ##############################################################3
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
@@ -41,7 +41,7 @@ if project_X:
 	if HIdens:
 		projx = pf.h.proj(0,'HI_NumberDensity')
 		frbx = projx.to_frb(width,res,center=pos)
-		fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frbx_1kpc_z05_HIdens.cpkl'
+		fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frbx_1kpc_z1_HIdens.cpkl'
 		cPickle.dump(frbx['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
         if velocity:
@@ -60,7 +60,7 @@ if project_Y:
         if HIdens:
                 projy = pf.h.proj(1,'HI_NumberDensity')
                 frby = projy.to_frb(width,res,center=pos)
-                fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frby_1kpc_z05_HIdens.cpkl'
+                fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frby_1kpc_z1_HIdens.cpkl'
                 cPickle.dump(frby['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
 	if velocity:
@@ -79,7 +79,7 @@ if project_Z:
         if HIdens:
                 projz = pf.h.proj(2,'HI_NumberDensity')
                 frbz = projz.to_frb(width,res,center=pos)
-                fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frbz_1kpc_z05_HIdens.cpkl'
+                fileout = 'bertone_frbs/coldens/grid_galquas/g1q1/frbz_1kpc_z1_HIdens.cpkl'
                 cPickle.dump(frbz['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
 	if velocity:

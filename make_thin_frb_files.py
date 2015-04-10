@@ -29,6 +29,7 @@ val, pos = pf.h.find_max('Density')
 
 resolution = [320,320]
 center = pos
+#thickness = 320./pf['kpc']
 thickness = 500./pf['kpc']
 width = 320./pf['kpc']
 
@@ -42,63 +43,63 @@ if project_X:
 	axis = 'x'
 	frbx = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
 
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_CIIIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_CIIIdens.cpkl'
 	cPickle.dump(frbx['CIII_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_CIVdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_CIVdens.cpkl'
 	cPickle.dump(frbx['CIV_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_OVIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_OVIdens.cpkl'
 	cPickle.dump(frbx['OVI_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_MgIIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_MgIIdens.cpkl'
 	cPickle.dump(frbx['MgII_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_SiIIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_SiIIdens.cpkl'
 	cPickle.dump(frbx['SiII_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_SiIIIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_SiIIIdens.cpkl'
 	cPickle.dump(frbx['SiIII_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_SiIVdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_SiIVdens.cpkl'
 	cPickle.dump(frbx['SiIV_Density'],open(fileout,'wb'),protocol=-1)
-	fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbx_1kpc_500kpc_z02_HIdens.cpkl'
+	fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbx_1kpc_500kpc_z02_HIdens.cpkl'
 	cPickle.dump(frbx['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
 	axis = 'y'
         frbx = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
 
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_CIIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_CIIIdens.cpkl'
         cPickle.dump(frbx['CIII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_CIVdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_CIVdens.cpkl'
         cPickle.dump(frbx['CIV_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_OVIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_OVIdens.cpkl'
         cPickle.dump(frbx['OVI_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_MgIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_MgIIdens.cpkl'
         cPickle.dump(frbx['MgII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_SiIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_SiIIdens.cpkl'
         cPickle.dump(frbx['SiII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_SiIIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_SiIIIdens.cpkl'
         cPickle.dump(frbx['SiIII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_SiIVdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_SiIVdens.cpkl'
         cPickle.dump(frbx['SiIV_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frby_1kpc_500kpc_z02_HIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frby_1kpc_500kpc_z02_HIdens.cpkl'
         cPickle.dump(frbx['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
 if project_Z:
 	axis = 'z'
         frbx = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
 
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_CIIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_CIIIdens.cpkl'
         cPickle.dump(frbx['CIII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_CIVdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_CIVdens.cpkl'
         cPickle.dump(frbx['CIV_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_OVIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_OVIdens.cpkl'
         cPickle.dump(frbx['OVI_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_MgIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_MgIIdens.cpkl'
         cPickle.dump(frbx['MgII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_SiIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_SiIIdens.cpkl'
         cPickle.dump(frbx['SiII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_SiIIIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_SiIIIdens.cpkl'
         cPickle.dump(frbx['SiIII_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_SiIVdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_SiIVdens.cpkl'
         cPickle.dump(frbx['SiIV_Density'],open(fileout,'wb'),protocol=-1)
-        fileout = 'bertone_frbs/coldens/grid_galquas/g1q01/frbz_1kpc_500kpc_z02_HIdens.cpkl'
+        fileout = 'bertone_frbs/coldens/grid_galquas/g1q10/frbz_1kpc_500kpc_z02_HIdens.cpkl'
         cPickle.dump(frbx['HI_NumberDensity'],open(fileout,'wb'),protocol=-1)
 
 
