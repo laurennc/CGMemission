@@ -37,7 +37,7 @@ if project_X:
 
 	for field in fields:
 		key = re.split('Emission_|',field)[1]
-		fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbx_6kpc_z1_'+'.cpkl'
+		fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbx_6kpc_1Mpc_z1_'+key+'.cpkl'
 		cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
@@ -46,7 +46,7 @@ if project_Y:
 
 	for field in fields:
       	        key = re.split('Emission_|',field)[1]
-                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frby_6kpc_z1_'+'.cpkl'
+                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frby_6kpc_1Mpc_z1_'+key+'.cpkl'
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 	
 
@@ -56,7 +56,7 @@ if project_Z:
 
         for field in fields:
                 key = re.split('Emission_|',field)[1]
-                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbz_6kpc_z1_'+'.cpkl'
+                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbz_6kpc_1Mpc_z1_'+key+'.cpkl'
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 
