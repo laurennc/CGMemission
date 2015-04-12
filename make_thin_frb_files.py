@@ -30,9 +30,9 @@ def make_thin_frb(pf,axis,fields,center,width,thickness,resolution):
 ##################### z = 0.2 ##########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 ####################  z = 0.5 ###########################
-#fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
+fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
 ####################  z = 1.0 ##########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
+#fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 
 
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
@@ -50,12 +50,12 @@ coldens = False
 if coldens:	
 	fields = ['CIII_Density','CIV_Density','OVI_Density','MgII_Density','SiII_Density','SiIII_Density','SiIV_Density']#,'HI_NumberDensity']
 	
-	file_begin = 'bertone_frbs/coldens/grid_galquas/g1q10/'
+	file_begin = 'bertone_frbs/coldens/grid_galquas/g1q01/'
 	key_string,keydx = '_Density',0
 
 if emission:
 	fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
-	file_begin = 'bertone_frbs/emis/grid_galquas/z1/g1q01/'	
+	file_begin = 'bertone_frbs/emis/grid_galquas/z05/g1q10/'	
 	key_string,keydx = 'Emission_|',1
 
 project_X = True
@@ -68,25 +68,25 @@ if project_X:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbx_1kpc_500kpc_z1_'+key+'.cpkl'
+                fileout = file_begin + 'frbx_1kpc_500kpc_z05_'+key+'.cpkl'
                 cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
 	axis = 'y'
-        frbx = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
+        frby = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frby_1kpc_500kpc_z1_'+key+'.cpkl'
+                fileout = file_begin + 'frby_1kpc_500kpc_z05_'+key+'.cpkl'
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 
 if project_Z:
 	axis = 'z'
-        frbx = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
+        frbz = make_thin_frb(pf,axis,fields,center,width,thickness,resolution)
 
         for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbz_1kpc_500kpc_z1_'+key+'.cpkl'
+                fileout = file_begin + 'frbz_1kpc_500kpc_z05_'+key+'.cpkl'
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 
