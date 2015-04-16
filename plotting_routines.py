@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cPickle
 import itertools
+from werk_galaxies import galaxies
 
 #recreate Bertone 2010 Figure 1 where I'm plotting cloudy results for different densities
 
@@ -128,14 +129,28 @@ def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	x = data[xkey][idx]
 	l_logNA = data['l_logNA'][idx]
 	e_logNA = data['e_logNA'][idx]	
+	ID = data['ID'][idx]
 
-	upper = np.where(l_logNA == 'u')[0]
-	lower = np.where(l_logNA == 'l')[0]
-	norm  = np.where(l_logNA == 'n')[0]
+##CODE FROM MUNIER
+	limKwargs = {'fmt':None,'capsize':3,'elinewidth':2,'mew':0,'yerr':0.5}
+	nrmKwargs = {'fmt':'s','markersize':5} 
+	for i in range(len(x)):
+		sSFR = galaxies[ID[i].strip()][5]/10**(galaxies[ID[i].strip()][2])
+		color = 'DodgerBlue' if sSFR > 1e-11 else 'Tomato'
+		if l_logNA[i] == 'u':
+			ax.errorbar(x[i],logNA[i],lolims=True,ecolor=color,**limKwargs)
+		elif l_logNA[i] == 'l':
+			ax.errorbar(x[i],logNA[i],uplims=True,ecolor=color,**limKwargs)
+		elif l_logNA[i] == 'n':
+			ax.errorbar(x[i],logNA[i],yerr=e_logNA[i],color=color,**nrmKwargs)
 
-	ax.errorbar(x[upper],logNA[upper],yerr=0.5,uplims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
-	ax.errorbar(x[lower],logNA[lower],yerr=0.5,lolims=True,fmt=None,ecolor='Crimson',capsize=5,elinewidth=2,mew=0)
-	ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='o',color='DarkOrange',ecolor='m')
+	#upper = np.where(l_logNA == 'u')[0]
+	#lower = np.where(l_logNA == 'l')[0]
+	#norm  = np.where(l_logNA == 'n')[0]
+
+	#ax.errorbar(x[upper],logNA[upper],yerr=0.5,uplims=True,fmt=None,ecolor='m',capsize=5,elinewidth=2,mew=0)
+	#ax.errorbar(x[lower],logNA[lower],yerr=0.5,lolims=True,fmt=None,ecolor='Crimson',capsize=5,elinewidth=2,mew=0)
+	#ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='o',color='DarkOrange',ecolor='m')
 	return
 
 def plot_ion_fractions(inputfile,ax,txtDens):
