@@ -6,12 +6,12 @@ model_mid = '/frbz_6kpc_1Mpc_z1_'
 ions = ['OVI']
 
 ##PARAMETERS FOR THE IMO###
-lambda_center,lambda_range,lambda_res = 0.204,0.0012,3.4e-6 
+lambda_center,lambda_range,lambda_res = 0.204,0.0006,3.4e-6 
 z_obs = 1
 lambda_emit = np.array([0.1032])
 #lambda_obs = lambda_emit*(1.+z_obs)
 lambda_obs = np.array([0.2040])
-stddev = (100./3.e5)*lambda_emit
+stddev = (100./3.e5)*lambda_emit/lambda_res
 step_width = 10.#5.
 
 for i in range(len(ions)):
