@@ -14,12 +14,13 @@ lambda_obs = np.array([0.2040])
 stddev = (100./3.e5)*lambda_emit/lambda_res
 step_width = 10.#5.
 
+#i=0
 for i in range(len(ions)):
 	filename = model_beg+model_gqs[0]+model_mid+ions[i]+'.cpkl'
 	frb = cPickle.load(open(filename,'rb'))
-
-	ip = ImageProducer(frb,lambda_center,lambda_range,lambda_res,lambda_obs[i],step_width,z_obs)
 	
+	ip = ImageProducer(frb,lambda_center,lambda_range,lambda_res,lambda_obs[i],step_width,z_obs)
+		
 	ip.convolve_image(stddev[i])
 
 	outputfile = 'IMOcube_'+ions[i]+'_z'+str(z_obs)+'step'+str(int(step_width))+'.fits'	
