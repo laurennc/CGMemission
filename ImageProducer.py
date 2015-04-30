@@ -7,6 +7,7 @@ from astropy.io import fits
 import os 
 from astropy.coordinates.angles import Angle
 import math
+from scipy.integrate import trapz
 
 class ImageProducer(object):
 	"""ImageProducer receives one of the frb image arrays that I've produced.
@@ -32,13 +33,13 @@ class ImageProducer(object):
 		self.frb = frbarray
 		#self.wavelengths = np.arange(lambda_center-lambda_range,lambda_center+lambda_range+lambda_res,lambda_res)[:-1]
 		#self.wavelengths = np.arange(0.204-0.0012,0.204+0.0012+3.4e-6,3.4e-6)
-		range = math.ceil((2.*lambda_range)/lambda_res)/2.
-		self.wavelengths = np.arange(-range,range+1,1)*lambda_res+lambda_center
+		lrange = int(math.ceil((2.*lambda_range)/lambda_res)/2.)
+		self.wavelengths = np.arange(-lrange,lrange+1,1)*lambda_res+lambda_center
 
 		#build the step function that will lead to the convolver shape
 		self.step_function = np.zeros(len(self.wavelengths))
 		idx = (np.abs(self.wavelengths-lambda_line)).argmin()
-		self.step_function[idx-step_width/2.:idx+step_width/2.+1] = 1.0/(step_width*lambda_res)
+		self.step_function[idx-step_width/2.:idx+step_width/2.] = 1.0/((step_width)*lambda_res)
 		##the previous step puts it in unites of photons/ micron and the next converts microns to Angstroms	
 		self.step_function = self.step_function*1.e-4
 		self.z_observed = z_observed
@@ -101,8 +102,12 @@ class ImageProducer(object):
 
 	##NOTE: Rather than having to transpose the cube, I've just built it as lambda,y,x
 
-		hdu = fits.PrimaryHDU(self.img)
+		hdu = fits.PrimaryHDU(self.img,header=hdr)
 		hdu.writeto(outputname)		
 		return
 
-	
+	def integrate(self,x,y):
+		z = trapz(self.img[:,x,y],self.wavelengths)
+		return z,self.frb[x,y]
+
+
