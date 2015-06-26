@@ -1,8 +1,11 @@
 from ImageProducer import *
 
-model_gqs = ['g1q1']
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z1/'
-model_mid = '/frbz_6kpc_1Mpc_z1_'
+#model_gqs = ['g1q1']
+model_gqs = ['']
+#model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z1/'
+#model_mid = '/frbz_6kpc_1Mpc_z1_'
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/forIMO/'
+model_mid = '/frbz_500kpc_z1_'
 ions = ['OVI']
 
 ##PARAMETERS FOR THE IMO###
@@ -23,7 +26,7 @@ for i in range(len(ions)):
 		
 	ip.convolve_image(stddev[i])
 
-	outputfile = 'IMOcube_'+ions[i]+'_z'+str(z_obs)+'step'+str(int(step_width))+'.fits'	
+	outputfile = 'IMOcube_'+ions[i]+'_z'+str(z_obs)+'step'+str(int(step_width))+'_500kpc_fixed.fits'	
 	ip.save_as_fits(outputfile)
 	
 	
