@@ -132,11 +132,11 @@ def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	ID = data['ID'][idx]
 
 ##CODE FROM MUNIER
-	limKwargs = {'fmt':None,'capsize':3,'elinewidth':2,'mew':0,'yerr':0.5}
+	limKwargs = {'fmt':None,'capsize':3,'elinewidth':2,'mew':0,'yerr':0.3}
 	nrmKwargs = {'fmt':'s','markersize':5} 
 	for i in range(len(x)):
 		sSFR = galaxies[ID[i].strip()][5]/10**(galaxies[ID[i].strip()][2])
-		color = 'DodgerBlue' if sSFR > 1e-11 else 'Tomato'
+		color = 'DodgerBlue' if sSFR > 1e-11 else 'Crimson'
 		if l_logNA[i] == 'u':
 			ax.errorbar(x[i],logNA[i],lolims=True,ecolor=color,**limKwargs)
 		elif l_logNA[i] == 'l':
@@ -253,7 +253,7 @@ def plot_all_ions(fileout):
 
 def plot_specific_ion_fraction(inputfile,ax,ionnum,color,labelOn=False,txt='',plotDashed=False,plotDotted=False):
 	data = np.genfromtxt(inputfile,skip_header=12)
-        x = data[:,0]
+	x = data[:,0]
         if labelOn:
 		ax.plot(x,data[:,ionnum],linewidth=1.5,color=color,label=txt)
 	elif plotDashed:
@@ -265,7 +265,7 @@ def plot_specific_ion_fraction(inputfile,ax,ionnum,color,labelOn=False,txt='',pl
 
         ax.set_ylim(-10,1)
         #ax.set_ylim(0,1)
-	ax.set_xlim(4.5,7)
+	#ax.set_xlim(4.5,7)
 	return
 
 def plot_specific_ion_EUVB_loop(inputPatt,outputfile,ion,ionnum):
@@ -354,5 +354,19 @@ def plot_single_specific_ion(inputPatt,outputfile,ion,ionnum):
 	plt.savefig('ionfrac_Standard_O6.png')
 	plt.close()
 	return
+
+
+def weighted_temp_dens_hist(data_sphere,weight_field,fileout):
+	hden=np.log10(np.array(data_sphere["H_NumberDensity"]))
+	temp=np.log10(np.array(data_sphere["Temperature"]))
+	weights = np.log10(data_sphere[weight_field])
+	hist = np.histogram2d(hden,temp,weights=weights,range=[[-6,2],[3, 8]])
+	plt.imshow(hist[0],extent=[-6,2,3,8],interpolation='none')
+	plt.colorbar()
+	plt.set_cmap('jet')
+	plt.savefig(fileout)
+	plt.close()
+	return
+
 
 
