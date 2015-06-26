@@ -11,10 +11,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 import itertools
-from Line_ORG import *
+import matplotlib.gridspec as gridspec
+#from Line_ORG import *
 #from Galaxy import *
 import re
-from lauren import make_SB_profile
+from lauren_holding import make_SB_profile
 from radial_data_lauren import *
 from plotting_routines import *
 
@@ -36,7 +37,7 @@ def make_radius_array():
         return r, dr, nrad
 
 def plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean):
-        mslope = (0.0075-0.07)/nrad
+        mslope = (0.015-0.07)/nrad
 	total_pts, num_above = 0.,0.
         for irad in range(nrad):
 		minrad = irad*dr
@@ -47,7 +48,7 @@ def plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean):
 		num_above = num_above + len(np.where(np.log10(frbarr[thisindex])>np.log10(rpmean[irad]))[0])
 		#FOr the scatter plot
 		alphahere = mslope*irad + 0.07
-        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'k.',alpha=alphahere)
+        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'.',alpha=alphahere,color='White')
 	#print float(num_above),float(total_pts)
 	percent_above = float(num_above)/float(total_pts)
         return percent_above
@@ -60,8 +61,7 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
         rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
 	percent_above = plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean)
 	idr = np.where(rpr <= max_r)[0]
-	print rpr[50]
-	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'c-',linewidth=2.2)
+	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'k-',linewidth=1.7)#,color='Coral')
 	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
 	ax.set_xticks(range(0,160,30))
@@ -71,6 +71,8 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 
 #ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
 ions = ['SiIV','CIII','OVI']
+#ions = ['HI','MgII','SiII']
+#ions = ['SiIII','CIV','OVI']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'
 model_gqs = ['g1q01','g1q1','g1q10']#,'g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 model_mid = '/frbz_1kpc_500kpc_z02_'
@@ -82,11 +84,13 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-fileout = 'scatter_matrix_Zfixed_500kpc.png'
+fileout = 'scatter_matrix_Zfixed_500kpc_sSFR_poster_nolabels.png'
 xlen,ylen = 3,3 #6#2,6
-fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey='row')
+fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 fig.set_size_inches(8,8)#,16)
-plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
+gs1 = gridspec.GridSpec(4, 4)
+gs1.update(wspace=0.025, hspace=0.05)
+#plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
 ax = ax.flat
 i = 0
 
@@ -103,22 +107,29 @@ for ion in ions:
 		modelname = model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl'
                 profile_names = [model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl']
 
+		if ion == 'HI':
+			modelname = model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl'
+			profile_names = [model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl']
+
 		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
+
+		plt.axis('on')
+   		ax[i].set_xticklabels([])
+    		ax[i].set_yticklabels([])
 		
 		count = count + 1
 		i = i + 1	
 
 
-for j in range(len(model_gqs)):
-	ax[j].set_title(model_gqs[j])
+#for j in range(len(model_gqs)):
+#	ax[j].set_title(model_gqs[j])
 
-for k in range(len(ions)):
-	print k*xlen+2, ions[k]
-	ax[k*xlen+2].text(100,17.05,ions[k])
+#for k in range(len(ions)):
+#	ax[k*xlen+2].text(100,17.05,ions[k])
 
 
 plt.tight_layout()
-plt.savefig(fileout)
+plt.savefig(fileout,transparent=True)
 plt.close()
 f.close()
 
