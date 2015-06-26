@@ -32,14 +32,28 @@ rad = 320./pf['kpc']
 
 
 #For making radial profiles of different quanitites:
-pc = PlotCollection(pf)
+#pc = PlotCollection(pf)
 #Default of this type of profile is weight='CellMassMsun', x_bins=128, x_log=True
-pc.add_profile_sphere(320.0,"kpc",["Radiuskpc","Temperature"],x_bins=320,x_log=False)
-pc.save()
+#pc.add_profile_sphere(320.0,"kpc",["Radiuskpc","Temperature"],x_bins=320,x_log=False)
+#pc.save()
+
+#pc = PlotCollection(pf)
+#pc.add_profile_sphere(320.0,"kpc",["Radiuskpc","H_NumberDensity"],x_bins=320,x_log=False)
+#pc.save()
+
 
 pc = PlotCollection(pf)
-pc.add_profile_sphere(320.0,"kpc",["Radiuskpc","H_NumberDensity"],x_bins=320,x_log=False)
-pc.save()
+pc.add_profile_sphere(1000.0,"kpc",["Radiuskpc","Temperature"],weight='CellMassMsun')
+pc.set_xlim(2,1000)
+pc.save('log')
 
+pc = PlotCollection(pf)
+pc.add_profile_sphere(1000.0,"kpc",["Radiuskpc","Metallicity"],weight='CellMassMsun')
+pc.set_xlim(2,1000)
+pc.save('log')
 
+pc = PlotCollection(pf)
+pc.add_profile_sphere(1000.0,"kpc",["Radiuskpc","Density"])
+pc.set_xlim(2,1000)
+pc.save('log')
 
