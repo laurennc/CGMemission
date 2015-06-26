@@ -83,7 +83,9 @@ class ImageProducer(object):
 		## RECUERDA: fits starts counting from 1 not zero
 
 		crpix = np.array([len(self.wavelengths)/2.+0.5,len(self.frb[1,:])/2.+0.5,len(self.frb[0,:])/2.+0.5])
-		crval = np.array([Angle('00d05m00s').degree,Angle('-00d18m00s').degree,0.2040])
+		##This sets position in the FOV of the instrument
+		#crval = np.array([Angle('00d05m00s').degree,Angle('-00d18m00s').degree,0.2040])
+		crval = np.array([Angle('00d00m00s').degree,Angle('00d00m00s').degree,0.2040])
 		cdelt = np.array([Angle('00d00m00.2s').degree,Angle('00d00m00.2s').degree,3.46*1e-6])
 		hdr = fits.Header()
 		hdr['NAXIS']  = self.img.ndim
