@@ -1,6 +1,7 @@
 from yt.mods import *
 import numpy as np
 import cPickle
+import math
 
 ##################### z = 0 #########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
@@ -8,19 +9,24 @@ import cPickle
 ##################### z = 0.2 ##########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 ####################  z = 0.5 ###########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
+#fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
 ####################  z = 1.0 ##########################
-#fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
+fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 
+
+################satellite position at z=1#################
+#pos =  (0.38492584228516125, 0.46051788330078125, 0.49160003662109875)
 
 ##############################################################3
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
 
 
-fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
+#fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
 #fields = ['Emission_HAlpha','Emission_OVI','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
-
+#fields = ['Emission_CIV','Emission_OVI','Emission_SiIV']
+#fields = ['Emission_OVI']
+fields = ['Density']
 
 #width = 200./pf['kpc']
 width = 320./pf['kpc']
@@ -30,10 +36,10 @@ res = [320,320]
 #res = [800,800]
 #res = [40,40]
 
-project_X = True
-project_Y = True
-project_Z = True
-project_faceon = False
+project_X = False
+project_Y = False
+project_Z = False
+project_faceon = True
 
 if project_X:
 	projx = pf.h.proj(0,fields)
@@ -118,7 +124,9 @@ if project_faceon:
 	dense_cold= dense_ad.cut_region(['grid["Temperature"] < 1e4'])
 	
 	L = dense_cold.quantities['AngularMomentumVector']()
-	
+	#L[2] = L[2] + math.pi	
+	L[2] = L[2] = 0.25
+
 	projFace = OffAxisProjectionPlot(pf, L, fields, ds.center, (320, "kpc"))
 	
 	#frbFace = projFace['Emission_CIII'].image.get_array()
@@ -134,33 +142,37 @@ if project_faceon:
         #fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_CIV.cpkl'
         #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_OVI'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_OVI.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_OVI'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/forIMO/frbEdgeTest_1kpc_z1_OVI.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+       
+	frbFace = projFace['Density'].image.get_array()
+	fileout = 'bertone_frbs/emis/grid_galquas/forIMO/frbEdgeTest_1kpc_z1_Density.cpkl'
+	cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)	
+ 
+	#frbFace = projFace['Emission_MgII'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_MgII.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_MgII'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_MgII.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_SiII'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiII.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_SiII'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiII.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_SiIII_1207'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIII_1207.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_SiIII_1207'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIII_1207.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_SiIII_1883'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIII_1883.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_SiIII_1883'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIII_1883.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_SiIV'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIV.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
         
-	frbFace = projFace['Emission_SiIV'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_SiIV.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
-        
-	frbFace = projFace['Emission_HAlpha'].image.get_array()
-	fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_HAlpha.cpkl'
-        cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
+	#frbFace = projFace['Emission_HAlpha'].image.get_array()
+	#fileout = 'bertone_frbs/emis/grid_galquas/z05/g1q1/frbFace_1kpc_z05_HAlpha.cpkl'
+        #cPickle.dump(frbFace,open(fileout,'wb'),protocol=-1)
 
 
 

@@ -13,19 +13,25 @@ import re
 ####################  z = 1.0 ##########################
 fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 
+################satellite position at z=1#################
+pos =  (0.38492584228516125, 0.46051788330078125, 0.49160003662109875)
 
 ##############################################################3
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
-val, pos = pf.h.find_max('Density')
+#val, pos = pf.h.find_max('Density')
 
 
 #fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
 fields = ['Emission_OVI','Emission_CIII_977']
 
-
-width = 981.5/pf['kpc']
+#ORIGINAL
+#width = 981.5/pf['kpc']
 res = [151,151]
-thickness = 1000./pf['kpc']
+#thickness = 1000./pf['kpc']
+
+#ZOOM IN
+width = 500./pf['kpc']
+thickness = 500./pf['kpc']
 
 project_X = False
 project_Y = False
@@ -37,7 +43,7 @@ if project_X:
 
 	for field in fields:
 		key = re.split('Emission_|',field)[1]
-		fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbx_6kpc_1Mpc_z1_'+key+'.cpkl'
+		fileout = 'bertone_frbs/emis/grid_galquas/forIMO/frbx_500kpc_z1_'+key+'.cpkl'
 		cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
@@ -46,7 +52,7 @@ if project_Y:
 
 	for field in fields:
       	        key = re.split('Emission_|',field)[1]
-                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frby_6kpc_1Mpc_z1_'+key+'.cpkl'
+                fileout = 'bertone_frbs/emis/grid_galquas/forIMO/frby_500kpc_z1_'+key+'.cpkl'
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 	
 
@@ -56,7 +62,7 @@ if project_Z:
 
         for field in fields:
                 key = re.split('Emission_|',field)[1]
-                fileout = 'bertone_frbs/emis/grid_galquas/z1/g1q1/frbz_6kpc_1Mpc_z1_'+key+'.cpkl'
+                fileout = 'bertone_frbs/emis/grid_galquas/forIMO/frbz_500kpc_z1_satellite_'+key+'.cpkl'
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 
