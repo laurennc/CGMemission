@@ -5,6 +5,7 @@ from yt.mods import *
 import numpy as np
 import matplotlib
 import sys
+from matplotlib import colors
 
 #field = str(sys.argv[1])
 #print field
@@ -19,17 +20,24 @@ pos = [0.40328598,0.47176743,0.46131516]
 ########THIS IS FOR Z=0.2 !!!!!!!!!!######################
 #pos = [0.39871597,0.46913528,0.46808243]
 
-#field = ['HI_NumberDensity']
-field = ['OVI_Density','Emission_OVI']
+field = ['HI_NumberDensity']
+#field = ['OVI_Density','Emission_OVI']
 #field = ['CIII_Density','CIV_Density','OVI_Density','MgII_Density','SiII_Density','SiIII_Density','SiIV_Density']
 
-pp = ProjectionPlot(pf,'x',field,center=pos,width=(108.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)#,fontweight='bold')
-pp.set_cmap('all','spectral')
+#pp = ProjectionPlot(pf,'x',field,center=pos,width=(108.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)#,fontweight='bold')
+
+cmap = colors.ListedColormap(['Gray','DarkViolet','DarkTurquoise','Chartreuse','HotPink'])
+bounds = [np.power(10.,14.),np.power(10.,15.5),np.power(10.,17.2),np.power(10.,19),np.power(10.,20.3),np.power(10.,23.)]
+norm = colors.BoundaryNorm(bounds,cmap.N)
+
+pp = ProjectionPlot(pf,'x',field,center=pos,width=(300.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)#,cmap=cmap,norm=norm)
+
+pp.set_cmap('all',cmap)
 #pp.set_zlim('all',10**14.0,10**23.5)
 #pp.set_zlim('all',10**12.0,10**24.0)
 #pp.set_zlim('all',1.,10**7)
 #pp.save('euvb_proj/ColDens/control/euvb_control_z02')
 #pp.save('bertone_proj/ColDens/grid_galquas/g1q1/g1q1')
-pp.save('check_Ximena')
+pp.save('DLAlimits300')
 
 
