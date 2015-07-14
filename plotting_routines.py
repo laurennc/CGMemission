@@ -153,6 +153,7 @@ def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	#ax.errorbar(x[norm],logNA[norm],yerr=e_logNA[norm],fmt='o',color='DarkOrange',ecolor='m')
 	return
 
+
 def plot_ion_fractions(inputfile,ax,txtDens):
 	#inputfile = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/control/bertone/euvb_ion_run10_O.dat"
 	#print inputfile
