@@ -25,10 +25,10 @@ def make_thin_frb(pf,axis,fields,center,width,thickness,resolution):
         return frb
 
 ##################### z = 0 #########################
-#fn="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
+fn="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
 #pos = [0.40328598,0.47176743,0.46131516]
 ##################### z = 0.2 ##########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
+#fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 ####################  z = 0.5 ###########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
 ####################  z = 1.0 ##########################
@@ -38,16 +38,16 @@ fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
 
-resolution = [320,320]
-resolution = [64,64]
-#resolution = [13,13]
+#resolution = [320,320]
+#resolution = [64,64]
+resolution = [13,13]
 
 center = pos
 #thickness = 320./pf['kpc']
-#thickness = 500./pf['kpc']
-#width = 320./pf['kpc']
-thickness = 1./pf['Mpc']
-width = 1./pf['Mpc']
+thickness = 500./pf['kpc']
+width = 320./pf['kpc']
+#thickness = 1./pf['Mpc']
+#width = 1./pf['Mpc']
 
 
 emission = True
@@ -63,15 +63,15 @@ if coldens:
 
 if emission:
 	#fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
-	#file_begin = 'bertone_frbs/emis/grid_galquas/z02/g1q10/'	
-	fields = ['Emission_OVI']
-	file_begin = 'wide_'
+	file_begin = 'bertone_frbs/final/emis/z0/g1q1/'	
+	fields = ['Emission_OVI','Emission_CIII_977','Emission_CIV','Emission_SiIV']
+	#file_begin = 'frb_resolution_z0_25kpc_zscaled_Zfixed_500kpc_'
 	key_string,keydx = 'Emission_|',1
 	file_end = '.cpkl'
 
 project_X = True
-project_Y = False
-project_Z = False
+project_Y = True
+project_Z = True
 
 if project_X:
 	axis = 'x'
@@ -79,7 +79,7 @@ if project_X:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbx_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frbx_25kpc_500kpc_z0_'+key+file_end
                 cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
@@ -88,7 +88,7 @@ if project_Y:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frby_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frby_25kpc_500kpc_z0_'+key+file_end
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 
 if project_Z:
@@ -97,7 +97,7 @@ if project_Z:
 
         for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbz_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frbz_25kpc_500kpc_z0_'+key+file_end
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 

@@ -46,7 +46,7 @@ def make_Cloudy_table(table_index):
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
 	#hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z1/g1q1/g1q1_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z05/g1q1/g1q1_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -60,7 +60,7 @@ def make_ion_table(ion,number):
 	hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
 	#was 10 before HI run
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q1/bert_ion_run%i_"+ion+".dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q01/bert_ion_run%i_"+ion+".dat"
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
         T=numpy.linspace(T_min,T_max, T_n_bins)
         table = np.zeros((hden_n_bins,T_n_bins))
