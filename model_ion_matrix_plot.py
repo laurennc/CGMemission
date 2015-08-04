@@ -48,7 +48,7 @@ def plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean):
 		num_above = num_above + len(np.where(np.log10(frbarr[thisindex])>np.log10(rpmean[irad]))[0])
 		#FOr the scatter plot
 		alphahere = mslope*irad + 0.07
-        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'.',alpha=alphahere,color='White')
+        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'.',alpha=alphahere,color='Gray')
 	#print float(num_above),float(total_pts)
 	percent_above = float(num_above)/float(total_pts)
         return percent_above
@@ -61,7 +61,7 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
         rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
 	percent_above = plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean)
 	idr = np.where(rpr <= max_r)[0]
-	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'k-',linewidth=1.7)#,color='Coral')
+	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
 	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
 	ax.set_xticks(range(0,160,30))
@@ -84,12 +84,12 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-fileout = 'scatter_matrix_Zfixed_500kpc_sSFR_poster_nolabels.png'
+fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 fig.set_size_inches(8,8)#,16)
 gs1 = gridspec.GridSpec(4, 4)
-gs1.update(wspace=0.025, hspace=0.05)
+gs1.update(wspace=0.00, hspace=0.05)
 #plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
 ax = ax.flat
 i = 0
@@ -114,22 +114,27 @@ for ion in ions:
 		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
 
 		plt.axis('on')
-   		ax[i].set_xticklabels([])
-    		ax[i].set_yticklabels([])
+   		#ax[i].set_xticklabels([])
+    		#ax[i].set_yticklabels([])
 		
 		count = count + 1
 		i = i + 1	
 
 
-#for j in range(len(model_gqs)):
-#	ax[j].set_title(model_gqs[j])
+for j in range(len(model_gqs)):
+	ax[j].set_title(model_gqs[j])
 
-#for k in range(len(ions)):
-#	ax[k*xlen+2].text(100,17.05,ions[k])
+for k in range(len(ions)):
+	ax[k*xlen+2].text(100,17.05,ions[k])
 
+ax[7].set_xlabel('Impact Parameter [kpc]')
+ax[3].set_ylabel('Column Density [cm^-2]')
+
+#fig.text(0.5, 0.005, 'Impact Parameter [kpc]', ha='center')
+#fig.text(0.005, 0.5, 'Column Density [cm^-2]', va='center', rotation='vertical')
 
 plt.tight_layout()
-plt.savefig(fileout,transparent=True)
+plt.savefig(fileout)#,transparent=True)
 plt.close()
 f.close()
 
