@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 import itertools
 import matplotlib.gridspec as gridspec
-#from Line_ORG import *
-#from Galaxy import *
 import re
 from lauren_holding import make_SB_profile
 from radial_data_lauren import *
@@ -20,7 +18,7 @@ from matplotlib import colors
 ############FUNCTIONS FOR THE PLOTTING####################################
 
 def basic_profile_vals(modelnames,xL,z=0.):
-        rpr,rpmean,rpmedian,rpmax,rpmin,rp_std = make_SB_profile(modelnames[0],modelnames[1],modelnames[2],xL,z=0.)
+        rpr,rpmean,rpmedian,rpmax,rpmin,rp_std = make_SB_profile(modelnames[0],modelnames[1],modelnames[2],xL,z=z)
         return rpr,rpmean,rpmedian,rpmax,rpmin
 
 def make_radius_array(key):
@@ -40,7 +38,7 @@ def make_radius_array(key):
         nrad = len(radial)
         return xL,r, dr, nrad
 
-def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key,z=0.):
+def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key,z=0.,comoving=False):
         mslope = (0.0075-0.07)/nrad
         for irad in range(nrad):
 		minrad = irad*dr
@@ -49,8 +47,11 @@ def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key,z=0.):
         	alphahere = mslope*irad + 0.07
 		rnow,frbnow = r[thisindex],np.log10(frbarr[thisindex]/(1.+z)**4.0)	
 	
+		if comoving:
+			rnow = rnow*(1.+z)
+
 		lims = [10,3,2,1,-10]
-                colors = ['Chartreuse','DarkTurquoise','HotPink','White']
+                colors = ['Chartreuse','DarkTurquoise','HotPink','Grey']
                 i = 0
 		while i < len(lims)-1:
 			wanted = np.where((frbnow < lims[i]) & (frbnow >= lims[i+1]))[0]
@@ -71,15 +72,19 @@ def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key,z=0.):
                 #ax.plot(rhere[wanted],np.log10(datahere[wanted]),'g.',alpha=0.5)
         return
 
-def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow):
+def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow,comoving=False):
 	xL,r,dr,nrad = make_radius_array(res_key)
+	##EDITED HERE FROM 0 TO 1
 	frbarr = np.array(cPickle.load(open(modelnames[0],'rb')))
-	plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,res_key,z=znow)
+	plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,res_key,z=znow,comoving=comoving)
 	rpr,rpmean,rpmedian,rpmax,rpmin = basic_profile_vals(modelnames,xL,z=znow)
 	
 	idr = np.where(rpr <= 160.0)
-	ax.plot(rpr[idr],np.log10(rpmedian[idr]),color='k',linewidth=2.2)#previously Goldenrod	
-	print np.max(rpr[idr]),np.max(np.log10(rpmedian[idr]))
+	if comoving:
+		ax.plot(rpr[idr]*(1.+znow),np.log10(rpmedian[idr]),color='k',linewidth=2.2)
+	else:
+		ax.plot(rpr[idr],np.log10(rpmedian[idr]),color='k',linewidth=2.2)#previously Goldenrod	
+	#print np.max(rpr[idr]),np.max(np.log10(rpmedian[idr]))
 	ax.set_xticks(range(0,160,30))
 	#ax.set_xlim(0,160)
 	ax.axis([0.,160.,-6.,6.5])
@@ -101,13 +106,72 @@ def add_HI_contour(ax,HIfrb,ncontours):
 	CS = ax.contour(X,Y,HIfrb,[15,18],color='k')
 	#plt.clabel(CS, fontsize=9, inline=1)
 	return
+
+def werk_cloudy_ions(emis,gals,ion):
+        blues = np.array([0.,0.])
+        reds = np.array([0.,0.])
+
+        i,j = 0,0
+
+        ##set it up for subplots since I'll be making a nine panel plot
+
+        while i < len(emis['ID']):
+                gal_id = emis['ID'][i]
+                #print gal_id
+                #gal_id = gal_id[0:10]
+                idx = np.where(gals['ID'] == gal_id)[0]
+                sSFR = gals['SFR'][idx]/np.power(10.,gals['mStar'][idx])
+                color = 'DodgerBlue' if sSFR > 1e-11 else 'Crimson'
+                if color == 'DodgerBlue':
+                        temp = np.array([0.,0.])
+                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]
+                        blues = np.vstack((blues,temp))
+                        temp[1] = emis[ion+'max'][j]
+                        blues = np.vstack((blues,temp))
+                if color == 'Crimson':
+                        temp = np.array([0.,0.])
+                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]
+                        reds = np.vstack((reds,temp))
+                        temp[1] = emis[ion+'max'][j]
+                        reds = np.vstack((reds,temp))
+
+                i = i + 4
+                j = j + 1
+
+
+        blues = np.delete(blues,0,0)
+        reds = np.delete(reds,0,0)
+        return blues,reds
+
+def plot_connected_minmax(ax,blues,reds):
+        i = 0
+        while i < len(blues):
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],'.',color='DodgerBlue')
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],color='DodgerBlue',lw=2.0)
+                i = i + 2
+
+        i = 0
+        while i < len(reds):
+                ax.plot(reds[i:i+2,0],reds[i:i+2,1],'.',color='Crimson')
+                ax.plot(reds[i:i+2,0],reds[i:i+2,1],color='Crimson',lw=2.0)
+                i = i + 2
+
+        return
+
+
+
 #########################################################################
 
-ions = ['SiIV','CIV','OVI']
-redshift_key = 'z0'
-znow = 0
+#ions = ['SiIV','CIV','OVI']
+ions = ['CIII','CIV','OVI']
+redshift_key = 'z05'
+znow = 0.5
 
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'+redshift_key+'/' ##CHANGED FORM Z02
+emis = cPickle.load(open('cloudywerk.cpkl','rb'))
+gals = cPickle.load(open('werk_galaxy_properties.cpkl','rb'))
+
+#model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'+redshift_key+'/' ##CHANGED FORM Z02
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'+redshift_key+'/'
 model_gqs = ['g1q01','g1q1','g1q10']
 res_keys = ['1kpc','1kpc','1kpc']
 
@@ -116,7 +180,7 @@ percentile = 0.01
 
 ncontours = 4
 
-fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc.png'
+fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons_comoving.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
@@ -129,6 +193,8 @@ i = 0
 #x=[0,1,2,3,4,5,6,7,8,9]
 
 for ion in ions:
+	print ion
+	blues,reds = werk_cloudy_ions(emis,gals,ion)
 	count = 0
 	while count < 3:
 		print ion, count, model_gqs[count],i
@@ -136,17 +202,24 @@ for ion in ions:
 
 
 		#ax[i].plot(x)
-		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow)
+		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=True)
+		if ion != 'SiIV':
+			plot_connected_minmax(ax[i],blues,reds)
 		#ax[i].set_title(model_gqs[count])
-		plt.axis('on')
-		ax[i].set_xticklabels([])
-		ax[i].set_yticklabels([])
+		#plt.axis('on')
+		#ax[i].set_xticklabels([])
+		#ax[i].set_yticklabels([])
 		i = i + 1
 		count = count + 1	
 
+for j in range(len(model_gqs)):
+        ax[j].set_title(model_gqs[j])
+
+for k in range(len(ions)):
+        ax[k*xlen+2].text(100,5.05,ions[k])
 
 plt.tight_layout()
-plt.savefig(fileout, transparent=True)
+plt.savefig(fileout)#, transparent=True)
 plt.close()
 
 
