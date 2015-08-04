@@ -370,4 +370,13 @@ def weighted_temp_dens_hist(data_sphere,weight_field,fileout):
 	return
 
 
+def plot_yt_weighted_fields(hdenfile,tempfile,fileout):
+	hden = cPickle.load(open(hdenfile,'rb'))
+	temp  = cPickle.load(open(tempfile,'rb'))
+	plt.plot(np.log10(hden),np.log10(temp),'.',alpha=0.2,color='DodgerBlue')
+	plt.xlabel('Hydrogen Density [cm^-2]')
+	plt.ylabel('Temperature [K]')	
+	plt.savefig(fileout)
+	return
+
 
