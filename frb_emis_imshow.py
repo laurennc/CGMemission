@@ -163,14 +163,14 @@ def plot_connected_minmax(ax,blues,reds):
 #########################################################################
 
 #ions = ['SiIV','CIV','OVI']
-ions = ['CIII','CIV','OVI']
+ions = ['CIII_977','CIV','OVI']
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
 model_gqs = ['g1q1','g1q1','g1q1']
 res_keys = ['1kpc','1kpc','1kpc']
 	
-redshift_keys = ['z1','z05','z1']
+redshift_keys = ['z0','z05','z1']
 znow = [0.,0.5,1.0]
 	
 max_r = 160.
@@ -193,7 +193,7 @@ for ion in ions:
 	count = 0
 	while count < 3:
 		print ion, count, model_gqs[count],i
-		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
+		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
 
 		plot_frb(modelnames[0],ax[i],z=znow[count])
 
