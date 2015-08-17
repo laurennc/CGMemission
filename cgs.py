@@ -15,6 +15,7 @@ km   = 1.0e5					# kilometer in cm
 h100 = 3.24077929e-18 # hertz
 c    = 29979245800.0  # speed of light [ cm/s ]
 eV   = 1.60217657e-12 # 1 eV in erg
+h    = 6.626e-27      # Planck's constant [ergs/s]
 
 def P(rho,T):
 	return rho*kb*T/(mu*mp)
