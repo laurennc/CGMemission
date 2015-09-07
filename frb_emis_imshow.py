@@ -14,6 +14,7 @@ from lauren_holding import make_SB_profile
 from radial_data_lauren import *
 from plotting_routines import *
 from matplotlib import colors
+import brewer2mpl as brew
 
 ############FUNCTIONS FOR THE PLOTTING####################################
 
@@ -90,15 +91,22 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow,comoving=F
 	ax.axis([0.,160.,-6.,6.5])
 	return
 
-def plot_frb(modelname,ax,z=0.,include_colorbar=False):
+def plot_frb(modelname,ax,z=0.,include_colorbar=False,obs_colors=True):
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
-	cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
-	bounds = [-5,1,2,3,5]
-	norm = colors.BoundaryNorm(bounds,cmap.N)
-	im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm,origin='lower')
+	if obs_colors:
+		cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+		bounds = [-5,1,2,3,5]	
+		norm = colors.BoundaryNorm(bounds,cmap.N)
+		im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm,origin='lower')
+	else:
+		bmap = brew.get_map('PuRd','Sequential',9)
+		#bmap = brew.get_map('PRGn','Diverging',9)
+		cmap = bmap.get_mpl_colormap(N=1000, gamma=2.0)
+		im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,origin='lower')
+
 	#if include_colorbar==True:
 	#	plt.colorbar(im)
-	return
+	return im
 
 def add_HI_contour(ax,HIfrb,ncontours):
 	xL,r,dr,nrad = make_radius_array('1kpc')
@@ -163,27 +171,42 @@ def plot_connected_minmax(ax,blues,reds):
 #########################################################################
 
 #ions = ['SiIV','CIV','OVI']
-ions = ['CIII_977','CIV','OVI']
+#ions = ['CIII_977','CIV','OVI']
+
+no_axes_labels = False
+obs_colors = False
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
+
+##ASTROFEST PARAMETERS
+#model_gqs = ['g1q1']
+#res_keys = ['1kpc']
+#redshift_keys = ['z0']
+#znow = [0.]
+#ions = ['SiIV','CIII_977','CIV','OVI']
+
+
+##REDSHIFT EVOLUTION PARAMETERS
 model_gqs = ['g1q1','g1q1','g1q1']
 res_keys = ['1kpc','1kpc','1kpc']
-	
 redshift_keys = ['z0','z05','z1']
-znow = [0.,0.5,1.0]
-	
+#znow = [0.,0.5,1.0]
+znow = [0.,0.,0.]
+ions = ['CIII_977','CIV','OVI']	
+
 max_r = 160.
 percentile = 0.01
 ncontours = 4
 
-fileout = 'frb_emis_varyRedshift.png'
+fileout = 'frb_emis_theory_nozscaling.png'
 
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
-fig.set_size_inches(8,8)
-gs1 = gridspec.GridSpec(4, 4)
-gs1.update(wspace=0.025, hspace=0.05)
+fig.set_size_inches(12,12)
+#fig.set_size_inches(24,6)
+#gs1 = gridspec.GridSpec(1, 4)
+#gs1.update(wspace=0.025, hspace=0.05)
 ax = ax.flat
 i = 0
 
@@ -191,18 +214,27 @@ i = 0
 for ion in ions:
 	print ion
 	count = 0
-	while count < 3:
+	while count < len(model_gqs):
 		print ion, count, model_gqs[count],i
 		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
 
-		plot_frb(modelnames[0],ax[i],z=znow[count])
+		im_out = plot_frb(modelnames[0],ax[i],z=znow[count],obs_colors=obs_colors)
 
-		#ax[i].set_title(model_gqs[count])
-		#plt.axis('on')
-		#ax[i].set_xticklabels([])
-		#ax[i].set_yticklabels([])
+		if no_axes_labels:
+			ax[i].set_title(model_gqs[count])
+			plt.axis('on')
+			ax[i].set_xticklabels([])
+			ax[i].set_yticklabels([])
+			ax[i].set_yticklabels([])
+			ax[i].set_adjustable('box-forced')		
+
+		#ax[i].set_title(ion)		
 		i = i + 1
 		count = count + 1	
+
+fig.subplots_adjust(right=0.85)
+cbar_ax = fig.add_axes([0.9, 0.1, 0.05, 0.5])
+fig.colorbar(im_out, cax=cbar_ax)
 
 for j in range(len(model_gqs)):
         #ax[j].set_title(model_gqs[j])
@@ -211,8 +243,8 @@ for j in range(len(model_gqs)):
 for k in range(len(ions)):
         ax[k*xlen+2].text(75,-100,ions[k])
 
-plt.tight_layout()
-plt.savefig(fileout)#, transparent=True)
+#plt.tight_layout()
+plt.savefig(fileout)#,transparent=True)
 plt.close()
 
 
