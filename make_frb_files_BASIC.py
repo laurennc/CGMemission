@@ -2,6 +2,27 @@ from yt.mods import *
 import numpy as np
 import cPickle
 
+def make_thin_frb(pf,axis,fields,center,width,thickness,resolution):
+        axis = fix_axis(axis)
+        center = np.array(center)
+
+        LE,RE = center.copy(),center.copy()
+        LE[axis] -= thickness/2.0
+        RE[axis] += thickness/2.0
+
+        area_axes = [0,1,2]
+        i = area_axes.index(axis)
+        del area_axes[i]
+
+        LE[area_axes] -= width/2.0
+        RE[area_axes] += width/2.0
+
+        region = pf.h.region(center, LE, RE)
+        obj = pf.h.proj(axis,fields,source=region,center=center)
+        frb = obj.to_frb(width,resolution,center=center)
+
+        return frb
+
 ##################### z = 0 #########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
 #pos = [0.40328598,0.47176743,0.46131516]
@@ -22,6 +43,7 @@ width = 320./pf['kpc']
 #res = [13,13]
 #res = [64,64]
 res = [320,320]
+thickness = 500./pf['kpc']
 
 project_X = True
 project_Y = True
@@ -33,9 +55,8 @@ HIdens = True
 
 if project_X:
 	if temperature:
-		projx = pf.h.proj(0,'Temperature',weight_field=weightfield)
-		frbx = projx.to_frb(width,res,center=pos)
-		fileout = '/u/10/l/lnc2115/vega/data/Ryan/pickles/frbx_temp_mass.cpkl'
+		frbx = make_thin_frb(pf,'x',fields,width,thickness,res,weight_field=weightfield)	
+		fileout = '/u/10/l/lnc2115/vega/data/Ryan/pickles/''.cpkl'
         	cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
 
 	if HIdens:
