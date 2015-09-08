@@ -173,43 +173,45 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['SiIV','CIV','OVI']
 #ions = ['CIII_977','CIV','OVI']
 
-no_axes_labels = False
+no_axes_labels = True
 obs_colors = False
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
 
-##ASTROFEST PARAMETERS
-#model_gqs = ['g1q1']
-#res_keys = ['1kpc']
-#redshift_keys = ['z0']
-#znow = [0.]
-#ions = ['SiIV','CIII_977','CIV','OVI']
-
+#ASTROFEST PARAMETERS
+model_gqs = ['g1q1']
+res_keys = ['1kpc']
+redshift_keys = ['z02']
+znow = [0.]
+ions = ['SiIV','CIII_977','CIV','OVI']
+xlen,ylen = 1,4
+figxlen,figylen = 3,9
+fileout = 'frb_emis_z02_nozscaling.png'
 
 ##REDSHIFT EVOLUTION PARAMETERS
-model_gqs = ['g1q1','g1q1','g1q1']
-res_keys = ['1kpc','1kpc','1kpc']
-redshift_keys = ['z0','z05','z1']
+#model_gqs = ['g1q1','g1q1','g1q1']
+#res_keys = ['1kpc','1kpc','1kpc']
+#redshift_keys = ['z0','z05','z1']
 #znow = [0.,0.5,1.0]
-znow = [0.,0.,0.]
-ions = ['CIII_977','CIV','OVI']	
+#znow = [0.,0.,0.]
+#ions = ['CIII_977','CIV','OVI']	
+#xlen,ylen = 3,3
+#figxlen,figylen = 12,12
+#fileout = 'frb_emis_theory_nozscaling.png'
 
 max_r = 160.
 percentile = 0.01
 ncontours = 4
 
-fileout = 'frb_emis_theory_nozscaling.png'
-
-xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
-fig.set_size_inches(12,12)
+fig.set_size_inches(figxlen,figylen)
 #fig.set_size_inches(24,6)
 #gs1 = gridspec.GridSpec(1, 4)
 #gs1.update(wspace=0.025, hspace=0.05)
 ax = ax.flat
 i = 0
-
+print fileout
 
 for ion in ions:
 	print ion
@@ -221,27 +223,28 @@ for ion in ions:
 		im_out = plot_frb(modelnames[0],ax[i],z=znow[count],obs_colors=obs_colors)
 
 		if no_axes_labels:
-			ax[i].set_title(model_gqs[count])
+			#ax[i].set_title(model_gqs[count])
 			plt.axis('on')
 			ax[i].set_xticklabels([])
 			ax[i].set_yticklabels([])
 			ax[i].set_yticklabels([])
-			ax[i].set_adjustable('box-forced')		
 
+		ax[i].set_adjustable('box-forced')		
 		#ax[i].set_title(ion)		
+		ax[i].text(75,-100,ion)
 		i = i + 1
 		count = count + 1	
 
 fig.subplots_adjust(right=0.85)
-cbar_ax = fig.add_axes([0.9, 0.1, 0.05, 0.5])
+cbar_ax = fig.add_axes([0.85, 0.1, 0.05, 0.5])
 fig.colorbar(im_out, cax=cbar_ax)
 
-for j in range(len(model_gqs)):
+#for j in range(len(model_gqs)):
         #ax[j].set_title(model_gqs[j])
-	ax[j].set_title(redshift_keys[j])
+#	ax[j].set_title(redshift_keys[j])
 	
-for k in range(len(ions)):
-        ax[k*xlen+2].text(75,-100,ions[k])
+#for k in range(len(ions)):
+#        ax[k*xlen+2].text(75,-100,ions[k])
 
 #plt.tight_layout()
 plt.savefig(fileout)#,transparent=True)
