@@ -44,6 +44,8 @@ cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
 bounds = [np.power(10.,-10.),np.power(10.,1.),np.power(10.,2.),np.power(10.,3.),np.power(10.,10.)]
 norm = colors.BoundaryNorm(bounds,cmap.N)
 
+field = ['Metallicity','Temperature','Density']
+
 pp = ProjectionPlot(pf,'x',field,center=pos,width=(320.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.)#,cmap=cmap,norm=norm)
 
 #cmap = 'YlGnBu'

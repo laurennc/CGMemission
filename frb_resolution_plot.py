@@ -158,8 +158,8 @@ def plot_connected_minmax(ax,blues,reds):
 
 #ions = ['SiIV','CIV','OVI']
 ions = ['CIII_977','CIV','OVI']
-redshift_key = 'z1'
-znow = 1.0
+redshift_key = 'z0'
+znow = 0.0
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
 gals = cPickle.load(open('werk_galaxy_properties.cpkl','rb'))
@@ -177,9 +177,11 @@ ncontours = 4
 i = 0
 
 #x=[0,1,2,3,4,5,6,7,8,9]
+ions = ['CIII_977']
 
 for ion in ions:
-	fileout = 'frbz_resolution_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_'+ion+'.png'
+	#fileout = 'frbz_resolution_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_'+ion+'.png'
+	fileout = 'frb_emis_resolution_forAstrofest.png'
 	xlen,ylen = 3,1
 	fig,ax = plt.subplots(ylen,xlen,sharey=True)
 	fig.set_size_inches(9,3)
@@ -190,9 +192,15 @@ for ion in ions:
 	count = 0
 	while count < 3:
 		print ion, count, model_gqs[count],i
-		modelnames = [model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_500kpc_'+redshift_key+'_'+ion+'.cpkl'] 
+		modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_key+'_'+ion+'.cpkl'] 
 		
 		plot_frb(modelnames[0],ax[count],z=znow) 
+		
+		ax[count].set_adjustable('box-forced')
+		plt.axis('on')
+                ax[count].set_xticklabels([])
+                ax[count].set_yticklabels([])
+                ax[count].set_yticklabels([])
 
 		count = count + 1	
 
@@ -203,7 +211,7 @@ for ion in ions:
 #        ax[k*xlen+2].text(100,5.05,ions[k])
 
 	plt.tight_layout()
-	plt.savefig(fileout)#, transparent=True)
+	plt.savefig(fileout, transparent=True)
 	plt.close()
 
 
