@@ -10,11 +10,18 @@ from matplotlib.ticker import MultipleLocator
 import sys
 
 
-def hden_temp_hist(weight_basic,weight_col,z_key,HMkey):	
+def hden_temp_hist(weight_basic,weight_col,z_key,HMkey,type=None):	
 	hden_file = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/'+z_key+'/'+HMkey+'/frbx_1kpc_500kpc_'+z_key+'_H_NumberDensity_'+weight_basic+'.cpkl'
 	temp_file = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/'+z_key+'/'+HMkey+'/frbx_1kpc_500kpc_'+z_key+'_Temperature_'+weight_basic+'.cpkl'
-	column_file = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'+HMkey+'/frbx_1kpc_500kpc_z02_'+weight_col+'dens.cpkl'
 	
+	if type == 'column':
+		column_file = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/coldens/grid_galquas/'+HMkey+'/frbx_1kpc_500kpc_z02_'+weight_col+'dens.cpkl'
+	elif type == 'emis':
+		column_file = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'+z_key+'/'+HMkey+'/frbx_1kpc_500kpc_'+z_key+'_'+weight_col+'.cpkl'
+	
+	else:
+		print "Need to give it a key so it can find the right output file!"
+
 	hden = cPickle.load(open(hden_file,'rb'))
 	temp = cPickle.load(open(temp_file,'rb'))
 	coldens = cPickle.load(open(column_file,'rb'))
@@ -26,9 +33,9 @@ def hden_temp_hist(weight_basic,weight_col,z_key,HMkey):
 	xbins = np.digitize(hden,xedges[1:-1])
 	ybins = np.digitize(temp,yedges[1:-1])
 	
-	totvals = np.zeros((len(xedges[1:-1]),len(yedges[1:-1])))
-	numvals = np.zeros((len(xedges[1:-1]),len(yedges[1:-1])))
-	maxvals = np.zeros((len(xedges[1:-1]),len(yedges[1:-1])))
+	totvals = np.zeros((len(xedges[1:]),len(yedges[1:])))
+	numvals = np.zeros((len(xedges[1:]),len(yedges[1:])))
+	maxvals = np.zeros((len(xedges[1:]),len(yedges[1:])))
 	
 	for i in range(len(coldens)):
 	    totvals[xbins[i],ybins[i]] += 10.**coldens[i]
@@ -47,7 +54,7 @@ def hden_temp_hist(weight_basic,weight_col,z_key,HMkey):
 try:
 	plot_key = sys.argv[1]
 except:
-	raise Exception('hey! you need a key so it knows what plots to make! use dev or paper!')
+	raise Exception('hey! you need a key so it knows what plots to make! use dev or paper or evolution!')
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
 
@@ -69,7 +76,7 @@ if plot_key == 'paper':
 	i,j = 0,0
 
 	while i < len(weights_col):
-		hist,avgvals,maxvals = hden_temp_hist(weights_basic[i],weights_col[i],redshift_key,HMkey)
+		hist,avgvals,maxvals = hden_temp_hist(weights_basic[i],weights_col[i],redshift_key,HMkey,type='column')
 		im1 = ax[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
 		im2 = ax[j+1].imshow(np.log10(avgvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=9.,vmax=16.,cmap='jet')
 		x0,x1 = ax[j].get_xlim()
@@ -94,6 +101,78 @@ if plot_key == 'paper':
 
         plt.savefig(fileout)
         plt.close()
+
+if plot_key == 'evolution':
+	redshift_keys = ['z0','z02','z05','z1']
+	HMkey = 'g1q1'
+	
+	fileout1 = 'hden_temp_evolution_emissivity_'+HMkey+'_number.png'
+	fileout2 = 'hden_temp_evolution_emissivity_'+HMkey+'_avg.png'
+	fileout3 = 'hden_temp_evolution_emissivity_'+HMkey+'_max.png'	
+
+	weights_col = ['SiIV','CIII_977','CIV','OVI']
+	weights_basic = ['Emission_SiIV','Emission_CIII_977','Emission_CIV','Emission_OVI']
+	vmin,vmax = -5,5
+
+	fig1,ax1 = plt.subplots(len(weights_col),len(redshift_keys),sharex=True,sharey=True)
+	fig1.set_size_inches(16,16)
+	ax1 = ax1.flat
+	fig2,ax2 = plt.subplots(len(weights_col),len(redshift_keys),sharex=True,sharey=True)
+        fig2.set_size_inches(16,16)
+        ax2 = ax2.flat
+	fig3,ax3 = plt.subplots(len(weights_col),len(redshift_keys),sharex=True,sharey=True)
+        fig3.set_size_inches(16,16)
+        ax3 = ax3.flat
+
+	i,j = 0,0
+
+	for weight in weights_col:
+		i = 0
+		while i < len(redshift_keys):
+			print j,weight,redshift_keys[i]
+			hist,avgvals,maxvals = hden_temp_hist('Emission_'+weight,weight,redshift_keys[i],HMkey,type='emis')
+			im1 = ax1[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
+			im2 = ax2[j].imshow(np.log10(avgvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
+			im3 = ax3[j].imshow(np.log10(maxvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
+		
+			x0,x1 = ax1[j].get_xlim()
+			y0,y1 = ax1[j].get_ylim()
+			ax1[j].set_aspect((x1-x0)/(y1-y0))
+			ax2[j].set_aspect((x1-x0)/(y1-y0))
+			ax3[j].set_aspect((x1-x0)/(y1-y0))
+
+			i = i + 1
+			j = j + 1
+
+	
+	fig1.subplots_adjust(right=0.8)
+
+        fig2.subplots_adjust(right=0.8)
+        cbar_ax = fig2.add_axes([0.85,0.15,0.05,0.7])
+        fig2.colorbar(im2,cax=cbar_ax)
+
+        fig3.subplots_adjust(right=0.8)
+        cbar_ax = fig3.add_axes([0.85,0.15,0.05,0.7])
+        fig3.colorbar(im3,cax=cbar_ax)
+
+	for j in range(len(redshift_keys)):
+		ax1[j].set_title(redshift_keys[j])
+		ax2[j].set_title(redshift_keys[j])
+		ax3[j].set_title(redshift_keys[j])
+
+	for k in range(len(weights_col)):
+		ax1[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
+		ax2[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
+		ax3[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
+
+	fig1.savefig(fileout1)
+        fig2.savefig(fileout2)
+        fig3.savefig(fileout3)	
+
+	plt.close()
+
+		
+		
 
 if plot_key == 'dev':
 	fileout = 'histdens_z02_g1q01_'+weight_basic+'_nohistweight.png'
