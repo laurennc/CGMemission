@@ -174,7 +174,7 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['CIII_977','CIV','OVI']
 
 no_axes_labels = True
-obs_colors = False
+obs_colors = True
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
@@ -187,7 +187,7 @@ znow = [0.]
 ions = ['SiIV','CIII_977','CIV','OVI']
 xlen,ylen = 1,4
 figxlen,figylen = 3,9
-fileout = 'frb_emis_z02_nozscaling.png'
+fileout = 'frb_emis_z02_obs_nozscaling.png'
 
 ##REDSHIFT EVOLUTION PARAMETERS
 #model_gqs = ['g1q1','g1q1','g1q1']
