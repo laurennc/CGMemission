@@ -28,8 +28,10 @@ def hden_temp_hist(weight_basic,weight_col,z_key,HMkey,type=None):
 	
 	hden,temp,coldens = np.log10(hden.flat),np.log10(temp.flat),np.log10(coldens.flat)
 	
-	hist, xedges, yedges  = np.histogram2d(hden,temp,range=[[-6,1],[4, 6]],bins=100)#,weights=coldens)
-	
+	###ORIGINAL RANGE THAT ENCOMPASSES ALL OF THE POINTS - NARROWED 10/26 FOR DIAGNOSTICS###
+	#hist, xedges, yedges  = np.histogram2d(hden,temp,range=[[-6,1],[4, 6]],bins=100)#,weights=coldens)
+	hist, xedges, yedges  = np.histogram2d(hden,temp,range=[[-6,-2],[4, 6]],bins=100)#,weights=coldens)	
+
 	xbins = np.digitize(hden,xedges[1:-1])
 	ybins = np.digitize(temp,yedges[1:-1])
 	
@@ -50,6 +52,16 @@ def hden_temp_hist(weight_basic,weight_col,z_key,HMkey,type=None):
 
 	return hist,avgvals,maxvals
 
+def add_grid(ax):
+	ax.xaxis.set_major_locator(plt.MultipleLocator(1.0))
+	ax.xaxis.set_minor_locator(plt.MultipleLocator(0.1))
+	ax.yaxis.set_major_locator(plt.MultipleLocator(1.0))
+	ax.yaxis.set_minor_locator(plt.MultipleLocator(0.1))
+	ax.grid(which='major', axis='x', linewidth=0.75, linestyle='-', color='0.75')
+	ax.grid(which='minor', axis='x', linewidth=0.25, linestyle='-', color='0.75')
+	ax.grid(which='major', axis='y', linewidth=0.75, linestyle='-', color='0.75')
+	ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75')
+	return
 
 try:
 	plot_key = sys.argv[1]
@@ -79,6 +91,10 @@ if plot_key == 'paper':
 		hist,avgvals,maxvals = hden_temp_hist(weights_basic[i],weights_col[i],redshift_key,HMkey,type='column')
 		im1 = ax[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
 		im2 = ax[j+1].imshow(np.log10(avgvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=9.,vmax=16.,cmap='jet')
+	
+		add_grid(ax[j])
+		add_grid(ax[j+1])
+
 		x0,x1 = ax[j].get_xlim()
         	y0,y1 = ax[j].get_ylim()
 
@@ -131,15 +147,22 @@ if plot_key == 'evolution':
 		while i < len(redshift_keys):
 			print j,weight,redshift_keys[i]
 			hist,avgvals,maxvals = hden_temp_hist('Emission_'+weight,weight,redshift_keys[i],HMkey,type='emis')
-			im1 = ax1[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
-			im2 = ax2[j].imshow(np.log10(avgvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
-			im3 = ax3[j].imshow(np.log10(maxvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
+			im1 = ax1[j].imshow(np.log10(hist.T),extent=[-6,-2,4,6],interpolation='nearest',origin='lower',cmap='Blues')
+			im2 = ax2[j].imshow(np.log10(avgvals.T),extent=[-6,-2,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
+			im3 = ax3[j].imshow(np.log10(maxvals.T),extent=[-6,-2,4,6],interpolation='nearest',origin='lower',vmin=vmin,vmax=vmax,cmap='jet')
 		
 			x0,x1 = ax1[j].get_xlim()
 			y0,y1 = ax1[j].get_ylim()
 			ax1[j].set_aspect((x1-x0)/(y1-y0))
 			ax2[j].set_aspect((x1-x0)/(y1-y0))
 			ax3[j].set_aspect((x1-x0)/(y1-y0))
+			ax1[j].set_xticks([-6,-5,-4,-3,-2])
+			ax2[j].set_xticks([-6,-5,-4,-3,-2])
+			ax3[j].set_xticks([-6,-5,-4,-3,-2])
+
+			add_grid(ax1[j])
+                	add_grid(ax2[j])
+			add_grid(ax3[j])	
 
 			i = i + 1
 			j = j + 1
@@ -164,6 +187,7 @@ if plot_key == 'evolution':
 		ax1[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
 		ax2[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
 		ax3[k*len(redshift_keys)+len(redshift_keys)-1].text(-1,5.75,weights_col[k])
+	
 
 	fig1.savefig(fileout1)
         fig2.savefig(fileout2)
