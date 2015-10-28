@@ -14,6 +14,7 @@ Hamax,Hamin = [],[]
 CIIImax,CIIImin = [],[]
 CIVmax,CIVmin = [],[]
 OVImax,OVImin = [],[]
+depth_start,depth_end = [],[]
 
 for i in range(len(werk['SDSSField'])):
 	Lya_temp = []
@@ -30,6 +31,8 @@ for i in range(len(werk['SDSSField'])):
 		ID = np.append(ID,werk['SDSSField'][i]+'_'+werk['ID'][i])
 		idf = np.append(idf,j)
 		T = np.append(T,ovr['Te'][0])
+		depth_start = np.append(depth_start,ovr['depth'][0])
+		deoth_end = np.append(depth_end,ovr['depth'][-1])
 		hden = np.append(hden,ovr['hden'][0])
 		Lya = np.append(Lya, np.log10(simps(np.power(10.,emis['H__1__1216A']),emis['depth'])/(4.*np.pi*1.63e-11)))
 		Ha  = np.append(Ha,  np.log10(simps(np.power(10.,emis['H__1__6563A']),emis['depth'])/(4.*np.pi*3.03e-12)))
@@ -70,6 +73,7 @@ fini['CIV'] = CIV
 fini['CIVmax'],fini['CIVmin'] = CIVmax,CIVmin
 fini['OVI'] = OVI
 fini['OVImax'],fini['OVImin'] = OVImax,OVImin
+fini['depth_start'],fini['depth_end'] = depth_start,depth_end
 
 fileout = 'cloudywerk.cpkl'
 cPickle.dump(fini,open(fileout,'wb'),protocol=-1)
