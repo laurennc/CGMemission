@@ -46,7 +46,7 @@ def make_Cloudy_table(table_index):
 	hden_n_bins, hden_min, hden_max = 15, -6, 1
 	#hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z02/g1q10/g1q10_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z075/g1q10/g1q10_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -184,4 +184,17 @@ def logU_to_hden(logU):
 	return -1.*logU-5.9694002780340494
 
 
+def find_covering_fraction(frb_filename,tempname,SB_lims,znow):
+	frb = np.array(cPickle.load(open(frb_filename,'rb')))
+	frb = frb.flatten()
+	frb = np.log10(frb/((1.+znow)**4.0))
+	temperature = np.log10(np.array(cPickle.load(open(tempname,'rb'))).flatten())
+	idx = np.where(temperature < 4.)[0]
+	frb[idx] = -5.
+	fractions = []
+	for lim in SB_lims:
+		idx = np.where(frb > lim)[0]
+		frac_temp = float(len(idx))/float(len(frb))
+		fractions = np.append(fractions,frac_temp)
+	return fractions
 

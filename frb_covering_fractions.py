@@ -1,6 +1,5 @@
 #Code to plot the frbs and radial profiles or my emission predictions
 #Created by: Lauren
-#Created on: 12/11/2014
 import matplotlib
 matplotlib.use('Agg')
 import cPickle
@@ -29,6 +28,7 @@ obs_colors = True
 
 ##REDSHIFT EVOLUTION PARAMETERS
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'
+temperature_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/'
 model_gqs = ['g1q1','g1q1','g1q1','g1q1']
 res_keys = ['1kpc','1kpc','1kpc','1kpc']
 redshift_keys = ['z0','z02','z05','z1']
@@ -56,8 +56,9 @@ for ion in ions:
 	while count < len(model_gqs):
 		print ion, count, model_gqs[count],i
 		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
+		tempname = model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_Temperature_Densityweight.cpkl'
 
-		fractions = find_covering_fraction(modelnames[0],SB_lims,znow[count])
+		fractions = find_covering_fraction(modelnames[0],tempname,SB_lims,znow[count])
 		lim1 = np.append(lim1,fractions[0])
 		lim2 = np.append(lim2,fractions[1])
 		lim3 = np.append(lim3,fractions[2])	
