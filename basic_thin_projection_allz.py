@@ -33,7 +33,8 @@ fn_z0="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
 pf = load(fn_z0, file_style="%s.grid.cpu%%04i")
 file_begin = 'bertone_frbs/final/basic/z0/g1q1/'
 rvir = 316.864810195 #kpc
-pos = [ 0.40320258,  0.4718025 ,  0.46123817]
+#pos = [ 0.40320258,  0.4718025 ,  0.46123817]
+val, pos = pf.h.find_max('Density')
 width = 475./pf['kpc'] ##roughly 1.5*rvir
 resolution = [475,475]
 
@@ -46,11 +47,12 @@ fileout = file_begin+'frbx_1kpc_500kpc_z0_Density.cpkl'
 cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
 
 ##################### z = 0.2 ##########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
-pf = load(fn_z0, file_style="%s.grid.cpu%%04i")
+fn_z02="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
+pf = load(fn_z02, file_style="%s.grid.cpu%%04i")
 file_begin = 'bertone_frbs/final/basic/z02/g1q1/'
 rvir = 294.55286015 #kpc
-pos = [ 0.39898226,  0.46904468,  0.46830814]
+#pos = [ 0.39898226,  0.46904468,  0.46830814]
+val, pos = pf.h.find_max('Density')
 width = 442./pf['kpc'] ##roughly 1.5*rvir
 resolution = [442,442]
 
@@ -64,11 +66,12 @@ cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
 
 
 ####################  z = 0.5 ###########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
-pf = load(fn_z0, file_style="%s.grid.cpu%%04i")
+fn_z05="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
+pf = load(fn_z05, file_style="%s.grid.cpu%%04i")
 file_begin = 'bertone_frbs/final/basic/z05/g1q1/'
 rvir = 226.321520623 #kpc
-pos = [ 0.3932969 ,  0.46559631,  0.47849673]
+#pos = [ 0.3932969 ,  0.46559631,  0.47849673]
+val, pos = pf.h.find_max('Density')
 width = 340./pf['kpc'] ##roughly 1.5*rvir
 resolution = [340,340]
 
@@ -83,11 +86,12 @@ cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
 
 
 ####################  z = 1.0 ##########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
-pf = load(fn_z0, file_style="%s.grid.cpu%%04i")
+fn_z1="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
+pf = load(fn_z1, file_style="%s.grid.cpu%%04i")
 file_begin = 'bertone_frbs/final/basic/z1/g1q1/'
 rvir = 162.656338662 #kpc
-pos = [ 0.38580719,  0.46065774,  0.49183819]
+#pos = [ 0.38580719,  0.46065774,  0.49183819]
+val, pos = pf.h.find_max('Density')
 width = 245./pf['kpc'] ##roughly 1.5*rvir
 resolution = [245,245]
 
