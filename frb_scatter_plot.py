@@ -121,8 +121,9 @@ def werk_cloudy_ions(emis,gals,ion):
                 #gal_id = gal_id[0:10]
                 idx = np.where(gals['ID'] == gal_id)[0]
                 sSFR = gals['SFR'][idx]/np.power(10.,gals['mStar'][idx])
-                color = 'DodgerBlue' if sSFR > 1e-11 else 'Crimson'
-                if color == 'DodgerBlue':
+                ###original colors were DodgerBlue and Crimson
+		color = 'MediumBlue' if sSFR > 1e-11 else 'Crimson'
+                if color == 'MediumBlue':
                         temp = np.array([0.,0.])
                         temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]
                         blues = np.vstack((blues,temp))
@@ -146,8 +147,8 @@ def werk_cloudy_ions(emis,gals,ion):
 def plot_connected_minmax(ax,blues,reds):
         i = 0
         while i < len(blues):
-                ax.plot(blues[i:i+2,0],blues[i:i+2,1],'.',color='DodgerBlue')
-                ax.plot(blues[i:i+2,0],blues[i:i+2,1],color='DodgerBlue',lw=2.0)
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],'.',color='MediumBlue')
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],color='MediumBlue',lw=2.0)
                 i = i + 2
 
         i = 0
@@ -164,8 +165,8 @@ def plot_connected_minmax(ax,blues,reds):
 
 #ions = ['SiIV','CIV','OVI']
 ions = ['CIII','CIV','OVI']
-redshift_key = 'z05'
-znow = 0.5
+redshift_key = 'z0'
+znow = 0.
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
 gals = cPickle.load(open('werk_galaxy_properties.cpkl','rb'))
@@ -180,7 +181,7 @@ percentile = 0.01
 
 ncontours = 4
 
-fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons_comoving.png'
+fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
@@ -202,7 +203,7 @@ for ion in ions:
 
 
 		#ax[i].plot(x)
-		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=True)
+		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=False)
 		if ion != 'SiIV':
 			plot_connected_minmax(ax[i],blues,reds)
 		#ax[i].set_title(model_gqs[count])
