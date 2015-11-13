@@ -174,7 +174,7 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['CIII_977','CIV','OVI']
 
 no_axes_labels = True
-obs_colors = True
+obs_colors = False
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
@@ -187,7 +187,7 @@ znow = [0.]
 ions = ['SiIV','CIII_977','CIV','OVI']
 xlen,ylen = 1,4
 figxlen,figylen = 3,9
-fileout = 'frb_emis_z02_obs_nozscaling.png'
+fileout = 'frb_emis_z02_obs_nozscaling_hdenStepVary.png'
 
 ##REDSHIFT EVOLUTION PARAMETERS
 #model_gqs = ['g1q1','g1q1','g1q1']
@@ -218,7 +218,8 @@ for ion in ions:
 	count = 0
 	while count < len(model_gqs):
 		print ion, count, model_gqs[count],i
-		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
+		#modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
+		modelnames = [model_beg+redshift_keys[count]+'/vary_hden_step/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl']
 
 		im_out = plot_frb(modelnames[0],ax[i],z=znow[count],obs_colors=obs_colors)
 
