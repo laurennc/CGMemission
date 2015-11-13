@@ -43,10 +43,12 @@ def scale_by_energy(frbfile,energy):
 def make_Cloudy_table(table_index):
 	#hden_n_bins, hden_min, hden_max = 35, -6, 1
 	#T_n_bins, T_min, T_max = 151, 3, 8
-	hden_n_bins, hden_min, hden_max = 15, -6, 1
+	#hden_n_bins, hden_min, hden_max = 15, -6, 1
+	hden_n_bins, hden_min, hden_max = 81, -6, 2
 	#hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z075/g1q10/g1q10_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z02/g1q1/g1q1_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/test_hden_step/g1q1_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -186,11 +188,20 @@ def logU_to_hden(logU):
 
 def find_covering_fraction(frb_filename,tempname,SB_lims,znow):
 	frb = np.array(cPickle.load(open(frb_filename,'rb')))
+	temperature = np.array(cPickle.load(open(tempname,'rb')))
+	
+	idx = np.where(np.log10(temperature) < 5.2)
+	test = np.where((idx[1] > 130) & (idx[0] < 170) & (idx[1] < 170) & (idx[0] > 130))
+	actual = [idx[0][test],idx[1][test]]
+	#print 'Min value is: '+str(np.log10((frb[actual].flatten()/(1.+znow)**4.0)).min())
+	#print 'Avg value is: '+str(np.log10(np.average(frb[actual].flatten()/(1.+znow)**4.0)))
+	frb[actual] = -50
+	testing = len(np.where(frb < -49.)[0].flatten())/float(len(frb.flatten()))
+        #print 'Fraction of pixels in the disk: '+str(testing)
+
 	frb = frb.flatten()
 	frb = np.log10(frb/((1.+znow)**4.0))
-	temperature = np.log10(np.array(cPickle.load(open(tempname,'rb'))).flatten())
-	idx = np.where(temperature < 4.)[0]
-	frb[idx] = -5.
+	
 	fractions = []
 	for lim in SB_lims:
 		idx = np.where(frb > lim)[0]
