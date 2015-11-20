@@ -15,7 +15,7 @@ res_keys = ['1kpc','1kpc','1kpc','1kpc']
 redshift_keys = ['z0','z02','z05','z1']
 xlen,ylen = 2,4
 figxlen,figylen = 4,8
-fileout = 'dens_temp_projs.png'
+fileout = 'dens_temp_projs.pdf'
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/'
 
 fig,ax = plt.subplots(ylen,xlen,sharey=True,sharex=True)
@@ -41,7 +41,7 @@ while count < len(res_keys):
 	dens_frb = np.log10(cPickle.load(open(densname,'rb')))
 
 	###PLOT THE DENSITY FIRST### 
-	im = ax[i].imshow(dens_frb,extent=(-160,160,160,-160),interpolation='none',cmap=dens_cmap,origin='lower',vmin=-4,vmax=-1)
+	im = ax[i].imshow(dens_frb,extent=(-160,160,160,-160),interpolation='none',cmap=dens_cmap,origin='lower',vmin=-5,vmax=-1)
 	###PLOT TEMPERATURE###
 	im2 = ax[i+1].imshow(temp_frb,extent=(-160,160,160,-160),interpolation='none',cmap=temp_cmap,origin='lower',vmin=4,vmax=6)
 

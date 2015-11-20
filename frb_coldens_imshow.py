@@ -49,7 +49,8 @@ znow = [0.]
 ions = ['HI','SiIV','CIII','OVI']
 xlen,ylen = 1,4
 figxlen,figylen = 3,9
-fileout = 'frb_coldens_z02_imshow.png'
+#fileout = 'frb_coldens_z02_imshow.png'
+fileout = 'frb_coldens_z02_imshow.pdf'
 
 ##REDSHIFT EVOLUTION PARAMETERS
 #model_gqs = ['g1q1','g1q1','g1q1']

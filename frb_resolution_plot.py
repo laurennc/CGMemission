@@ -158,8 +158,8 @@ def plot_connected_minmax(ax,blues,reds):
 
 #ions = ['SiIV','CIV','OVI']
 ions = ['CIII_977','CIV','OVI']
-redshift_key = 'z0'
-znow = 0.0
+redshift_key = 'z02'
+znow = 0.2
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
 gals = cPickle.load(open('werk_galaxy_properties.cpkl','rb'))
@@ -180,8 +180,8 @@ i = 0
 ions = ['CIII_977']
 
 for ion in ions:
-	#fileout = 'frbz_resolution_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_'+ion+'.png'
-	fileout = 'frb_emis_resolution_forAstrofest.png'
+	fileout = 'frbx_resolution_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_'+ion+'.pdf'#'.png'
+	#fileout = 'frb_emis_resolution_forAstrofest.png'
 	xlen,ylen = 3,1
 	fig,ax = plt.subplots(ylen,xlen,sharey=True)
 	fig.set_size_inches(9,3)
@@ -198,9 +198,9 @@ for ion in ions:
 		
 		ax[count].set_adjustable('box-forced')
 		plt.axis('on')
-                ax[count].set_xticklabels([])
-                ax[count].set_yticklabels([])
-                ax[count].set_yticklabels([])
+                #ax[count].set_xticklabels([])
+                #ax[count].set_yticklabels([])
+                #ax[count].set_yticklabels([])
 
 		count = count + 1	
 
@@ -211,7 +211,7 @@ for ion in ions:
 #        ax[k*xlen+2].text(100,5.05,ions[k])
 
 	plt.tight_layout()
-	plt.savefig(fileout, transparent=True)
+	plt.savefig(fileout)#, transparent=True)
 	plt.close()
 
 
