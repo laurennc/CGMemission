@@ -58,9 +58,9 @@ def add_grid(ax):
 	ax.yaxis.set_major_locator(plt.MultipleLocator(1.0))
 	ax.yaxis.set_minor_locator(plt.MultipleLocator(0.1))
 	ax.grid(which='major', axis='x', linewidth=0.75, linestyle='-', color='0.75')
-	ax.grid(which='minor', axis='x', linewidth=0.25, linestyle='-', color='0.75')
+	ax.grid(which='minor', axis='x', linewidth=0.25, linestyle='-', color='0.75',alpha=0.2)
 	ax.grid(which='major', axis='y', linewidth=0.75, linestyle='-', color='0.75')
-	ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75')
+	ax.grid(which='minor', axis='y', linewidth=0.25, linestyle='-', color='0.75',alpha=0.2)
 	return
 
 try:
@@ -77,44 +77,62 @@ HMkey = 'g1q1'
 
 
 if plot_key == 'paper':
-	fileout = 'hden_temp_paper_'+redshift_key+'_'+HMkey+'.png'
+	fileout = 'hden_temp_paper_'+redshift_key+'_'+HMkey+'.pdf'
 	
 	weights_col = ['SiIV','CIII','OVI']
 	weights_basic = ['SiIV_Density','CIII_Density','OVI_Density']
 
-	fig,ax = plt.subplots(3,2,sharex=True,sharey=True)
-	fig.set_size_inches(8,12)
+	#weights_col = ['SiIV','SiIV','SiIV']
+	#weights_basic = ['SiIV_Density','SiIV_Density','SiIV_Density']
+
+	#fig,ax = plt.subplots(3,2,sharex=True,sharey=True)
+	#fig.set_size_inches(8,12)
+	fig,ax = plt.subplots(3,1,sharex=True,sharey=True)
+	fig.set_size_inches(3,9)
 	ax= ax.flat	
 	i,j = 0,0
 
 	while i < len(weights_col):
 		hist,avgvals,maxvals = hden_temp_hist(weights_basic[i],weights_col[i],redshift_key,HMkey,type='column')
-		im1 = ax[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
-		im2 = ax[j+1].imshow(np.log10(avgvals.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',vmin=9.,vmax=16.,cmap='jet')
+		#im1 = ax[j].imshow(np.log10(hist.T),extent=[-6,1,4,6],interpolation='nearest',origin='lower',cmap='Blues')
+		##this was j+1 but its the one that I want to keep so....
+		im2 = ax[j].imshow(np.log10(avgvals.T),extent=[-6,-1,4,6],interpolation='nearest',origin='lower',vmin=9.,vmax=16.,cmap='jet')
 	
 		add_grid(ax[j])
-		add_grid(ax[j+1])
+		#add_grid(ax[j+1])
+		ax[j].plot(emis['hden'],emis['T'],'s',color='#6D6968',alpha=0.75,ms=3.5) ##old is HotPink
+		
 
+                ax[j].set_xlim(-6,-1)
+                ax[j].set_ylim(3.5,6.)
 		x0,x1 = ax[j].get_xlim()
         	y0,y1 = ax[j].get_ylim()
+		ax[j].set_title(weights_col[i])
 
+		#ax[j+1].set_aspect((x1-x0)/(y1-y0))
+                #ax[j+1].set_xlim(-6,-1)
+                #ax[j+1].set_ylim(3.5,6)
+                #ax[j+1].set_title(weights_col[i])
+
+	
 		ax[j].set_aspect((x1-x0)/(y1-y0))
-		ax[j].set_xlim(-6,1)
-           	ax[j].set_ylim(3.5,6)
+#		ax[j].set_autoscale_on(False)	
+                #ax[j].set_xlim(-6,-1)
+                #ax[j].set_ylim(3,6.)
 
-		ax[j+1].set_aspect((x1-x0)/(y1-y0))
-                ax[j+1].set_xlim(-6,1)
-                ax[j+1].set_ylim(3.5,6)
-                ax[j+1].set_title(weights_col[i])
-
-		ax[j].plot(emis['hden'],emis['T'],'s',color='HotPink',alpha=0.75,ms=3.5)
 		i = i + 1
-		j = j + 2
+		#j = j + 2
+		j = j + 1
 
-	fig.subplots_adjust(right=0.8)
-        cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-        fig.colorbar(im2, cax=cbar_ax)#,shrink=0.6,ticks=MultipleLocator(0.5), format="%.2f")
+	#fig.subplots_adjust(bottom=0.125)#8)
+        #cbar_ax = fig.add_axes([0.12, 0.08, 0.8, 0.01])
+        #fig.colorbar(im2, cax=cbar_ax,orientation='horizontal',ticks=[10,12,14,16])#,shrink=0.6,ticks=MultipleLocator(0.5), format="%.2f")
 
+	#for k in range(3):
+	#	ax[k].set_xlim(-6.,-1.)
+	#	ax[k].set_ylim(3,6.)
+
+	#plt.ylim(3,6)
         plt.savefig(fileout)
         plt.close()
 
@@ -122,7 +140,7 @@ if plot_key == 'evolution':
 	redshift_keys = ['z0','z02','z05','z1']
 	HMkey = 'g1q1'
 	
-	fileout1 = 'hden_temp_evolution_emissivity_'+HMkey+'_number.png'
+	fileout1 = 'hden_temp_evolution_emissivity_'+HMkey+'_number.pdf'
 	fileout2 = 'hden_temp_evolution_emissivity_'+HMkey+'_avg.png'
 	fileout3 = 'hden_temp_evolution_emissivity_'+HMkey+'_max.png'	
 

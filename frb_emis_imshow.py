@@ -174,31 +174,41 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['CIII_977','CIV','OVI']
 
 no_axes_labels = True
-obs_colors = False
+obs_colors = True
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
 
 #ASTROFEST PARAMETERS
-model_gqs = ['g1q1']
-res_keys = ['1kpc']
-redshift_keys = ['z02']
-znow = [0.]
-ions = ['SiIV','CIII_977','CIV','OVI']
-xlen,ylen = 1,4
-figxlen,figylen = 3,9
-fileout = 'frb_emis_z02_obs_nozscaling_hdenStepVary.png'
+#model_gqs = ['g1q1']
+#res_keys = ['1kpc']
+#redshift_keys = ['z02']
+#znow = [0.]
+#ions = ['SiIV','CIII_977','CIV','OVI']
+#xlen,ylen = 1,4
+#figxlen,figylen = 3,9
+#fileout = 'frb_emis_z02_obs_nozscaling.eps'
 
 ##REDSHIFT EVOLUTION PARAMETERS
 #model_gqs = ['g1q1','g1q1','g1q1']
 #res_keys = ['1kpc','1kpc','1kpc']
 #redshift_keys = ['z0','z05','z1']
 #znow = [0.,0.5,1.0]
-#znow = [0.,0.,0.]
-#ions = ['CIII_977','CIV','OVI']	
+#ions = ['CIII_977','CIV','OVI']
 #xlen,ylen = 3,3
 #figxlen,figylen = 12,12
-#fileout = 'frb_emis_theory_nozscaling.png'
+fileout = 'frb_emis_varyRedshift.pdf'
+
+##REDSHIFT EVOLUTION PARAMETERS w z02
+model_gqs = ['g1q1','g1q1','g1q1','g1q1']
+res_keys = ['1kpc','1kpc','1kpc','1kpc']
+redshift_keys = ['z0','z02','z05','z1']
+znow = [0.,0.2,0.5,1.0]
+#znow = [0.,0.,0.,0.]
+ions = ['CIII_977','CIV','OVI']	
+xlen,ylen = 4,3
+figxlen,figylen = 16,12
+#fileout = 'frb_emis_theory_nozscaling_wz02.pdf'
 
 max_r = 160.
 percentile = 0.01
@@ -218,8 +228,8 @@ for ion in ions:
 	count = 0
 	while count < len(model_gqs):
 		print ion, count, model_gqs[count],i
-		#modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
-		modelnames = [model_beg+redshift_keys[count]+'/vary_hden_step/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl']
+		modelnames = [model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl'] 
+		#modelnames = [model_beg+redshift_keys[count]+'/vary_hden_step/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl']
 
 		im_out = plot_frb(modelnames[0],ax[i],z=znow[count],obs_colors=obs_colors)
 
@@ -232,19 +242,21 @@ for ion in ions:
 
 		ax[i].set_adjustable('box-forced')		
 		#ax[i].set_title(ion)		
-		ax[i].text(75,-100,ion)
+		#ax[i].text(75,-100,ion)
 		i = i + 1
 		count = count + 1	
 
+##FOR VARY REDSHIFT
 fig.subplots_adjust(right=0.85)
-cbar_ax = fig.add_axes([0.85, 0.1, 0.05, 0.5])
+cbar_ax = fig.add_axes([0.90, 0.1, 0.02, 0.5])
 fig.colorbar(im_out, cax=cbar_ax)
 
-#for j in range(len(model_gqs)):
-        #ax[j].set_title(model_gqs[j])
-#	ax[j].set_title(redshift_keys[j])
+for j in range(len(model_gqs)):
+        ax[j].set_title(model_gqs[j])
+	ax[j].set_title(redshift_keys[j])
 	
-#for k in range(len(ions)):
+for k in range(len(ions)):
+	ax[k*xlen+2].set_xlabel(ions[k])
 #        ax[k*xlen+2].text(75,-100,ions[k])
 
 #plt.tight_layout()
