@@ -136,7 +136,8 @@ def plot_Werk_ColDens(ax,data,ion,xkey,xmax=500.):
 	nrmKwargs = {'fmt':'s','markersize':5} 
 	for i in range(len(x)):
 		sSFR = galaxies[ID[i].strip()][5]/10**(galaxies[ID[i].strip()][2])
-		color = 'DodgerBlue' if sSFR > 1e-11 else 'Crimson'
+		#color = 'DodgerBlue' if sSFR > 1e-11 else 'Crimson'
+		color = 'MediumBlue' if sSFR > 1e-11 else 'Crimson'
 		if l_logNA[i] == 'u':
 			ax.errorbar(x[i],logNA[i],lolims=True,ecolor=color,**limKwargs)
 		elif l_logNA[i] == 'l':

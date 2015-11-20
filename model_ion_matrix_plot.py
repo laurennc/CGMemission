@@ -84,7 +84,8 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
+#fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
+fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.pdf'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 fig.set_size_inches(8,8)#,16)
