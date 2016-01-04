@@ -8,12 +8,13 @@ werk = np.genfromtxt('werk14_ionparams.dat',names=True,dtype=None)
 ID, idf = [], []
 T,hden = [], []
 Lya, Ha = [], []
-CIII,CIV,OVI = [],[],[]
+CIII,CIV,OVI,SiIV = [],[],[],[]
 Lyamax,Lyamin = [],[]
 Hamax,Hamin = [],[]
 CIIImax,CIIImin = [],[]
 CIVmax,CIVmin = [],[]
 OVImax,OVImin = [],[]
+SiIVmax,SiIVmin = [], []
 depth_start,depth_end = [],[]
 
 for i in range(len(werk['SDSSField'])):
@@ -22,6 +23,7 @@ for i in range(len(werk['SDSSField'])):
 	CIII_temp = []
 	CIV_temp = []
 	OVI_temp = []
+	SiIV_temp = []
 	
 	for j in "abcd":
 		filein = 'WerkLoop/'+str(werk['SDSSField'][i])+'_'+str(werk['ID'][i])+'_'+j
@@ -43,12 +45,16 @@ for i in range(len(werk['SDSSField'])):
 		ovi = simps(np.power(10.,emis['O__6__1032A']),emis['depth'])+simps(np.power(10.,emis['O__6__1038A']),emis['depth'])
 		ovi = np.log10(ovi/(4.*np.pi*1.92e-11))
 		OVI = np.append(OVI,ovi)
+		siiv = simps(np.power(10.,emis['Si_4__1395A']),emis['depth'])+simps(np.power(10.,emis['Si_4__1403A']),emis['depth'])
+                siiv = np.log10(siiv/(4.*np.pi*1.42e-11))
+                SiIV = np.append(SiIV,siiv)
 
 		Lya_temp = np.append(Lya_temp,Lya[-1])
 		Ha_temp = np.append(Ha_temp,Ha[-1])
 		CIII_temp = np.append(CIII_temp,CIII[-1])
 		CIV_temp = np.append(CIV_temp,CIV[-1])
 		OVI_temp = np.append(OVI_temp,OVI[-1])
+		SiIV_temp = np.append(SiIV_temp,SiIV[-1])
 
 		if j=='d':
 			Lyamax,Lyamin = np.append(Lyamax,Lya_temp.max()),np.append(Lyamin,Lya_temp.min())
@@ -56,7 +62,7 @@ for i in range(len(werk['SDSSField'])):
 			CIIImax,CIIImin = np.append(CIIImax,CIII_temp.max()),np.append(CIIImin,CIII_temp.min())
 			CIVmax,CIVmin = np.append(CIVmax,CIV_temp.max()),np.append(CIVmin,CIV_temp.min())
 			OVImax,OVImin = np.append(OVImax,OVI_temp.max()),np.append(OVImin,OVI_temp.min())				
-
+			SiIVmax,SiIVmin = np.append(SiIVmax,SiIV_temp.max()),np.append(SiIVmin,SiIV_temp.min())
 
 fini = {}
 fini['ID'] = ID
@@ -73,6 +79,8 @@ fini['CIV'] = CIV
 fini['CIVmax'],fini['CIVmin'] = CIVmax,CIVmin
 fini['OVI'] = OVI
 fini['OVImax'],fini['OVImin'] = OVImax,OVImin
+fini['SiIV'] = SiIV
+fini['SiIVmax'],fini['SiIVmin'] = SiIVmax, SiIVmin
 fini['depth_start'],fini['depth_end'] = depth_start,depth_end
 
 fileout = 'cloudywerk.cpkl'
