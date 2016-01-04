@@ -84,6 +84,7 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow,comoving=F
 		ax.plot(rpr[idr]*(1.+znow),np.log10(rpmedian[idr]),color='k',linewidth=2.2)
 	else:
 		ax.plot(rpr[idr],np.log10(rpmedian[idr]),color='k',linewidth=2.2)#previously Goldenrod	
+	print np.log10(rpmedian[99]),np.log10(rpmean[99])
 	#print np.max(rpr[idr]),np.max(np.log10(rpmedian[idr]))
 	ax.set_xticks(range(0,160,30))
 	#ax.set_xlim(0,160)
@@ -107,7 +108,7 @@ def add_HI_contour(ax,HIfrb,ncontours):
 	#plt.clabel(CS, fontsize=9, inline=1)
 	return
 
-def werk_cloudy_ions(emis,gals,ion):
+def werk_cloudy_ions(emis,gals,ion,znow):
         blues = np.array([0.,0.])
         reds = np.array([0.,0.])
 
@@ -125,15 +126,15 @@ def werk_cloudy_ions(emis,gals,ion):
 		color = 'MediumBlue' if sSFR > 1e-11 else 'Crimson'
                 if color == 'MediumBlue':
                         temp = np.array([0.,0.])
-                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]
+                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]-4.*np.log10((1.+znow)**4.)
                         blues = np.vstack((blues,temp))
-                        temp[1] = emis[ion+'max'][j]
+                        temp[1] = emis[ion+'max'][j]-4.*np.log10((1.+znow)**4.)
                         blues = np.vstack((blues,temp))
                 if color == 'Crimson':
                         temp = np.array([0.,0.])
-                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]
+                        temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]-4.*np.log10((1.+znow)**4.)
                         reds = np.vstack((reds,temp))
-                        temp[1] = emis[ion+'max'][j]
+                        temp[1] = emis[ion+'max'][j]-4.*np.log10((1.+znow)**4.)
                         reds = np.vstack((reds,temp))
 
                 i = i + 4
@@ -164,15 +165,15 @@ def plot_connected_minmax(ax,blues,reds):
 #########################################################################
 
 #ions = ['SiIV','CIV','OVI']
-ions = ['CIII','CIV','OVI']
-redshift_key = 'z0'
+ions = ['SiIV','CIII_977','OVI']
+redshift_key = 'z02'
 znow = 0.
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
 gals = cPickle.load(open('werk_galaxy_properties.cpkl','rb'))
 
-#model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'+redshift_key+'/' ##CHANGED FORM Z02
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'+redshift_key+'/'
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/'+redshift_key+'/' ##CHANGED FORM Z02
+#model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'+redshift_key+'/'
 model_gqs = ['g1q01','g1q1','g1q10']
 res_keys = ['1kpc','1kpc','1kpc']
 
@@ -181,13 +182,15 @@ percentile = 0.01
 
 ncontours = 4
 
-fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
+#fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
+##has all of the above keys but shorter for me to scp easier
+fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_HOLDER.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
 #plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
 gs1 = gridspec.GridSpec(4, 4)
-gs1.update(wspace=0.025, hspace=0.05)
+gs1.update(wspace=0.0,hspace=0.05) #25, hspace=0.05)
 ax = ax.flat
 i = 0
 
@@ -195,17 +198,23 @@ i = 0
 
 for ion in ions:
 	print ion
-	blues,reds = werk_cloudy_ions(emis,gals,ion)
+	if ion == 'CIII_977':
+		ionhere = 'CIII'
+	else:
+		ionhere = ion
+
+	blues,reds = werk_cloudy_ions(emis,gals,ionhere,znow)
 	count = 0
 	while count < 3:
 		print ion, count, model_gqs[count],i
-		modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frby_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl'] 
+		#modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frby_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_'+redshift_key+'_'+ion+'.cpkl'] 
+		modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frby_'+res_keys[count]+'_500kpc_'+redshift_key+'_'+ion+'.cpkl',model_beg+model_gqs[count]+'/frbz_'+res_keys[count]+'_500kpc_'+redshift_key+'_'+ion+'.cpkl']
 
 
 		#ax[i].plot(x)
 		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=False)
-		if ion != 'SiIV':
-			plot_connected_minmax(ax[i],blues,reds)
+		#if ion != 'SiIV':
+			#plot_connected_minmax(ax[i],blues,reds)
 		#ax[i].set_title(model_gqs[count])
 		#plt.axis('on')
 		#ax[i].set_xticklabels([])
@@ -216,8 +225,11 @@ for ion in ions:
 for j in range(len(model_gqs)):
         ax[j].set_title(model_gqs[j])
 
-for k in range(len(ions)):
-        ax[k*xlen+2].text(100,5.05,ions[k])
+#for k in range(len(ions)):
+#        ax[k*xlen+2].text(100,5.05,ions[k])
+
+ax[7].set_xlabel('Impact Parameter [kpc]')
+ax[3].set_ylabel('Column Density [cm^-2]')
 
 plt.tight_layout()
 plt.savefig(fileout)#, transparent=True)
