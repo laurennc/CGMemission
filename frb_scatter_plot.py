@@ -166,7 +166,7 @@ def plot_connected_minmax(ax,blues,reds):
 
 #ions = ['SiIV','CIV','OVI']
 ions = ['SiIV','CIII_977','OVI']
-redshift_key = 'z02'
+redshift_key = 'z1'
 znow = 0.
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
@@ -184,7 +184,7 @@ ncontours = 4
 
 #fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
 ##has all of the above keys but shorter for me to scp easier
-fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_HOLDER.png'
+fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_wodata.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
@@ -214,7 +214,7 @@ for ion in ions:
 		#ax[i].plot(x)
 		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=False)
 		#if ion != 'SiIV':
-			#plot_connected_minmax(ax[i],blues,reds)
+		#plot_connected_minmax(ax[i],blues,reds)
 		#ax[i].set_title(model_gqs[count])
 		#plt.axis('on')
 		#ax[i].set_xticklabels([])
