@@ -45,7 +45,7 @@ for i in range(len(werk['SDSSField'])):
 		ovi = simps(np.power(10.,emis['O__6__1032A']),emis['depth'])+simps(np.power(10.,emis['O__6__1038A']),emis['depth'])
 		ovi = np.log10(ovi/(4.*np.pi*1.92e-11))
 		OVI = np.append(OVI,ovi)
-		siiv = simps(np.power(10.,emis['Si_4__1395A']),emis['depth'])+simps(np.power(10.,emis['Si_4__1403A']),emis['depth'])
+		siiv = simps(np.power(10.,emis['Si_4__1394A']),emis['depth'])+simps(np.power(10.,emis['Si_4__1403A']),emis['depth'])
                 siiv = np.log10(siiv/(4.*np.pi*1.42e-11))
                 SiIV = np.append(SiIV,siiv)
 
