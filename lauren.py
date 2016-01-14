@@ -44,11 +44,11 @@ def make_Cloudy_table(table_index):
 	#hden_n_bins, hden_min, hden_max = 35, -6, 1
 	#T_n_bins, T_min, T_max = 151, 3, 8
 	#hden_n_bins, hden_min, hden_max = 15, -6, 1
-	hden_n_bins, hden_min, hden_max = 81, -6, 2
-	#hden_n_bins, hden_min, hden_max = 17, -6, 2
+	#hden_n_bins, hden_min, hden_max = 81, -6, 2
+	hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z02/g1q1/g1q1_run%i.dat"
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/test_hden_step/g1q1_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z1/g1q1/g1q1_run%i.dat"
+	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/test_hden_step/g1q1_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
 	T=numpy.linspace(T_min,T_max, T_n_bins)
@@ -208,4 +208,15 @@ def find_covering_fraction(frb_filename,tempname,SB_lims,znow):
 		frac_temp = float(len(idx))/float(len(frb))
 		fractions = np.append(fractions,frac_temp)
 	return fractions
+
+def make_radius_array():
+        xL = np.linspace(-160,160,320)
+        maxnow = 160.
+        xL, yL = np.meshgrid(xL,xL)
+        r = abs(xL+1j*yL)
+        dr = np.abs([xL[0,0] - xL[0,1]])
+        radial = np.arange(maxnow/dr)*dr + dr/2
+        nrad = len(radial)
+        return r, dr, nrad
+
 

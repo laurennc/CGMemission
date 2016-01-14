@@ -19,21 +19,21 @@ fn_z1="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 
 pf = load(fn_z0, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
-pp = ProjectionPlot(pf,'x','Temperature',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
-pp.save('Temperature_z0')
+pp = ProjectionPlot(pf,'x','Metallicity',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
+pp.save('Metallicity_z0')
 
 pf = load(fn_z02, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
-pp = ProjectionPlot(pf,'x','Temperature',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
-pp.save('Temperature_z02')
+pp = ProjectionPlot(pf,'x','Metallicity',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
+pp.save('Metallicity_z02')
 
 pf = load(fn_z05, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
-pp = ProjectionPlot(pf,'x','Temperature',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
-pp.save('Temperature_z05')
+pp = ProjectionPlot(pf,'x','Metallicity',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
+pp.save('Metallicity_z05')
 
 pf = load(fn_z1, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
-pp = ProjectionPlot(pf,'x','Temperature',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
-pp.save('Temperature_z1')
+pp = ProjectionPlot(pf,'x','Metallicity',center=pos,width=(600.,'kpc'),axes_unit=['kpc','kpc'],fontsize=22.,weight_field='Density')#,cmap=cmap,norm=norm)
+pp.save('Metallicity_z1')
 
