@@ -86,7 +86,8 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow):
 
 def plot_frb(modelname,ax,z=0.,include_colorbar=False):
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
-	cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+	#cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+	cmap = colors.ListedColormap(['Gray','#e41a1c','#377eb8','#4daf4a'])
 	bounds = [-5,1,2,3,5]
 	norm = colors.BoundaryNorm(bounds,cmap.N)
 	im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm,origin='lower')
@@ -180,7 +181,7 @@ i = 0
 ions = ['CIII_977']
 
 for ion in ions:
-	fileout = 'frbx_resolution_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_'+ion+'.pdf'#'.png'
+	fileout = 'frbx_resolution_'+redshift_key+'_'+ion+'_AAS.pdf'#'.png'
 	#fileout = 'frb_emis_resolution_forAstrofest.png'
 	xlen,ylen = 3,1
 	fig,ax = plt.subplots(ylen,xlen,sharey=True)

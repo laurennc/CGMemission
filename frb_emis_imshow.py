@@ -52,8 +52,10 @@ def plot_scatter_points_percentile(ax,frbarr,r,dr,nrad,percentile,key,z=0.,comov
 			rnow = rnow*(1.+z)
 
 		lims = [10,3,2,1,-10]
-                colors = ['Chartreuse','DarkTurquoise','HotPink','Grey']
-                i = 0
+                #colors = ['Chartreuse','DarkTurquoise','HotPink','Grey']
+                #colors = ['ShamrockGreen','BlueberryBlue','MediumVioletRed','Grey']
+		
+		i = 0
 		while i < len(lims)-1:
 			wanted = np.where((frbnow < lims[i]) & (frbnow >= lims[i+1]))[0]
 			if key=='1kpc':
@@ -94,7 +96,9 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow,comoving=F
 def plot_frb(modelname,ax,z=0.,include_colorbar=False,obs_colors=True):
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
 	if obs_colors:
-		cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
+		cmap = colors.ListedColormap(['Gray','#e41a1c','#377eb8','#4daf4a'])
+#['Gray','DarkMagenta','MediumBlue','ForestGreen'])
+#'DeepPink','DodgerBlue','LimeGreen'])#'HotPink','DarkTurquoise','Chartreuse'])
 		bounds = [-5,1,2,3,5]	
 		norm = colors.BoundaryNorm(bounds,cmap.N)
 		im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm,origin='lower')
@@ -197,7 +201,7 @@ model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##
 #ions = ['CIII_977','CIV','OVI']
 #xlen,ylen = 3,3
 #figxlen,figylen = 12,12
-fileout = 'frb_emis_varyRedshift.pdf'
+fileout = 'frb_emis_varyRedshift_AAS.pdf'
 
 ##REDSHIFT EVOLUTION PARAMETERS w z02
 model_gqs = ['g1q1','g1q1','g1q1','g1q1']
