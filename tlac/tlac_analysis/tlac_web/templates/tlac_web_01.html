@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>tlac web</title>
+        <script src="{{ app_url }}"></script>
+        <script>
+            window._bokeh_onload_callbacks = [window.TlacWebApp.main];
+        </script>
+        <script language="javascript" type="text/javascript">
+          <!--
+              function popitup(url, w, h) {
+	      newwindow=window.open(url,'name','location=no,status=no,menubar=no,scrollbars=no,resizable=yes,height='+h+',width='+w);
+	      if (window.focus) {newwindow.focus()}
+	      return false;
+              }
+              
+              // -->
+        </script>
+        <style media="screen" type="text/css">
+          body,p {
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          color: #000000;
+          }
+          a:link#boxlink, a:visited#boxlink {
+          font-weight: bold;
+          color: #ffffff;
+          background-color: #428bca;
+          text-align: center;
+          padding: 4px;
+          text-decoration: none;
+          }
+          a:hover#boxlink, a:active#boxlink {
+          background-color: #3276b1;
+          }
+        </style>
+    </head>
+    <body>
+        {% if ul_link %}
+        <a id="boxlink" href="{{ ul_link }}" onclick="return popitup(this.href,600,100)">Upload data</a>
+        {% endif %}
+        {% if dl_link %}
+        <a id="boxlink" href="{{ dl_link }}">Download generated files</a>
+        <small><i>(generate files by pressing on the "Save" button below.)</i></small>
+        {% endif %}
+        <a id="boxlink" href="tlac_web/doc" onclick="return popitup(this.href,600,900)">Docs & About</a>
+        {{ app_tag|indent(8)|safe }}
+        <br><br>
+    </body>
+</html>
