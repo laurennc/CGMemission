@@ -123,14 +123,15 @@ def werk_cloudy_ions(emis,gals,ion,znow):
                 idx = np.where(gals['ID'] == gal_id)[0]
                 sSFR = gals['SFR'][idx]/np.power(10.,gals['mStar'][idx])
                 ###original colors were DodgerBlue and Crimson
-		color = 'MediumBlue' if sSFR > 1e-11 else 'Crimson'
-                if color == 'MediumBlue':
+		#color = 'MediumBlue' if sSFR > 1e-11 else 'Crimson'
+                color = '#377eb8' if sSFR > 1e-11 else '#e41a1c'
+		if color == '#377eb8':
                         temp = np.array([0.,0.])
                         temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]-4.*np.log10((1.+znow)**4.)
                         blues = np.vstack((blues,temp))
                         temp[1] = emis[ion+'max'][j]-4.*np.log10((1.+znow)**4.)
                         blues = np.vstack((blues,temp))
-                if color == 'Crimson':
+                if color == '#e41a1c':
                         temp = np.array([0.,0.])
                         temp[0],temp[1] = gals['Rperp'][idx],emis[ion+'min'][j]-4.*np.log10((1.+znow)**4.)
                         reds = np.vstack((reds,temp))
@@ -148,14 +149,14 @@ def werk_cloudy_ions(emis,gals,ion,znow):
 def plot_connected_minmax(ax,blues,reds):
         i = 0
         while i < len(blues):
-                ax.plot(blues[i:i+2,0],blues[i:i+2,1],'.',color='MediumBlue')
-                ax.plot(blues[i:i+2,0],blues[i:i+2,1],color='MediumBlue',lw=2.0)
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],'.',color='#377eb8')
+                ax.plot(blues[i:i+2,0],blues[i:i+2,1],color='#377eb8',lw=2.0)
                 i = i + 2
 
         i = 0
         while i < len(reds):
-                ax.plot(reds[i:i+2,0],reds[i:i+2,1],'.',color='Crimson')
-                ax.plot(reds[i:i+2,0],reds[i:i+2,1],color='Crimson',lw=2.0)
+                ax.plot(reds[i:i+2,0],reds[i:i+2,1],'.',color='#e41a1c')
+                ax.plot(reds[i:i+2,0],reds[i:i+2,1],color='#e41a1c',lw=2.0)
                 i = i + 2
 
         return
@@ -166,7 +167,7 @@ def plot_connected_minmax(ax,blues,reds):
 
 #ions = ['SiIV','CIV','OVI']
 ions = ['SiIV','CIII_977','OVI']
-redshift_key = 'z1'
+redshift_key = 'z02'
 znow = 0.
 
 emis = cPickle.load(open('cloudywerk.cpkl','rb'))
@@ -184,7 +185,7 @@ ncontours = 4
 
 #fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
 ##has all of the above keys but shorter for me to scp easier
-fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_wodata.png'
+fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_papercolors.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
@@ -214,7 +215,7 @@ for ion in ions:
 		#ax[i].plot(x)
 		full_scatter_plot(modelnames,ion,ax[i],res_keys[count],max_r,percentile,znow,comoving=False)
 		#if ion != 'SiIV':
-		#plot_connected_minmax(ax[i],blues,reds)
+		plot_connected_minmax(ax[i],blues,reds)
 		#ax[i].set_title(model_gqs[count])
 		#plt.axis('on')
 		#ax[i].set_xticklabels([])
