@@ -28,13 +28,13 @@ def make_thin_frb(pf,axis,fields,center,width,thickness,resolution,weight_field=
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0058_l10/redshift0058"
 #pos = [0.40328598,0.47176743,0.46131516]
 ##################### z = 0.2 ##########################
-#fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
+fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 ####################  z = 0.5 ###########################
 #fn="/u/10/l/lnc2115/vega/data/Ryan/r0048/redshift0048"
 ####################  z = 0.75 #########################
 #fn = "/u/10/l/lnc2115/vega/data/Ryan/r0043/redshift0043"
 ####################  z = 1.0 ##########################
-fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
+#fn="/u/10/l/lnc2115/vega/data/Ryan/r0038/redshift0038"
 
 
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
@@ -52,23 +52,25 @@ width = 320./pf['kpc']
 #width = 1./pf['Mpc']
 
 
-emission = True
-coldens = False
+emission = False
+coldens = True
 
 if coldens:	
 	#fields = ['CIII_Density','CIV_Density','OVI_Density','MgII_Density','SiII_Density','SiIII_Density','SiIV_Density']#,'HI_NumberDensity']
 	#fields = ['HI_NumberDensity']	
-	fields = ['CIII_Density','SiIV_Density','OVI_Density','HI_NumberDensity']
+	fields = ['CIII_Density','SiIV_Density','OVI_Density','HI_NumberDensity','NV_Density','SiII_Density']
 
-	file_begin = 'bertone_frbs/coldens/grid_galquas/z1/g1q1/'
+#	file_begin = 'bertone_frbs/coldens/grid_galquas/z02/g1q10/'
+	file_begin = 'bertone_frbs/final/coldens/z02/g1q10/'
 	key_string,keydx = '_Density',0
 	file_end = 'dens.cpkl'
 
 if emission:
 	#fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
-	file_begin = 'bertone_frbs/final/emis/z1/g1q1/'	
+	file_begin = 'bertone_frbs/final/emis/z02/g1q10/'	
 	fields = ['Emission_OVI','Emission_CIII_977','Emission_CIV','Emission_SiIV']
-	#file_begin = 'frb_resolution_z1_1kpc_zscaled_Zfixed_500kpc_'
+	#fields = ['Emission_NV','Emission_SiII']
+	#file_begin = 'frb_resolution_z02_1kpc_zscaled_Zfixed_500kpc_'
 	key_string,keydx = 'Emission_|',1
 	file_end = '.cpkl'
 
@@ -82,7 +84,7 @@ if project_X:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbx_1kpc_500kpc_z1_'+key+file_end
+                fileout = file_begin + 'frbx_1kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
@@ -91,7 +93,7 @@ if project_Y:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frby_1kpc_500kpc_z1_'+key+file_end
+                fileout = file_begin + 'frby_1kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 
 if project_Z:
@@ -100,7 +102,7 @@ if project_Z:
 
         for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbz_1kpc_500kpc_z1_'+key+file_end
+                fileout = file_begin + 'frbz_1kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 
