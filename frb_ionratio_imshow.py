@@ -36,11 +36,11 @@ obs_colors = True
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 
 #ASTROFEST PARAMETERS
-model_gqs = ['g1q10']
+model_gqs = ['g1q1']
 res_keys = ['1kpc']
 redshift_keys = ['z02']
 znow = [0.]
-ions = ['SiIV','CIII_977','CIV','OVI']
+ions = ['SiIV','CIII_977','CIV','OVI','SiII']
 xlen,ylen = 1,3
 figxlen,figylen = 3,9
 fileout = 'frb_ionfracs_z02_nozscaling.png'
@@ -64,6 +64,8 @@ frb_CIV = np.array(cPickle.load(open(model_beg+redshift_keys[count]+'/'+model_gq
 
 frb_OVI = np.array(cPickle.load(open(model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_OVI.cpkl','rb')))
 
+frb_SiII = np.array(cPickle.load(open(model_beg+redshift_keys[count]+'/'+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_OVI.cpkl','rb')))
+
 
 #bmap = brew.get_map('PuRd','Sequential',9)
 bmap = brew.get_map('PRGn','Diverging',9)
@@ -71,9 +73,9 @@ cmap = bmap.get_mpl_colormap(N=1000, gamma=2.0)
 
 
 
-plt.imshow(np.log10(frb_SiIV/frb_CIII),extent=(-160,160,160,-160),interpolation='none',cmap=cmap,origin='lower')
+plt.imshow(np.log10(frb_SiII/frb_SiIV),extent=(-160,160,160,-160),interpolation='none',cmap=cmap,origin='lower')
 plt.colorbar()
-plt.savefig('SiIV_CIII_'+redshift_keys[count]+'_'+model_gqs[count]+'.png')
+plt.savefig('SiII_SiIV_'+redshift_keys[count]+'_'+model_gqs[count]+'.png')
 plt.close()
 
 plt.imshow(np.log10(frb_CIII/frb_CIV),extent=(-160,160,160,-160),interpolation='none',cmap=cmap,origin='lower',vmax=1.5,vmin=-2.5)
