@@ -36,19 +36,17 @@ def make_radius_array():
         nrad = len(radial)
         return r, dr, nrad
 
-def plot_scatter_points(ax,frbarr,r,dr,nrad):#,rpmean):
+def plot_scatter_points(ax,frbarr1,frbarr2,temperature,r,dr,nrad):#,rpmean):
         mslope = (0.015-0.07)/nrad
-	total_pts, num_above = 0.,0.
         for irad in range(nrad):
 		minrad = irad*dr
         	maxrad = minrad + dr
         	thisindex = (r>=minrad) * (r<maxrad)
-        	#For the percentage calculation
-		total_pts = total_pts + len(frbarr[thisindex])
-		#num_above = num_above + len(np.where(np.log10(frbarr[thisindex])>np.log10(rpmean[irad]))[0])
-		#FOr the scatter plot
+		frbarr1here,frbarr2here,temphere,rhere = frbarr1[thisindex],frbarr2[thisindex],temperature[thisindex],r[thisindex]
+		idx = np.where((frbarr1here > 1.0) & (frbarr2here > 1.0))
 		alphahere = mslope*irad + 0.07
-        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'.',alpha=alphahere,color='Gray')
+        	frbarrplot = np.log10(frbarr1here[idx]/frbarr2here[idx])
+		ax.scatter(rhere[idx],frbarrplot,c=np.log10(temphere[idx]),alpha=alphahere)
 	#print float(num_above),float(total_pts)
 	#percent_above = float(num_above)/float(total_pts)
         return #percent_above
@@ -57,11 +55,14 @@ def full_scatter_plot(modelname1,profile_names1,ion1,modelname2,profile_names2,i
 	r,dr,nrad = make_radius_array()
 	frbarr1 = np.array(cPickle.load(open(modelname1,'rb')))
 	frbarr2 = np.array(cPickle.load(open(modelname2,'rb')))
+	temperature = np.array(cPickle.load(open('/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/z02/g1q1//frbx_1kpc_500kpc_z02_Temperature_Density.cpkl','rb')))
+	density = np.array(cPickle.load(open('/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/z02/g1q1//frbx_1kpc_500kpc_z02_Density.cpkl','rb')))
+
 	###FIX THIS###
 	xL = np.linspace(-160,160,320)
         #rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
-	frbarr = frbarr1/frbarr2
-	percent_above = plot_scatter_points(ax,frbarr,r,dr,nrad)#,rpmean)
+	#frbarr = frbarr1/frbarr2
+	percent_above = plot_scatter_points(ax,frbarr1,frbarr2,density,r,dr,nrad)#,rpmean)
 	#idr = np.where(rpr <= max_r)[0]
 	#ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
 	#plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
@@ -94,7 +95,7 @@ max_r = 160.
 
 #fileout = 'paper1X_scatter_matrix_Zfixed_500kpc_sSFR_wemisprof.png'
 #fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
-fileout = 'ionfrac_scatter_matrix_z02_nozscale.png'
+fileout = 'ionfrac_scatter_emis_z02_nozscale_01limit_dens.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 #fig.set_size_inches(12,4)
@@ -137,11 +138,12 @@ for j in range(len(model_gqs)):
 	ax[j].set_title(model_gqs[j])
 
 for k in range(len(ions1)):
-	ax[k*xlen+2].text(100,17.05,ions1[k]+'/'+ions2[k])
+	#ax[k*xlen+2].text(100,17.05,ions1[k]+'/'+ions2[k])
+	ax[k*xlen+2].text(100,4.05,ions1[k]+'/'+ions2[k])
 
 ax[7].set_xlabel('Impact Parameter [kpc]')
-ax[3].set_ylabel('Column Density [cm^-2]')
-
+#ax[3].set_ylabel('Column Density [cm^-2]')
+ax[3].set_ylabel('Surface Brightness')
 
 plt.tight_layout()
 plt.savefig(fileout)#,transparent=True)
