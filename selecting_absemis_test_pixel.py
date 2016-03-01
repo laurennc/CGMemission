@@ -20,6 +20,16 @@ model_mid = '/frbx_1kpc_500kpc_z02_'
 data = {}
 fileout = 'absemis_test.cpkl'
 
+xL = np.linspace(-160,160,320)
+maxnow = 160.
+xL, yL = np.meshgrid(xL,xL)
+r = abs(xL+1j*yL)
+dr = np.abs([xL[0,0] - xL[0,1]])
+radial = np.arange(maxnow/dr)*dr + dr/2
+nrad = len(radial)
+
+
+
 ## just for now I'm going to make a cut such that the CIII emission is above our detection limit
 CIIIemis = model_beg_emis+model_gqs[count]+model_mid+'CIII_977.cpkl'
 minrad = 25.
