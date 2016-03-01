@@ -17,6 +17,16 @@ def make_Cloudy_table(model_gq,table_index):
 
         return hden,T,table
 
+def make_ion_table(model_gq,ion,number):
+	hden_n_bins, hden_min, hden_max = 17, -6, 2
+        T_n_bins, T_min, T_max = 51, 3, 8
+        patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/z02/"+model_gq+"/bert_ion_run%i_"+ion+".dat"
+        hden=np.linspace(hden_min,hden_max,hden_n_bins)
+        T=np.linspace(T_min,T_max, T_n_bins)
+        table = np.zeros((hden_n_bins,T_n_bins))
+        for i in range(hden_n_bins):
+                table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
+        return hden,T,table
 
 def load_emission_tables(model_gq):
 	## CIII Emission
@@ -40,9 +50,19 @@ def load_emission_tables(model_gq):
 	OVI_Emission = 10.**(table_OVI_1) + 10.**(table_OVI_2)
 	OVI_Emission = np.log10(OVI_Emission)
 	
-	## NV   Emission
-	## Need to find the right line for NV and then run all of the Cloudy models....
 	return CIII_Emission,CIV_Emission,OVI_Emission
+
+def load_ionfrac_tables(model_gq):
+        ## CIII Emission
+        hden1,T1,table_CIII = make_ion_table(model_gq,'C',3)
+        ## CIV  Emission
+        hden1, T1, table_CIV = make_ion_table(model_gq,'C',4)
+        ## OVI  Emission
+        hden1, T1, table_OVI = make_ion_table(model_gq,'O',6)
+	## HI Fraction
+	hden1, T1, table_HI = make_ion_table(model_gq,'H',1)
+	return table_CIII,table_CIV,table_OVI,table_HI
+
 
 def plot_emission_imshows():
 	## first just plotting them!
