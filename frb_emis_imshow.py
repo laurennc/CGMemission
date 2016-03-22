@@ -177,8 +177,8 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['SiIV','CIV','OVI']
 #ions = ['CIII_977','CIV','OVI']
 
-no_axes_labels = True
-obs_colors = True
+no_axes_labels = False
+obs_colors = False
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
@@ -201,18 +201,30 @@ model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##
 #ions = ['CIII_977','CIV','OVI']
 #xlen,ylen = 3,3
 #figxlen,figylen = 12,12
-fileout = 'frb_emis_varyRedshift_AAS.pdf'
+#fileout = 'frb_emis_varyRedshift_AAS.pdf'
 
 ##REDSHIFT EVOLUTION PARAMETERS w z02
-model_gqs = ['g1q1','g1q1','g1q1','g1q1']
-res_keys = ['1kpc','1kpc','1kpc','1kpc']
-redshift_keys = ['z0','z02','z05','z1']
-znow = [0.,0.2,0.5,1.0]
+#model_gqs = ['g1q1','g1q1','g1q1','g1q1']
+#res_keys = ['1kpc','1kpc','1kpc','1kpc']
+#redshift_keys = ['z0','z02','z05','z1']
+#znow = [0.,0.2,0.5,1.0]
 #znow = [0.,0.,0.,0.]
-ions = ['CIII_977','CIV','OVI']	
-xlen,ylen = 4,3
-figxlen,figylen = 16,12
+#ions = ['CIII_977','CIV','OVI']	
+#xlen,ylen = 4,3
+#figxlen,figylen = 16,12
 #fileout = 'frb_emis_theory_nozscaling_wz02.pdf'
+
+
+## PARAMETERS FOR FIREBALL PROPOSAL FOR ERIKA
+model_gqs = ['g1q1','g1q1','g1q1']
+res_keys = ['1kpc','1kpc','1kpc']
+redshift_keys = ['z02','z075','z1']
+znow = [0.2,0.75,1.0]
+#znow = [0.,0.,0.]
+ions = ['LyA','CIV','OVI']
+xlen,ylen = 3,3
+figxlen,figylen = 12,12
+fileout = 'frb_emis_obs__erika.pdf'
 
 max_r = 160.
 percentile = 0.01
@@ -236,6 +248,12 @@ for ion in ions:
 		#modelnames = [model_beg+redshift_keys[count]+'/vary_hden_step/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'.cpkl']
 
 		im_out = plot_frb(modelnames[0],ax[i],z=znow[count],obs_colors=obs_colors)
+		
+		##the beginnings of plotting each individually but maybe that's not necessary...
+		#fig2,ax2 = plt.subplots(1,1)
+		#ax2 = im_out
+		#ax2.set_title(ion+' '+str(znow[count])
+		#ax2
 
 		if no_axes_labels:
 			#ax[i].set_title(model_gqs[count])
