@@ -383,3 +383,19 @@ def plot_yt_weighted_fields(hdenfile,tempfile,fileout):
 	return
 
 
+def plot_radial_profiles_werrs(sphere,fileout):
+	rad_profile = BinnedProfile1D(sphere, 100, "Radiuskpc", 0.0, 500., log_space=False)
+	rad_profile.add_fields("Density","Temperature","Metallicity")
+	fields = ['Density','Temperature','Metallicity']
+	units = ['[g cm^-3]','[K]','[Z/Z_sun]']
+	fig,ax = plt.subplots(1,3)
+	for i in range(len(fields)):
+		ax[i].loglog(rad_profile["Radiuskpc"],rad_profile[fields[i]],linewidth=1.5,color='b')
+		ax[i].set_xlabel('Radius [kpc]')
+		ax[i].set_ylable(fields[i]+' '+units[i])
+		ax[i].errorbar(rad_profile["Radiuskpc"],rad_profile[fields[i]],yerr=rad_profile[fields[i]+'_std'],color='b')
+
+	plt.savefig(fileout)
+	plt.close()
+	return
+
