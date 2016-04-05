@@ -36,46 +36,52 @@ def make_radius_array():
         nrad = len(radial)
         return r, dr, nrad
 
-def plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean):
+def plot_scatter_points(ax,frbarr1,frbarr2,temperature,r,dr,nrad):#,rpmean):
         mslope = (0.015-0.07)/nrad
-	total_pts, num_above = 0.,0.
         for irad in range(nrad):
 		minrad = irad*dr
         	maxrad = minrad + dr
         	thisindex = (r>=minrad) * (r<maxrad)
-        	#For the percentage calculation
-		total_pts = total_pts + len(frbarr[thisindex])
-		num_above = num_above + len(np.where(np.log10(frbarr[thisindex])>np.log10(rpmean[irad]))[0])
-		#FOr the scatter plot
+		frbarr1here,frbarr2here,temphere,rhere = frbarr1[thisindex],frbarr2[thisindex],temperature[thisindex],r[thisindex]
+		idx = np.where((frbarr1here > 1.0) & (frbarr2here > 1.0))
 		alphahere = mslope*irad + 0.07
-        	ax.plot(r[thisindex],np.log10(frbarr[thisindex]),'.',alpha=alphahere,color='Gray')
+        	frbarrplot = np.log10(frbarr1here[idx]/frbarr2here[idx])
+		ax.scatter(rhere[idx],frbarrplot,c=np.log10(temphere[idx]),alpha=alphahere)
 	#print float(num_above),float(total_pts)
-	percent_above = float(num_above)/float(total_pts)
-        return percent_above
+	#percent_above = float(num_above)/float(total_pts)
+        return #percent_above
 
-def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
+def full_scatter_plot(modelname1,profile_names1,ion1,modelname2,profile_names2,ion2,ax,werk_data,max_r):
 	r,dr,nrad = make_radius_array()
-	frbarr = np.array(cPickle.load(open(modelname,'rb')))
+	frbarr1 = np.array(cPickle.load(open(modelname1,'rb')))
+	frbarr2 = np.array(cPickle.load(open(modelname2,'rb')))
+	temperature = np.array(cPickle.load(open('/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/z02/g1q1//frbx_1kpc_500kpc_z02_Temperature_Density.cpkl','rb')))
+	density = np.array(cPickle.load(open('/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/z02/g1q1//frbx_1kpc_500kpc_z02_Density.cpkl','rb')))
+
 	###FIX THIS###
 	xL = np.linspace(-160,160,320)
-        rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
-	percent_above = plot_scatter_points(ax,frbarr,r,dr,nrad,rpmean)
-	idr = np.where(rpr <= max_r)[0]
-	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
-	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
+        #rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
+	#frbarr = frbarr1/frbarr2
+	percent_above = plot_scatter_points(ax,frbarr1,frbarr2,density,r,dr,nrad)#,rpmean)
+	#idr = np.where(rpr <= max_r)[0]
+	#ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
+	#plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
 	ax.set_xticks(range(0,160,30))
-	ax.axis([0.,160.,8,18])
+	#ax.axis([0.,160.,8,18])
 	return percent_above
 #########################################################################
 
 #ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
 #ions = ['SiIV','CIII','OVI']
-ions = ['SiII','NV','OVI']
+ions1 = ['CIII_977','CIII_977','CIII_977']
+ions2 = ['SiIV','CIV','OVI']
 #ions = ['SiIV']
 #ions = ['HI','MgII','SiII']
 #ions = ['SiIII','CIV','OVI']
-model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/coldens/z02/'
+#model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/coldens/z02/'
+model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/z02/'
+
 model_gqs = ['g1q01','g1q1','g1q10']#,'g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 #model_mid = '/frbz_1kpc_500kpc_z02_'
 model_mid = '/frbx_1kpc_500kpc_z02_'
@@ -89,7 +95,7 @@ max_r = 160.
 
 #fileout = 'paper1X_scatter_matrix_Zfixed_500kpc_sSFR_wemisprof.png'
 #fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
-fileout = 'paper1_scatter_matrix_z02_updated.png'
+fileout = 'ionfrac_scatter_emis_z02_nozscale_01limit_dens.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 #fig.set_size_inches(12,4)
@@ -105,38 +111,24 @@ xL = np.linspace(-160,160,320)
 f = open('percent_above.dat', 'w')
 
 model_gqs = ['g1q01','g1q1','g1q10']
+i2 = -1
 
-
-for ion in ions:
+for ion in ions1:
 	count = 0
+	i2 = i2 + 1
 	while count < 3:
 		print ion, count, model_gqs[count],i
+		ion2 = ions2[i2]
 
-		modelname = model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl'
-                profile_names = [model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl']
+		modelname1 = model_beg+model_gqs[count]+model_mid+ion+'.cpkl'
+                profile_names1 = [model_beg+model_gqs[count]+model_mid+ion+'.cpkl',model_beg+model_gqs[count]+model_mid+ion+'.cpkl',model_beg+model_gqs[count]+model_mid+ion+'.cpkl']
 
-		#if ion == 'HI':
-		#	modelname = model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl'
-		#	profile_names = [model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl']
-
-		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
-
-		#if ion == 'CIII':
-		#	ion_here = 'CIII_977'
-		#else:
-		#	ion_here = ion
-		#print ion_here
-		#emismodels = ['/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'+model_gqs[count]+'/frbx_1kpc_z02_'+ion_here+'.cpkl', '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'+model_gqs[count]+'/frby_1kpc_z02_'+ion_here+'.cpkl', '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/z02/'+model_gqs[count]+'/frbz_1kpc_z02_'+ion_here+'.cpkl']
-		#rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(emismodels[0],emismodels[1],emismodels[2],xL)
-		#rpmedian = np.log10(rpmedian) + 13.1
-		#idr = np.where(rpr <= max_r)[0]
-        	#ax[i].plot(rpr[idr],rpmedian[idr],'--',linewidth=1.7,color='Black')
+		modelname2 = model_beg+model_gqs[count]+model_mid+ion2+'.cpkl'
+                profile_names2 = [model_beg+model_gqs[count]+model_mid+ion2+'.cpkl',model_beg+model_gqs[count]+model_mid+ion2+'.cpkl',model_beg+model_gqs[count]+model_mid+ion2+'.cpkl']
 
 
+		full_scatter_plot(modelname1,profile_names1,ion,modelname2,profile_names2,ion2,ax[i],werk_data,max_r)
 
-		#plt.axis('on')
-   		#ax[i].set_xticklabels([])
-    		#ax[i].set_yticklabels([])
 		
 		count = count + 1
 		i = i + 1	
@@ -145,14 +137,13 @@ for ion in ions:
 for j in range(len(model_gqs)):
 	ax[j].set_title(model_gqs[j])
 
-for k in range(len(ions)):
-	ax[k*xlen+2].text(100,17.05,ions[k])
+for k in range(len(ions1)):
+	#ax[k*xlen+2].text(100,17.05,ions1[k]+'/'+ions2[k])
+	ax[k*xlen+2].text(100,4.05,ions1[k]+'/'+ions2[k])
 
 ax[7].set_xlabel('Impact Parameter [kpc]')
-ax[3].set_ylabel('Column Density [cm^-2]')
-
-#fig.text(0.5, 0.005, 'Impact Parameter [kpc]', ha='center')
-#fig.text(0.005, 0.5, 'Column Density [cm^-2]', va='center', rotation='vertical')
+#ax[3].set_ylabel('Column Density [cm^-2]')
+ax[3].set_ylabel('Surface Brightness')
 
 plt.tight_layout()
 plt.savefig(fileout)#,transparent=True)
