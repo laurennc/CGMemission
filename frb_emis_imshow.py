@@ -96,9 +96,10 @@ def full_scatter_plot(modelnames,ion,ax,res_key,max_r,percentile,znow,comoving=F
 def plot_frb(modelname,ax,z=0.,include_colorbar=False,obs_colors=True):
 	frbarr = np.array(cPickle.load(open(modelname,'rb')))
 	if obs_colors:
-		cmap = colors.ListedColormap(['Gray','#e41a1c','#377eb8','#4daf4a'])
+		#cmap = colors.ListedColormap(['Gray','#e41a1c','#377eb8','#4daf4a'])
 #['Gray','DarkMagenta','MediumBlue','ForestGreen'])
-#'DeepPink','DodgerBlue','LimeGreen'])#'HotPink','DarkTurquoise','Chartreuse'])
+		#cmap = colors.ListedColormap(['Gray','DeepPink','DodgerBlue','LimeGreen'])#
+		cmap = colors.ListedColormap(['Gray','HotPink','DarkTurquoise','Chartreuse'])
 		bounds = [-5,1,2,3,5]	
 		norm = colors.BoundaryNorm(bounds,cmap.N)
 		im = ax.imshow(np.log10(frbarr/(1.+z)**4.0),extent=(-160,160,160,-160),vmin=-5,vmax=5,interpolation='none',cmap=cmap,norm=norm,origin='lower')
@@ -178,7 +179,7 @@ def plot_connected_minmax(ax,blues,reds):
 #ions = ['CIII_977','CIV','OVI']
 
 no_axes_labels = False
-obs_colors = False
+obs_colors = True
 
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##CHANGED FORM Z02
 #model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/emis/grid_galquas/'
@@ -204,27 +205,27 @@ model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/' ##
 #fileout = 'frb_emis_varyRedshift_AAS.pdf'
 
 ##REDSHIFT EVOLUTION PARAMETERS w z02
-#model_gqs = ['g1q1','g1q1','g1q1','g1q1']
-#res_keys = ['1kpc','1kpc','1kpc','1kpc']
-#redshift_keys = ['z0','z02','z05','z1']
-#znow = [0.,0.2,0.5,1.0]
+model_gqs = ['g1q1','g1q1','g1q1','g1q1']
+res_keys = ['1kpc','1kpc','1kpc','1kpc']
+redshift_keys = ['z0','z02','z05','z1']
+znow = [0.,0.2,0.5,1.0]
 #znow = [0.,0.,0.,0.]
-#ions = ['CIII_977','CIV','OVI']	
-#xlen,ylen = 4,3
-#figxlen,figylen = 16,12
-#fileout = 'frb_emis_theory_nozscaling_wz02.pdf'
+ions = ['SiIII_1207','SiIV','CIII_977']	
+xlen,ylen = 4,3
+figxlen,figylen = 16,12
+fileout = 'frb_emis_obs_nozscaling_wz02_SiiCref.pdf'
 
 
 ## PARAMETERS FOR FIREBALL PROPOSAL FOR ERIKA
-model_gqs = ['g1q1','g1q1','g1q1']
-res_keys = ['1kpc','1kpc','1kpc']
-redshift_keys = ['z02','z075','z1']
-znow = [0.2,0.75,1.0]
+#model_gqs = ['g1q1','g1q1','g1q1']
+#res_keys = ['1kpc','1kpc','1kpc']
+#redshift_keys = ['z02','z075','z1']
+#znow = [0.2,0.75,1.0]
 #znow = [0.,0.,0.]
-ions = ['LyA','CIV','OVI']
-xlen,ylen = 3,3
-figxlen,figylen = 12,12
-fileout = 'frb_emis_obs__erika.pdf'
+#ions = ['LyA','CIV','OVI']
+#xlen,ylen = 3,3
+#figxlen,figylen = 12,12
+#fileout = 'frb_emis_obs__erika.pdf'
 
 max_r = 160.
 percentile = 0.01
@@ -263,7 +264,7 @@ for ion in ions:
 			ax[i].set_yticklabels([])
 
 		ax[i].set_adjustable('box-forced')		
-		#ax[i].set_title(ion)		
+		ax[i].set_title(ion)		
 		#ax[i].text(75,-100,ion)
 		i = i + 1
 		count = count + 1	

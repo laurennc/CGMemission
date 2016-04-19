@@ -13,6 +13,17 @@ def plot_radial_profiles(sphere,color,z_label):
 	rad_profile.add_fields(["Density","Temperature","Metallicity"])
 	i = 0
 	while i < len(fields):
+		#j,ixs = 0,[]
+		#while j < len(rad_profile["Radiuskpc"])-1:
+			#if np.log10(rad_profile[fields[i]][j+1] ) < (np.log10(rad_profile[fields[i]][j]) +0.05):
+			#	ixs = np.append(ixs,int(j+1))
+			
+			#j = j + 1
+	
+		#print i,len(ixs)
+		#print ixs[0:10]	
+		#ixs = [int(x) for x in ixs]
+		#print ixs[0:10]
 		if i == (len(fields)-1):
 			print 'Here I am'
 			ax[i].plot(rad_profile["Radiuskpc"],np.log10(rad_profile[fields[i]]),linewidth=1.5,color=color,label=z_label)
@@ -52,7 +63,7 @@ for i in range(len(fields)):
 ax[len(fields)-1].legend()	
 
 plt.tight_layout()
-plt.savefig('radial_profiles_referee.png')
+plt.savefig('radial_profiles_referee_original.pdf')
 plt.close()
 
 

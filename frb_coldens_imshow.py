@@ -50,7 +50,7 @@ ions = ['HI','SiIV','CIII','OVI']
 xlen,ylen = 1,4
 figxlen,figylen = 3,9
 #fileout = 'frb_coldens_z02_imshow.png'
-fileout = 'frb_coldens_z02_imshow.pdf'
+fileout = 'frb_coldens_z02_imshow_referee.pdf'
 
 ##REDSHIFT EVOLUTION PARAMETERS
 #model_gqs = ['g1q1','g1q1','g1q1']
@@ -84,7 +84,7 @@ for ion in ions:
 		modelnames = [model_beg+model_gqs[count]+'/frbx_'+res_keys[count]+'_500kpc_'+redshift_keys[count]+'_'+ion+'dens.cpkl']
 
 		if ion=='HI':
-			im_out_HI = plot_frb(modelnames[0],ax[i],vmin=12,vmax=24,z=znow[count],obs_colors=obs_colors)
+			im_out_HI = plot_frb(modelnames[0],ax[i],vmin=10,vmax=24,z=znow[count],obs_colors=obs_colors)
 			#ax[i].colorbar(im_out_HI)
 		else:	
 			im_out = plot_frb(modelnames[0],ax[i],vmin=12,vmax=16,z=znow[count],obs_colors=obs_colors)
