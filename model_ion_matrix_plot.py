@@ -64,6 +64,7 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
 	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
+	ax.axhline(12.5,linestyle='--',color='k',linewidth=1.3)
 	ax.set_xticks(range(0,160,30))
 	ax.axis([0.,160.,8,18])
 	return percent_above
@@ -71,7 +72,8 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 
 #ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
 #ions = ['SiIV','CIII','OVI']
-ions = ['SiII','NV','OVI']
+#ions = ['SiII','NV','OVI']
+ions = ['SiIII','SiIV','CIII']
 #ions = ['SiIV']
 #ions = ['HI','MgII','SiII']
 #ions = ['SiIII','CIV','OVI']
@@ -89,7 +91,7 @@ max_r = 160.
 
 #fileout = 'paper1X_scatter_matrix_Zfixed_500kpc_sSFR_wemisprof.png'
 #fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
-fileout = 'paper1_scatter_matrix_z02_updated.png'
+fileout = 'paper1_scatter_matrix_z02_toptest.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 #fig.set_size_inches(12,4)
