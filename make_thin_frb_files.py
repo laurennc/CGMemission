@@ -40,9 +40,10 @@ fn="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
 pf = load(fn, file_style="%s.grid.cpu%%04i") # load data
 val, pos = pf.h.find_max('Density')
 
-resolution = [320,320]
+#resolution = [320,320]
 #resolution = [64,64]
 #resolution = [13,13]
+resolution = [24,24]
 
 center = pos
 #thickness = 320./pf['kpc']
@@ -57,20 +58,20 @@ coldens = True
 
 if coldens:	
 	#fields = ['CIII_Density','CIV_Density','OVI_Density','MgII_Density','SiII_Density','SiIII_Density','SiIV_Density']#,'HI_NumberDensity']
-	#fields = ['HI_NumberDensity']	
-	fields = ['CIII_Density','SiIV_Density','OVI_Density','HI_NumberDensity','NV_Density','SiII_Density']
 
-#	file_begin = 'bertone_frbs/coldens/grid_galquas/z02/g1q10/'
-	file_begin = 'bertone_frbs/final/coldens/z02/g1q10/'
+	fields = ['SiIII_Density','SiIV_Density','CIII_Density','OVI_Density']
+#	file_begin = 'bertone_frbs/coldens/grid_galquas/z02/g1q1/'
+	file_begin = 'bertone_frbs/final/coldens/z02/g1q1/'
 	key_string,keydx = '_Density',0
 	file_end = 'dens.cpkl'
 
 if emission:
 	#fields = ['Emission_HAlpha','Emission_CIV','Emission_OVI','Emission_CIII_977','Emission_CIII','Emission_SiII','Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV','Emission_MgII']
-	file_begin = 'bertone_frbs/final/emis/z02/g1q10/'	
-	fields = ['Emission_OVI','Emission_CIII_977','Emission_CIV','Emission_SiIV']
-	#fields = ['Emission_NV','Emission_SiII']
-	#file_begin = 'frb_resolution_z02_1kpc_zscaled_Zfixed_500kpc_'
+	file_begin = 'bertone_frbs/final/emis/z02/g1q1/'	
+	#fields = ['Emission_OVI','Emission_CIII_977','Emission_CIV','Emission_SiIV','Emission_SiIII_1207']
+	fields = ['Emission_SiIII_1207','Emission_SiIII_1883','Emission_SiIV']
+	#fields = ['Emission_OVI']
+	#file_begin = 'frb_resolution_z02_13kpc_zscaled_Zfixed_500kpc_'
 	key_string,keydx = 'Emission_|',1
 	file_end = '.cpkl'
 
@@ -84,7 +85,7 @@ if project_X:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbx_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frbx_13kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frbx[field],open(fileout,'wb'),protocol=-1)
 
 if project_Y:
@@ -93,7 +94,7 @@ if project_Y:
 
 	for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frby_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frby_13kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frby[field],open(fileout,'wb'),protocol=-1)
 
 if project_Z:
@@ -102,7 +103,7 @@ if project_Z:
 
         for field in fields:
                 key = re.split(key_string,field)[keydx]
-                fileout = file_begin + 'frbz_1kpc_500kpc_z02_'+key+file_end
+                fileout = file_begin + 'frbz_13kpc_500kpc_z02_'+key+file_end
                 cPickle.dump(frbz[field],open(fileout,'wb'),protocol=-1)
 
 

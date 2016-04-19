@@ -64,6 +64,7 @@ def make_ion_table(ion,number):
 	#was 10 before HI run
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/g1q01/bert_ion_run%i_"+ion+".dat"
 	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/Ions/grid_galquas/z02/g1q1/bert_ion_run%i_"+ion+".dat"
+
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
         T=numpy.linspace(T_min,T_max, T_n_bins)
         table = np.zeros((hden_n_bins,T_n_bins))

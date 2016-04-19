@@ -38,13 +38,17 @@ val, pos = pf.h.find_max('Density')
 width = 475./pf['kpc'] ##roughly 1.5*rvir
 resolution = [475,475]
 
-frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z0_Temperature_Densityweight.cpkl'
-cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z0_Temperature_Densityweight.cpkl'
+#cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
 
-frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z0_Density.cpkl'
-cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z0_Density.cpkl'
+#cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+
+frbx = make_thin_frb(pf,'x','Metallicity','Density',pos,width,width,resolution)
+fileout = file_begin+'frbx_1kpc_500kpc_z0_Metallicity_Densityweight.cpkl'
+cPickle.dump(frbx['Metallicity'],open(fileout,'wb'),protocol=-1)
 
 ##################### z = 0.2 ##########################
 fn_z02="/u/10/l/lnc2115/vega/data/Ryan/r0054/redshift0054"
@@ -56,13 +60,17 @@ val, pos = pf.h.find_max('Density')
 width = 442./pf['kpc'] ##roughly 1.5*rvir
 resolution = [442,442]
 
-frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z02_Temperature_Densityweight.cpkl'
-cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z02_Temperature_Densityweight.cpkl'
+#cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
 
-frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z02_Density.cpkl'
-cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z02_Density.cpkl'
+#cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+
+frbx = make_thin_frb(pf,'x','Metallicity','Density',pos,width,width,resolution)
+fileout = file_begin+'frbx_1kpc_500kpc_z02_Metallicity_Densityweight.cpkl'
+cPickle.dump(frbx['Metallicity'],open(fileout,'wb'),protocol=-1)
 
 
 ####################  z = 0.5 ###########################
@@ -75,14 +83,17 @@ val, pos = pf.h.find_max('Density')
 width = 340./pf['kpc'] ##roughly 1.5*rvir
 resolution = [340,340]
 
-frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z05_Temperature_Densityweight.cpkl'
-cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z05_Temperature_Densityweight.cpkl'
+#cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
 
-frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z05_Density.cpkl'
-cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z05_Density.cpkl'
+#cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
 
+frbx = make_thin_frb(pf,'x','Metallicity','Density',pos,width,width,resolution)
+fileout = file_begin+'frbx_1kpc_500kpc_z05_Metallicity_Densityweight.cpkl'
+cPickle.dump(frbx['Metallicity'],open(fileout,'wb'),protocol=-1)
 
 
 ####################  z = 1.0 ##########################
@@ -95,15 +106,18 @@ val, pos = pf.h.find_max('Density')
 width = 245./pf['kpc'] ##roughly 1.5*rvir
 resolution = [245,245]
 
-frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z1_Temperature_Densityweight.cpkl'
-cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Temperature','Density',pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z1_Temperature_Densityweight.cpkl'
+#cPickle.dump(frbx['Temperature'],open(fileout,'wb'),protocol=-1)
 
-frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
-fileout = file_begin+'frbx_1kpc_500kpc_z1_Density.cpkl'
-cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
+#frbx = make_thin_frb(pf,'x','Density',None,pos,width,width,resolution)
+#fileout = file_begin+'frbx_1kpc_500kpc_z1_Density.cpkl'
+#cPickle.dump(frbx['Density'],open(fileout,'wb'),protocol=-1)
 
 
+frbx = make_thin_frb(pf,'x','Metallicity','Density',pos,width,width,resolution)
+fileout = file_begin+'frbx_1kpc_500kpc_z1_Metallicity_Densityweight.cpkl'
+cPickle.dump(frbx['Metallicity'],open(fileout,'wb'),protocol=-1)
 
 
 
