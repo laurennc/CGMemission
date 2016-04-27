@@ -16,6 +16,9 @@ CIVmax,CIVmin = [],[]
 OVImax,OVImin = [],[]
 SiIVmax,SiIVmin = [], []
 depth_start,depth_end = [],[]
+SiIII_1207,SiIII_1883 = [],[]
+SiIII_1207max,SiIII_1207min = [],[]
+SiIII_1883max,SiIII_1883min = [],[]
 
 for i in range(len(werk['SDSSField'])):
 	Lya_temp = []
@@ -24,7 +27,9 @@ for i in range(len(werk['SDSSField'])):
 	CIV_temp = []
 	OVI_temp = []
 	SiIV_temp = []
-	
+	SiIII_1207_temp = []
+	SiIII_1883_temp = []	
+
 	for j in "abcd":
 		filein = 'WerkLoop/'+str(werk['SDSSField'][i])+'_'+str(werk['ID'][i])+'_'+j
 		ovr = np.genfromtxt(filein+'.ovr',names=True,dtype=None)
@@ -48,6 +53,8 @@ for i in range(len(werk['SDSSField'])):
 		siiv = simps(np.power(10.,emis['Si_4__1394A']),emis['depth'])+simps(np.power(10.,emis['Si_4__1403A']),emis['depth'])
                 siiv = np.log10(siiv/(4.*np.pi*1.42e-11))
                 SiIV = np.append(SiIV,siiv)
+		SiIII_1207 = np.append(SiIII_1207, np.log10(simps(np.power(10.,emis['Si_3__1207A']),emis['depth'])/(4*np.pi*1.635e-11)))
+		SiIII_1883 = np.append(SiIII_1883, np.log10(simps(np.power(10.,emis['Si_3__1883A']),emis['depth'])/(4*np.pi*1.055e-11)))
 
 		Lya_temp = np.append(Lya_temp,Lya[-1])
 		Ha_temp = np.append(Ha_temp,Ha[-1])
@@ -55,6 +62,8 @@ for i in range(len(werk['SDSSField'])):
 		CIV_temp = np.append(CIV_temp,CIV[-1])
 		OVI_temp = np.append(OVI_temp,OVI[-1])
 		SiIV_temp = np.append(SiIV_temp,SiIV[-1])
+		SiIII_1207_temp = np.append(SiIII_1207_temp,SiIII_1207[-1])
+		SiIII_1883_temp = np.append(SiIII_1883_temp,SiIII_1883[-1])		
 
 		if j=='d':
 			Lyamax,Lyamin = np.append(Lyamax,Lya_temp.max()),np.append(Lyamin,Lya_temp.min())
@@ -63,7 +72,10 @@ for i in range(len(werk['SDSSField'])):
 			CIVmax,CIVmin = np.append(CIVmax,CIV_temp.max()),np.append(CIVmin,CIV_temp.min())
 			OVImax,OVImin = np.append(OVImax,OVI_temp.max()),np.append(OVImin,OVI_temp.min())				
 			SiIVmax,SiIVmin = np.append(SiIVmax,SiIV_temp.max()),np.append(SiIVmin,SiIV_temp.min())
+			SiIII_1207max,SiIII_1207min = np.append(SiIII_1207max,SiIII_1207_temp.max()),np.append(SiIII_1207min,SiIII_1207_temp.min())
+			SiIII_1883max,SiIII_1883min = np.append(SiIII_1883max,SiIII_1883_temp.max()),np.append(SiIII_1883min,SiIII_1883_temp.min())
 
+		
 fini = {}
 fini['ID'] = ID
 fini['idf'] = idf
