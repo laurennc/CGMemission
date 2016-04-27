@@ -166,7 +166,8 @@ def plot_connected_minmax(ax,blues,reds):
 #########################################################################
 
 #ions = ['SiIV','CIV','OVI']
-ions = ['SiIV','CIII_977','OVI']
+#ions = ['SiIV','CIII_977','OVI']
+ions = ['SiIII_1207','SiIII_1883','CIII_977']
 redshift_key = 'z02'
 znow = 0.
 
@@ -185,7 +186,7 @@ ncontours = 4
 
 #fileout = 'frb_scatter_'+redshift_key+'_1kpc_zscaled_Zfixed_500kpc_NewIons.png'#_comoving.png'
 ##has all of the above keys but shorter for me to scp easier
-fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_papercolors_ref.png'
+fileout = 'frb_scatter_'+redshift_key+'_nozscale_werk_FINALgqs_papercolors_ref_SiIII.png'
 xlen,ylen = 3,3
 fig,ax = plt.subplots(ylen,xlen,sharey=True)
 fig.set_size_inches(8,8)
