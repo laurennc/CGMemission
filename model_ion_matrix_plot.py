@@ -64,13 +64,12 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 	ax.plot(rpr[idr],np.log10(rpmedian[idr]),'-',linewidth=1.7,color='Black')
 	plot_Werk_ColDens(ax,werk_data,ion,'Rperp',xmax=max_r)
 	#ax.text(100,17.05,re.split('galquas/|/frb',modelname)[1])
-	ax.axhline(12.5,linestyle='--',color='k',linewidth=1.3)
+	#ax.axhline(12.5,linestyle='--',color='k',linewidth=1.3)
 	ax.set_xticks(range(0,160,30))
 	ax.axis([0.,160.,8,18])
 	return percent_above
 #########################################################################
 
-#ions = ['HI','MgII','SiII','SiIII','SiIV','CIII','OVI']
 #ions = ['SiIV','CIII','OVI']
 #ions = ['SiII','NV','OVI']
 ions = ['SiIII','SiIV','CIII']
@@ -80,7 +79,7 @@ ions = ['SiIII','SiIV','CIII']
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/coldens/z02/'
 model_gqs = ['g1q01','g1q1','g1q10']#,'g1q01','g1q1','g1q10','g1q01','g1q1','g1q10']
 #model_mid = '/frbz_1kpc_500kpc_z02_'
-model_mid = '/frbx_1kpc_500kpc_z02_'
+model_mid = '_1kpc_500kpc_z02_'
 #model_mid = '/frbFace_default_z02_'
 
 werk_data = cPickle.load(open('werk_coldens_data.cpkl','rb'))
@@ -89,16 +88,10 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-#fileout = 'paper1X_scatter_matrix_Zfixed_500kpc_sSFR_wemisprof.png'
-#fileout = 'paper1_scatter_matrix_Zfixed_500kpc_sSFR.png'
-fileout = 'paper1_scatter_matrix_z02_toptest.png'
+fileout = 'paper1_scatter_matrix_z02_Si_fixedmedian.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
-#fig.set_size_inches(12,4)
 fig.set_size_inches(8,8)#,16)
-#gs1 = gridspec.GridSpec(4, 4)
-#gs1.update(wspace=0.00, hspace=0.05)
-#plt.subplots_adjust(.1,.1,.9,.9,0,0.1)
 ax = ax.flat
 i = 0
 r,dr,nrad = make_radius_array()
@@ -114,12 +107,8 @@ for ion in ions:
 	while count < 3:
 		print ion, count, model_gqs[count],i
 
-		modelname = model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl'
-                profile_names = [model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+model_mid+ion+'dens.cpkl']
-
-		#if ion == 'HI':
-		#	modelname = model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl'
-		#	profile_names = [model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl',model_beg+model_gqs[count]+model_mid+ion+'densCl.cpkl']
+		modelname = model_beg+model_gqs[count]+'/frbx'+model_mid+ion+'dens.cpkl'
+                profile_names = [model_beg+model_gqs[count]+'/frbx'+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frby'+model_mid+ion+'dens.cpkl',model_beg+model_gqs[count]+'/frbz'+model_mid+ion+'dens.cpkl']
 
 		percent_above = full_scatter_plot(modelname,profile_names,ion,ax[i],werk_data,max_r)
 
