@@ -15,7 +15,7 @@ res_keys = ['1kpc','1kpc','1kpc','1kpc']
 redshift_keys = ['z0','z02','z05','z1']
 xlen,ylen = 3,4
 figxlen,figylen = 6,8
-fileout = 'dens_temp_metal_projs.pdf'
+fileout = 'dens_temp_metal_projs_FORREF.pdf'
 model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/basic/'
 
 fig,ax = plt.subplots(ylen,xlen,sharey=True,sharex=True)
@@ -51,7 +51,7 @@ while count < len(res_keys):
 	###PLOT TEMPERATURE###
 	im2 = ax[i+1].imshow(temp_frb,extent=(-160,160,160,-160),interpolation='none',cmap=temp_cmap,origin='lower',vmin=4,vmax=6)
 	###PLOT METALLICITY###
-	im3 = ax[i+2].imshow(metal_frb,extent=(-160,160,160,-160),interpolation='none',cmap=metal_cmap,origin='lower',vmin=-3,vmax=0)
+	im3 = ax[i+2].imshow(metal_frb,extent=(-160,160,160,-160),interpolation='none',cmap=metal_cmap,origin='lower',vmin=-2,vmax=0)
 
 	###TURN AXIS LABELS OFF###
 	ax[i].set_xticklabels([])

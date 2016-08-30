@@ -72,7 +72,8 @@ def full_scatter_plot(modelname,profile_names,ion,ax,werk_data,max_r):
 
 #ions = ['SiIV','CIII','OVI']
 #ions = ['SiII','NV','OVI']
-ions = ['SiIII','SiIV','CIII']
+#ions = ['SiIII','SiIV','CIII']
+ions = ['HI_NumberDensity','SiII','SiIII']
 #ions = ['SiIV']
 #ions = ['HI','MgII','SiII']
 #ions = ['SiIII','CIV','OVI']
@@ -88,7 +89,7 @@ model_width = 0.0
 nbins,ndraws = 500,10
 max_r = 160.
 
-fileout = 'paper1_scatter_matrix_z02_Si_fixedmedian.png'
+fileout = 'paper1_scatter_matrix_z02_defense_cold.png'
 xlen,ylen = 3,3 #6#2,6
 fig,ax = plt.subplots(ylen,xlen,sharex=True,sharey=True)
 fig.set_size_inches(8,8)#,16)

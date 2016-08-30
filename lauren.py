@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import interpolate
 from radial_data_lauren import *
 import triangle
+from lauren_holding import make_SB_profile
 
 def ergs_sr_TO_raleighs(data_arr):
 	return data_arr*3.304e11/79577.4715459
@@ -47,7 +48,7 @@ def make_Cloudy_table(table_index):
 	#hden_n_bins, hden_min, hden_max = 81, -6, 2
 	hden_n_bins, hden_min, hden_max = 17, -6, 2
 	T_n_bins, T_min, T_max = 51, 3, 8
-	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z02/g1q1/g1q1_run%i.dat"
+	patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/grid_galquas/emis/z0/g1q1/g1q1_run%i.dat"
 	#patt = "/u/10/l/lnc2115/vega/data/Ryan/cloudy_out/test_hden_step/g1q1_run%i.dat"
 
 	hden=numpy.linspace(hden_min,hden_max,hden_n_bins)
@@ -72,7 +73,7 @@ def make_ion_table(ion,number):
                 table[i,:]=[float(l.split()[number]) for l in open(patt%(i+1)) if l[0] != "#"]
         return hden,T,table
  
-def make_SB_profile(filex,filey,filez,xL,z=0.):
+def make_SB_profile_z(filex,filey,filez,xL,z=0.):
         #xL = np.arange(-20,20)*10.0
         #xL = np.arange(-200,200,0.5)
 	#xL = np.arange(-100,100,0.25)
@@ -221,4 +222,35 @@ def make_radius_array():
         nrad = len(radial)
         return r, dr, nrad
 
+def median_coldens_100kpc(ion):
+	model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/coldens/z02/'
+	model_gqs = ['g1q01','g1q1','g1q10']
+	model_mid = '_1kpc_500kpc_z02_'
+	xL = np.linspace(-160,160,320)
+	count = 0
+	while count < 3:
+		profile_names = [model_beg+model_gqs[count]+'/frbx'+model_mid+ion+
+'dens.cpkl',model_beg+model_gqs[count]+'/frby'+model_mid+ion+'dens.cpkl',model_beg
++model_gqs[count]+'/frbz'+model_mid+ion+'dens.cpkl']
+		rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
+   		print ion,model_gqs[count],np.log10(rpmedian[99])
+		count = count + 1
+	return
+
+
+#SiIII_1207, CIII_977, OVI, SiIV
+def median_emis_100kpc(ion):
+        model_beg = '/u/10/l/lnc2115/vega/repos/CGMemission/bertone_frbs/final/emis/z02/'
+        model_gqs = ['g1q01','g1q1','g1q10']
+        model_mid = '_1kpc_500kpc_z02_'
+        xL = np.linspace(-160,160,320)
+        count = 0
+        while count < 3:
+                profile_names = [model_beg+model_gqs[count]+'/frbx'+model_mid+ion+
+'.cpkl',model_beg+model_gqs[count]+'/frby'+model_mid+ion+'.cpkl',model_beg
++model_gqs[count]+'/frbz'+model_mid+ion+'.cpkl']
+                rpr,rpmean,rpmedian,rpmax,rpmin,rpstd = make_SB_profile(profile_names[0],profile_names[1],profile_names[2],xL)
+                print ion,model_gqs[count],np.log10(rpmedian[99])
+                count = count + 1
+        return
 

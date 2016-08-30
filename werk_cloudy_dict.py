@@ -93,6 +93,10 @@ fini['OVI'] = OVI
 fini['OVImax'],fini['OVImin'] = OVImax,OVImin
 fini['SiIV'] = SiIV
 fini['SiIVmax'],fini['SiIVmin'] = SiIVmax, SiIVmin
+fini['SiIII_1207'] = SiIII_1207
+fini['SiIII_1207max'],fini['SiIII_1207min'] = SiIII_1207max, SiIII_1207min
+fini['SiIII_1883'] = SiIII_1883
+fini['SiIII_1883max'],fini['SiIII_1883min'] = SiIII_1883max, SiIII_1883min
 fini['depth_start'],fini['depth_end'] = depth_start,depth_end
 
 fileout = 'cloudywerk.cpkl'
